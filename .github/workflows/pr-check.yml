@@ -41,7 +41,7 @@ jobs:
       - name: Type check
         id: type-check
         continue-on-error: true
-        run: pnpm tsc --noEmit
+        run: pnpm typecheck
 
       - name: Lint check
         id: lint
