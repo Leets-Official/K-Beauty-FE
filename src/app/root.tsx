@@ -1,6 +1,6 @@
 import { Outlet, Scripts, ScrollRestoration } from 'react-router';
 
-import '../index.css';
+import './styles/global.css';
 
 export default function Root() {
   return (
