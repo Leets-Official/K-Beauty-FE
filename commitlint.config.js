@@ -4,12 +4,14 @@ const config = {
     {
       rules: {
         'issue-number-required': ({ header }) => {
-          const pattern =
-            /^(feat|fix|refactor|design|docs|test|chore|setup|style|perf|ci|revert): #[0-9]+ .+$/;
+          const issuePattern =
+            /^(feat|fix|refactor|design|docs|test|chore|setup|style|perf|ci|revert): #[1-9][0-9]* .+$/;
+
+          const hotfixPattern = /^hotfix: .+$/;
 
           return [
-            pattern.test(header),
-            '커밋 메시지는 "type: #issueNumber message" 형식이어야 합니다.',
+            issuePattern.test(header) || hotfixPattern.test(header),
+            '커밋 메시지는 "type: message" 형식으로 작성하고, 이슈 번호가 포함된 브랜치에서 커밋해야 합니다. 단, hotfix는 이슈 번호 없이 커밋할 수 있습니다.',
           ];
         },
       },
@@ -32,6 +34,7 @@ const config = {
         'perf',
         'ci',
         'revert',
+        'hotfix',
       ],
     ],
     'subject-case': [0],
