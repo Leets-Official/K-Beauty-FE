@@ -14,38 +14,46 @@ type Pages = {
   '/': {
     params: {};
   };
-  '/login': {
+  '/survey': {
     params: {};
+  };
+  '/recommendations': {
+    params: {};
+  };
+  '/products/:productId': {
+    params: {
+      productId: string;
+    };
   };
 };
 
 type RouteFiles = {
   'root.tsx': {
     id: 'root';
-    page: '/' | '/login';
+    page: '/' | '/survey' | '/recommendations' | '/products/:productId';
   };
-  'layouts/PublicLayout.tsx': {
-    id: 'layouts/PublicLayout';
-    page: '/login';
-  };
-  'routes/(public)/login/index.tsx': {
-    id: 'routes/(public)/login/index';
-    page: '/login';
-  };
-  'layouts/PrivateLayout.tsx': {
-    id: 'layouts/PrivateLayout';
+  'routes/onboarding/index.tsx': {
+    id: 'routes/onboarding/index';
     page: '/';
   };
-  'routes/(private)/home/index.tsx': {
-    id: 'routes/(private)/home/index';
-    page: '/';
+  'routes/survey/index.tsx': {
+    id: 'routes/survey/index';
+    page: '/survey';
+  };
+  'routes/recommendations/index.tsx': {
+    id: 'routes/recommendations/index';
+    page: '/recommendations';
+  };
+  'routes/products/detail.tsx': {
+    id: 'routes/products/detail';
+    page: '/products/:productId';
   };
 };
 
 type RouteModules = {
   root: typeof import('./src/app/root.tsx');
-  'layouts/PublicLayout': typeof import('./src/app/layouts/PublicLayout.tsx');
-  'routes/(public)/login/index': typeof import('./src/app/routes/(public)/login/index.tsx');
-  'layouts/PrivateLayout': typeof import('./src/app/layouts/PrivateLayout.tsx');
-  'routes/(private)/home/index': typeof import('./src/app/routes/(private)/home/index.tsx');
+  'routes/onboarding/index': typeof import('./src/app/routes/onboarding/index.tsx');
+  'routes/survey/index': typeof import('./src/app/routes/survey/index.tsx');
+  'routes/recommendations/index': typeof import('./src/app/routes/recommendations/index.tsx');
+  'routes/products/detail': typeof import('./src/app/routes/products/detail.tsx');
 };
