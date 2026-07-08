@@ -2,25 +2,53 @@ MSG_FILE="$1"
 
 BRANCH_NAME=$(git symbolic-ref --short HEAD 2>/dev/null)
 
-if printf '%s' "$BRANCH_NAME" | grep -qE '^hotfix([/#]|$)'; then
+ISSUE_NUMBER=$(printf '%s' "$BRANCH_NAME" \
+  | grep -oE '#[1-9][0-9]*' \
+  | head -n 1)
+
+FIRST_LINE=$(head -n 1 "$MSG_FILE")
+
+# 이미 포맷된 메시지는 수정하지 않음
+if printf '%s' "$FIRST_LINE" \
+  | grep -qE '^\[[A-Z]+\]( #[1-9][0-9]*)? '; then
   exit 0
 fi
 
-ISSUE_NUMBER=$(printf '%s' "$BRANCH_NAME" | grep -oE '#[1-9][0-9]*' | head -n 1)
+# 커밋 타입 추출
+COMMIT_TYPE=$(printf '%s' "$FIRST_LINE" \
+  | sed -nE 's/^([^:]+): .*/\1/p' \
+  | tr '[:lower:]' '[:upper:]')
 
-if [ -n "$ISSUE_NUMBER" ]; then
-  FIRST_LINE=$(head -n 1 "$MSG_FILE")
+# 커밋 메시지 내용 추출
+COMMIT_MESSAGE=$(printf '%s' "$FIRST_LINE" \
+  | sed -E 's/^[^:]+:[[:space:]]*//')
 
-  if ! printf '%s' "$FIRST_LINE" | grep -qE ': #[1-9][0-9]* '; then
-    UPDATED_LINE=$(printf '%s\n' "$FIRST_LINE" | sed -E "s/^([^:]+): /\1: $ISSUE_NUMBER /")
+# 커밋 타입 검증
+case "$COMMIT_TYPE" in
+  FEAT|FIX|STYLE|REFACTOR|HOTFIX|TEST|DOCS|CHORE)
+    ;;
+  *)
+    exit 0
+    ;;
+esac
 
-    TMP_FILE=$(mktemp)
-
-    {
-      printf '%s\n' "$UPDATED_LINE"
-      tail -n +2 "$MSG_FILE"
-    } > "$TMP_FILE"
-
-    mv "$TMP_FILE" "$MSG_FILE"
+# hotfix는 이슈 번호 없이 포맷
+if [ "$COMMIT_TYPE" = "HOTFIX" ]; then
+  UPDATED_LINE="[HOTFIX] ${COMMIT_MESSAGE}"
+else
+  # hotfix 외 타입은 이슈 번호 필수
+  if [ -z "$ISSUE_NUMBER" ]; then
+    exit 0
   fi
+
+  UPDATED_LINE="[${COMMIT_TYPE}] ${ISSUE_NUMBER} ${COMMIT_MESSAGE}"
 fi
+
+TMP_FILE=$(mktemp)
+
+{
+  printf '%s\n' "$UPDATED_LINE"
+  tail -n +2 "$MSG_FILE"
+} > "$TMP_FILE"
+
+mv "$TMP_FILE" "$MSG_FILE"

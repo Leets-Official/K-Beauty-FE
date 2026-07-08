@@ -1,13 +1,14 @@
 const config = {
   extends: ['@commitlint/config-conventional'],
+
   plugins: [
     {
       rules: {
-        'issue-number-required': ({ header }) => {
+        'commit-format': ({ header }) => {
           const issuePattern =
-            /^(feat|fix|refactor|design|docs|test|chore|setup|style|perf|ci|revert): #[1-9][0-9]* .+$/;
+            /^\[(FEAT|FIX|REFACTOR|DESIGN|DOCS|TEST|CHORE|SETUP|STYLE|PERF|CI|REVERT)\] #[1-9][0-9]* .+$/;
 
-          const hotfixPattern = /^hotfix: .+$/;
+          const hotfixPattern = /^\[HOTFIX\] .+$/;
 
           return [
             issuePattern.test(header) || hotfixPattern.test(header),
@@ -17,30 +18,15 @@ const config = {
       },
     },
   ],
+
   rules: {
-    'type-enum': [
-      2,
-      'always',
-      [
-        'feat',
-        'fix',
-        'refactor',
-        'design',
-        'docs',
-        'test',
-        'chore',
-        'setup',
-        'style',
-        'perf',
-        'ci',
-        'revert',
-        'hotfix',
-      ],
-    ],
+    'type-enum': [0],
+    'type-empty': [0],
+    'subject-empty': [0],
     'subject-case': [0],
     'subject-full-stop': [2, 'never', '.'],
     'header-max-length': [2, 'always', 100],
-    'issue-number-required': [2, 'always'],
+    'commit-format': [2, 'always'],
   },
 };
 
