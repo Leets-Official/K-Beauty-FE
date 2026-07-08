@@ -1,0 +1,26 @@
+MSG_FILE="$1"
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+if printf '%s' "$BRANCH_NAME" | grep -qE '^hotfix([/#]|$)'; then
+  exit 0
+fi
+
+ISSUE_NUMBER=$(printf '%s' "$BRANCH_NAME" | grep -oE '#[1-9][0-9]*' | head -n 1)
+
+if [ -n "$ISSUE_NUMBER" ]; then
+  FIRST_LINE=$(head -n 1 "$MSG_FILE")
+
+  if ! printf '%s' "$FIRST_LINE" | grep -qE ': #[1-9][0-9]* '; then
+    UPDATED_LINE=$(printf '%s\n' "$FIRST_LINE" | sed -E "s/^([^:]+): /\1: $ISSUE_NUMBER /")
+
+    TMP_FILE=$(mktemp)
+
+    {
+      printf '%s\n' "$UPDATED_LINE"
+      tail -n +2 "$MSG_FILE"
+    } > "$TMP_FILE"
+
+    mv "$TMP_FILE" "$MSG_FILE"
+  fi
+fi

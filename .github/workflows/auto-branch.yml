@@ -1,0 +1,213 @@
+name: Auto Create Branch
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Extract branch information
+        id: extract
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf '%s\n' "$ISSUE_BODY" > issue_body.txt
+
+          echo "현재 이슈 제목: $ISSUE_TITLE"
+
+          # 브랜치명 추출
+          BRANCH_NAME=$(grep -A 2 "브랜치명\|Branch" issue_body.txt | tail -1 | xargs)
+
+          if [ -z "$BRANCH_NAME" ] || [[ "$BRANCH_NAME" == "###"* ]] || [[ "$BRANCH_NAME" == "🌳"* ]]; then
+            BRANCH_NAME=$(sed -n '/브랜치명\|Branch/,/###/{/브랜치명\|Branch/n; /###/!p;}' issue_body.txt \
+              | grep -v "^$" \
+              | head -1 \
+              | xargs)
+          fi
+
+          # 브랜치 타입 추출
+          BRANCH_TYPE=$(grep -A 2 "브랜치 타입\|branchType" issue_body.txt | tail -1 | xargs)
+
+          if [ -z "$BRANCH_TYPE" ] || [[ "$BRANCH_TYPE" == "###"* ]] || [[ "$BRANCH_TYPE" == "📂"* ]]; then
+            BRANCH_TYPE=$(sed -n '/브랜치 타입\|branchType/,/###/{/브랜치 타입\|branchType/n; /###/!p;}' issue_body.txt \
+              | grep -v "^$" \
+              | head -1 \
+              | xargs)
+          fi
+
+          # 소문자로 통일
+          BRANCH_TYPE=$(printf '%s' "$BRANCH_TYPE" | tr '[:upper:]' '[:lower:]')
+
+          echo "추출된 브랜치 타입: $BRANCH_TYPE"
+          echo "추출된 브랜치명: $BRANCH_NAME"
+
+          # 브랜치 타입 검증
+          case "$BRANCH_TYPE" in
+            feat|fix|refactor|design|docs|test|chore|setup|style|perf|ci|revert|hotfix)
+              ;;
+            *)
+              echo "❌ 허용되지 않은 브랜치 타입입니다: $BRANCH_TYPE"
+              exit 1
+              ;;
+          esac
+
+          # 이슈 제목 타입 및 GitHub 라벨 매핑
+          case "$BRANCH_TYPE" in
+            feat)
+              ISSUE_TYPE="Feature"
+              ISSUE_LABEL="✨ Feature"
+              ;;
+            fix)
+              ISSUE_TYPE="BugFix"
+              ISSUE_LABEL="🐛 BugFix"
+              ;;
+            refactor)
+              ISSUE_TYPE="Refactor"
+              ISSUE_LABEL="♻️ Refactor"
+              ;;
+            design)
+              ISSUE_TYPE="Style"
+              ISSUE_LABEL="🎨 Style"
+              ;;
+            docs)
+              ISSUE_TYPE="Docs"
+              ISSUE_LABEL="📋 Docs"
+              ;;
+            test)
+              ISSUE_TYPE="Test"
+              ISSUE_LABEL="✅ Test"
+              ;;
+            chore)
+              ISSUE_TYPE="Chore"
+              ISSUE_LABEL="🛠️ Chore"
+              ;;
+            setup)
+              ISSUE_TYPE="Chore"
+              ISSUE_LABEL="🛠️ Chore"
+              ;;
+            style)
+              ISSUE_TYPE="Style"
+              ISSUE_LABEL="🎨 Style"
+              ;;
+            perf)
+              ISSUE_TYPE="Refactor"
+              ISSUE_LABEL="♻️ Refactor"
+              ;;
+            ci)
+              ISSUE_TYPE="Deploy"
+              ISSUE_LABEL="🌍 Deploy"
+              ;;
+            revert)
+              ISSUE_TYPE="Chore"
+              ISSUE_LABEL="🛠️ Chore"
+              ;;
+            hotfix)
+              ISSUE_TYPE="BugFix"
+              ISSUE_LABEL="🐛 BugFix"
+              ;;
+          esac
+
+          # 이슈 제목 생성
+          if [[ ! "$ISSUE_TITLE" =~ ^\[.*\] ]]; then
+            NEW_ISSUE_TITLE="[${ISSUE_TYPE}] #${ISSUE_NUMBER} ${ISSUE_TITLE}"
+          else
+            NEW_ISSUE_TITLE="$ISSUE_TITLE"
+          fi
+
+          # 브랜치명 정제
+          BRANCH_NAME=$(printf '%s' "$BRANCH_NAME" | sed 's/[[:space:]]\+/-/g')
+
+          # Git에서 사용할 수 없는 문자 제거
+          BRANCH_NAME=$(printf '%s' "$BRANCH_NAME" \
+            | sed 's/[:^~?*\[\\]//g; s/\.\.//g; s/@{//g')
+
+          # 연속 하이픈 정리
+          BRANCH_NAME=$(printf '%s' "$BRANCH_NAME" | sed 's/--*/-/g')
+
+          # 앞뒤 하이픈, 슬래시, 점 제거
+          BRANCH_NAME=$(printf '%s' "$BRANCH_NAME" \
+            | sed 's/^[-\/\.]*//; s/[-\/\.]*$//')
+
+          if [ -z "$BRANCH_NAME" ]; then
+            echo "❌ 브랜치명을 찾을 수 없습니다."
+            exit 1
+          fi
+
+          # 최종 브랜치명
+          FINAL_BRANCH_NAME="${BRANCH_TYPE}/#${ISSUE_NUMBER}-${BRANCH_NAME}"
+
+          echo "최종 브랜치명: $FINAL_BRANCH_NAME"
+          echo "새 이슈 제목: $NEW_ISSUE_TITLE"
+          echo "GitHub 라벨: $ISSUE_LABEL"
+
+          echo "branch_name=$FINAL_BRANCH_NAME" >> "$GITHUB_OUTPUT"
+          echo "new_issue_title=$NEW_ISSUE_TITLE" >> "$GITHUB_OUTPUT"
+          echo "branch_type=$BRANCH_TYPE" >> "$GITHUB_OUTPUT"
+          echo "label=$ISSUE_LABEL" >> "$GITHUB_OUTPUT"
+
+          rm -f issue_body.txt
+
+      - name: Update issue metadata
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_ISSUE_TITLE: ${{ steps.extract.outputs.new_issue_title }}
+          ISSUE_LABEL: ${{ steps.extract.outputs.label }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: |
+          gh issue edit "${{ github.event.issue.number }}" \
+            --title "$NEW_ISSUE_TITLE" \
+            --add-label "$ISSUE_LABEL" \
+            --add-assignee "$ISSUE_AUTHOR"
+
+          echo "이슈 제목 업데이트: $NEW_ISSUE_TITLE"
+          echo "라벨 설정: $ISSUE_LABEL"
+          echo "담당자 할당: $ISSUE_AUTHOR"
+
+      - name: Create branch from develop
+        env:
+          BRANCH_NAME: ${{ steps.extract.outputs.branch_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin develop
+          git checkout -b "$BRANCH_NAME" origin/develop
+          git push origin "$BRANCH_NAME"
+
+          echo "브랜치 '$BRANCH_NAME' 생성 완료"
+
+      - name: Add branch comment
+        env:
+          BRANCH_NAME: ${{ steps.extract.outputs.branch_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT=$(cat <<EOF
+          🌿 브랜치가 생성되었습니다!
+
+          \`\`\`
+          $BRANCH_NAME
+          \`\`\`
+
+          \`develop\` 브랜치를 기준으로 생성되었습니다.
+          EOF
+          )
+
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "$COMMENT"
+
+          echo "이슈에 댓글 추가 완료"
