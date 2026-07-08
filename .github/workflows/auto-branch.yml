@@ -122,12 +122,16 @@ jobs:
               ;;
           esac
 
+          # 기존 [Type] 제거
+          CLEAN_ISSUE_TITLE=$(printf '%s' "$ISSUE_TITLE" \
+            | sed -E 's/^\[[^]]+\][[:space:]]*//')
+
+          # 기존 #이슈번호 제거
+          CLEAN_ISSUE_TITLE=$(printf '%s' "$CLEAN_ISSUE_TITLE" \
+            | sed -E 's/^#[0-9]+[[:space:]]*//')
+
           # 이슈 제목 생성
-          if [[ ! "$ISSUE_TITLE" =~ ^\[.*\] ]]; then
-            NEW_ISSUE_TITLE="[${ISSUE_TYPE}] #${ISSUE_NUMBER} ${ISSUE_TITLE}"
-          else
-            NEW_ISSUE_TITLE="$ISSUE_TITLE"
-          fi
+          NEW_ISSUE_TITLE="[${ISSUE_TYPE}] #${ISSUE_NUMBER} ${CLEAN_ISSUE_TITLE}"
 
           # 브랜치명 정제
           BRANCH_NAME=$(printf '%s' "$BRANCH_NAME" | sed 's/[[:space:]]\+/-/g')
@@ -202,8 +206,6 @@ jobs:
           \`\`\`
           $BRANCH_NAME
           \`\`\`
-
-          \`develop\` 브랜치를 기준으로 생성되었습니다.
           EOF
           )
 
