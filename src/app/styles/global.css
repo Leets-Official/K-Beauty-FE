@@ -287,4 +287,22 @@
   html {
     @apply font-sans;
   }
+  button,
+  a,
+  summary,
+  [role='button'],
+  [role='link'],
+  [role='menuitem'],
+  [role='option'],
+  [role='tab'],
+  [role='switch'],
+  [role='checkbox'],
+  [role='radio'],
+  [data-clickable='true'] {
+    @apply cursor-pointer;
+  }
+  button:disabled,
+  [aria-disabled='true'] {
+    @apply cursor-not-allowed;
+  }
 }
