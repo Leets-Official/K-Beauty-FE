@@ -11,6 +11,37 @@
   src: url('/assets/fonts/SUIT-Variable.woff2') format('woff2-variations');
 }
 
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply bg-background font-sans;
+  }
+  body {
+    @apply bg-background text-foreground mx-auto min-h-dvh w-full;
+    max-width: var(--app-mobile-width);
+  }
+  button,
+  a,
+  summary,
+  [role='button'],
+  [role='link'],
+  [role='menuitem'],
+  [role='option'],
+  [role='tab'],
+  [role='switch'],
+  [role='checkbox'],
+  [role='radio'],
+  [data-clickable='true'] {
+    @apply cursor-pointer;
+  }
+  button:disabled,
+  [aria-disabled='true'] {
+    @apply cursor-not-allowed;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -36,6 +67,7 @@
   --caption2-line-height: 1.4;
   --title-letter-spacing: -0.02em;
   --body-letter-spacing: -0.01em;
+  --app-mobile-width: 430px;
   --color-primary-pink: var(--primary-pink);
   --color-primary-yellow: var(--primary-yellow);
   --color-primary-mint: var(--primary-mint);
@@ -275,34 +307,4 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
-  button,
-  a,
-  summary,
-  [role='button'],
-  [role='link'],
-  [role='menuitem'],
-  [role='option'],
-  [role='tab'],
-  [role='switch'],
-  [role='checkbox'],
-  [role='radio'],
-  [data-clickable='true'] {
-    @apply cursor-pointer;
-  }
-  button:disabled,
-  [aria-disabled='true'] {
-    @apply cursor-not-allowed;
-  }
 }
