@@ -4,7 +4,7 @@
 
 /* suit font */
 @font-face {
-  font-family: 'SUIT';
+  font-family: SUIT;
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
@@ -20,6 +20,7 @@
   }
   body {
     @apply bg-background text-foreground mx-auto min-h-dvh w-full;
+
     max-width: var(--app-mobile-width);
   }
   button,
@@ -46,7 +47,7 @@
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'SUIT', sans-serif;
+  --font-sans: SUIT, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
