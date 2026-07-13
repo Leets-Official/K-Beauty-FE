@@ -126,12 +126,12 @@ function OptionCard({
       {...props}
     >
       <BlobCharacter tone={tone} expression={expression} detail={detail} size={36} />
-      <span className="flex h-[30px] w-[90px] min-w-0 flex-col items-start">
-        <span className="h-[14px] w-[90px] truncate font-['Outfit'] text-[11px] leading-[14px] font-semibold text-[#3D2B1F]">
+      <span className="flex h-[30px] min-w-0 flex-1 flex-col items-start">
+        <span className="h-[14px] w-full truncate font-['Outfit'] text-[11px] leading-[14px] font-semibold text-[#3D2B1F]">
           {label}
         </span>
         {caption ? (
-          <span className="h-[16px] w-[82px] truncate pt-0.5 font-['Menlo'] text-[9px] leading-[14px] font-normal text-[#C4B5AE]">
+          <span className="h-[16px] w-full truncate pt-0.5 font-['Menlo'] text-[9px] leading-[14px] font-normal text-[#C4B5AE]">
             {caption}
           </span>
         ) : null}
