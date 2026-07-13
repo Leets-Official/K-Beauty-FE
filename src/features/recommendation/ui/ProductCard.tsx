@@ -41,7 +41,9 @@ function ProductCard({
     <ProductBottle variant={bottleVariant} tone={bottleTone} size={68} title={`${name} 일러스트`} />
   );
   const normalizedRating =
-    typeof rating === 'number' ? Math.min(Math.max(rating, 0), maxRating) : undefined;
+    typeof rating === 'number' && Number.isFinite(rating)
+      ? Math.min(Math.max(rating, 0), maxRating)
+      : undefined;
   const ratingLabel = normalizedRating?.toFixed(1);
 
   return (
@@ -107,7 +109,7 @@ function ProductCard({
             >
               {detailLabel}
             </a>
-          ) : (
+          ) : onDetailClick ? (
             <button
               type="button"
               className="typo-caption1 bg-surface-soft text-primary rounded-full px-3 py-2 font-semibold"
@@ -115,7 +117,7 @@ function ProductCard({
             >
               {detailLabel}
             </button>
-          )}
+          ) : null}
         </div>
       </div>
     </article>
