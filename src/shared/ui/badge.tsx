@@ -7,16 +7,16 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        radiantPink: 'border-transparent bg-[#F77B6A] text-white',
-        apricotGlow: 'border-transparent bg-[#F7C361] text-[#3D2B1F]',
-        mintCalm: 'border-transparent bg-[#82D3D1]/25 text-[#3A8B88]',
-        lavenderSoothe: 'border-transparent bg-[#E5D4EF] text-[#7B618C]',
-        blush: 'border-transparent bg-[#F6EFEA] text-[#8A7B74]',
-        outline: 'border-[#FDDFD9] bg-transparent text-[#9B8578]',
+        pink: 'border-transparent bg-primary-pink text-white',
+        yellow: 'border-transparent bg-primary-yellow text-primary-yellow-badge-text',
+        mint: 'border-transparent bg-primary-mint-badge text-primary-mint-badge-text',
+        lavender: 'border-transparent bg-primary-lavender text-primary-lavender-badge-text',
+        brown: 'border-transparent bg-primary-brown-badge text-primary-brown-badge-text',
+        outline: 'border-primary-outline bg-transparent text-primary-outline-badge-text',
       },
     },
     defaultVariants: {
-      variant: 'lavenderSoothe',
+      variant: 'lavender',
     },
   },
 );

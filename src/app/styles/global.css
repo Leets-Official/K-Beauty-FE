@@ -71,9 +71,17 @@
   --app-mobile-width: 430px;
   --color-primary-pink: var(--primary-pink);
   --color-primary-yellow: var(--primary-yellow);
+  --color-primary-yellow-badge-text: var(--primary-yellow-badge-text);
   --color-primary-mint: var(--primary-mint);
+  --color-primary-mint-badge: var(--primary-mint-badge);
+  --color-primary-mint-badge-text: var(--primary-mint-badge-text);
   --color-primary-lavender: var(--primary-lavender);
+  --color-primary-lavender-badge-text: var(--primary-lavender-badge-text);
   --color-primary-brown: var(--primary-brown);
+  --color-primary-brown-badge: var(--primary-brown-badge);
+  --color-primary-brown-badge-text: var(--primary-brown-badge-text);
+  --color-primary-outline: var(--primary-outline);
+  --color-primary-outline-badge-text: var(--primary-outline-badge-text);
   --color-secondary-cream: var(--secondary-cream);
   --color-secondary-blush: var(--secondary-blush);
   --color-secondary-pink: var(--secondary-pink);
@@ -188,9 +196,17 @@
 :root {
   --primary-pink: #f77b6a;
   --primary-yellow: #f7c361;
+  --primary-yellow-badge-text: #3d2b1f;
   --primary-mint: #82d3d1;
+  --primary-mint-badge: #dfefec;
+  --primary-mint-badge-text: #519b99;
   --primary-lavender: #e5d4ef;
+  --primary-lavender-badge-text: #886db0;
   --primary-brown: #955e3b;
+  --primary-brown-badge: #f5ece8;
+  --primary-brown-badge-text: #a69286;
+  --primary-outline: #fdd3cc;
+  --primary-outline-badge-text: #a89388;
   --secondary-cream: #fff8f5;
   --secondary-blush: #fff0e9;
   --secondary-pink: #fddfd9;
