@@ -8,13 +8,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-gradient-to-r from-[#E0896F] to-[#E69A81] text-white active:transition-none active:bg-none active:bg-[#C86A51] disabled:bg-none disabled:bg-[#EBEAE8] disabled:text-[#C1BDB9] data-[disabled]:bg-none data-[disabled]:bg-[#EBEAE8] data-[disabled]:text-[#C1BDB9]',
+          'bg-button-gradient text-white active:transition-none active:bg-none active:bg-action-active disabled:bg-none disabled:bg-action-disabled-bg disabled:text-action-disabled-text data-[disabled]:bg-none data-[disabled]:bg-action-disabled-bg data-[disabled]:text-action-disabled-text',
 
         secondary:
-          'border-[#E0896F] text-[#E0896F] bg-transparent active:border-[#C86A51] active:text-[#C86A51] active:bg-[#FCECE8] disabled:border-[#EBEAE8] disabled:text-[#C1BDB9] disabled:bg-transparent data-[disabled]:border-[#EBEAE8] data-[disabled]:text-[#C1BDB9] data-[disabled]:bg-transparent',
+          'border-brand text-brand bg-transparent active:border-action-active active:text-action-active active:bg-action-secondary-active-bg disabled:border-action-disabled-bg disabled:text-action-disabled-text disabled:bg-transparent data-[disabled]:border-action-disabled-bg data-[disabled]:text-action-disabled-text data-[disabled]:bg-transparent',
 
         ghost:
-          'text-[#8A8782] bg-transparent active:text-[#C86A51] disabled:text-[#C1BDB9] data-[disabled]:text-[#C1BDB9]',
+          'text-text-ghost bg-transparent active:text-action-active disabled:text-action-disabled-text data-[disabled]:text-action-disabled-text',
       },
     },
     defaultVariants: {
