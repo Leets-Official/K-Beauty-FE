@@ -5,14 +5,25 @@ import { Star } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice, MAX_RATING, normalizeRating } from '@/shared/utils/format';
 
-export type ProductCardProps = React.ComponentProps<'article'> & {
-  name: string;
-  brand: string;
-  price: number;
-  rank?: number;
-  rating?: number;
-  image?: React.ReactNode;
-};
+type ProductCardDetailActionProps =
+  | {
+      detailHref: string;
+      onDetailClick?: never;
+    }
+  | {
+      detailHref?: never;
+      onDetailClick: React.MouseEventHandler<HTMLButtonElement>;
+    };
+
+export type ProductCardProps = React.ComponentProps<'article'> &
+  ProductCardDetailActionProps & {
+    name: string;
+    brand: string;
+    price: number;
+    rank?: number;
+    rating?: number;
+    image?: React.ReactNode;
+  };
 
 function ProductCard({
   className,
@@ -22,6 +33,8 @@ function ProductCard({
   rank,
   rating,
   image,
+  detailHref,
+  onDetailClick,
   ...props
 }: ProductCardProps) {
   const normalizedRating = normalizeRating(rating);
@@ -80,6 +93,23 @@ function ProductCard({
         ) : null}
 
         <p className="typo-title2 text-primary mt-2 font-bold">{formatPrice(price)}</p>
+
+        {detailHref !== undefined ? (
+          <a
+            href={detailHref}
+            className="text-primary mt-1 self-start text-sm font-semibold underline-offset-4 hover:underline"
+          >
+            자세히
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={onDetailClick}
+            className="text-primary mt-1 self-start text-sm font-semibold underline-offset-4 hover:underline"
+          >
+            자세히
+          </button>
+        )}
       </div>
     </article>
   );
