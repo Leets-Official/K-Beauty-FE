@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Star } from 'lucide-react';
 
-import { ProductBottle, type BottleTone, type BottleVariant } from '@/shared/ui/ProductBottle';
 import { cn } from '@/shared/utils/cn';
+import { formatPrice, MAX_RATING, normalizeRating } from '@/shared/utils/format';
 
 export type ProductCardProps = React.ComponentProps<'article'> & {
   name: string;
@@ -12,15 +12,7 @@ export type ProductCardProps = React.ComponentProps<'article'> & {
   rank?: number;
   rating?: number;
   image?: React.ReactNode;
-  bottleVariant?: BottleVariant;
-  bottleTone?: BottleTone;
-  detailLabel?: string;
-  detailHref?: string;
-  onDetailClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
-
-const priceFormatter = new Intl.NumberFormat('ko-KR');
-const maxRating = 5;
 
 function ProductCard({
   className,
@@ -30,20 +22,9 @@ function ProductCard({
   rank,
   rating,
   image,
-  bottleVariant,
-  bottleTone,
-  detailLabel = '자세히',
-  detailHref,
-  onDetailClick,
   ...props
 }: ProductCardProps) {
-  const productVisual = image ?? (
-    <ProductBottle variant={bottleVariant} tone={bottleTone} size={68} title={`${name} 일러스트`} />
-  );
-  const normalizedRating =
-    typeof rating === 'number' && Number.isFinite(rating)
-      ? Math.min(Math.max(rating, 0), maxRating)
-      : undefined;
+  const normalizedRating = normalizeRating(rating);
   const ratingLabel = normalizedRating?.toFixed(1);
 
   return (
@@ -55,9 +36,7 @@ function ProductCard({
       )}
       {...props}
     >
-      <div className="bg-surface-soft flex aspect-[2.2/1] items-center justify-center">
-        {productVisual}
-      </div>
+      <div className="bg-surface-soft flex aspect-[2.2/1] items-center justify-center">{image}</div>
 
       <div className="flex flex-col gap-2 p-5">
         <div className="flex items-center gap-2">
@@ -74,7 +53,7 @@ function ProductCard({
         {typeof normalizedRating === 'number' ? (
           <div className="text-muted-foreground flex items-center gap-2">
             <div className="flex items-center gap-0.5" aria-label={`평점 ${ratingLabel}`}>
-              {Array.from({ length: maxRating }, (_, index) => {
+              {Array.from({ length: MAX_RATING }, (_, index) => {
                 const fillRatio = Math.min(Math.max(normalizedRating - index, 0), 1);
 
                 return (
@@ -100,25 +79,7 @@ function ProductCard({
           </div>
         ) : null}
 
-        <div className="mt-2 flex items-center justify-between gap-3">
-          <p className="typo-title2 text-primary font-bold">{priceFormatter.format(price)}원</p>
-          {detailHref ? (
-            <a
-              href={detailHref}
-              className="typo-caption1 bg-surface-soft text-primary rounded-full px-3 py-2 font-semibold"
-            >
-              {detailLabel}
-            </a>
-          ) : onDetailClick ? (
-            <button
-              type="button"
-              className="typo-caption1 bg-surface-soft text-primary rounded-full px-3 py-2 font-semibold"
-              onClick={onDetailClick}
-            >
-              {detailLabel}
-            </button>
-          ) : null}
-        </div>
+        <p className="typo-title2 text-primary mt-2 font-bold">{formatPrice(price)}</p>
       </div>
     </article>
   );

@@ -1,0 +1,57 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 64"
+  width="56"
+  height="56"
+  data-slot="product-serum"
+>
+  <style>
+    [data-slot='product-serum'] {
+      --product-bottle-fill: var(--primary-mint);
+      --product-bottle-label: var(--surface);
+      --product-bottle-cap: var(--text-subtle);
+    }
+
+    [data-slot='product-serum'][data-tone='lavender'] {
+      --product-bottle-fill: var(--primary-lavender);
+    }
+
+    [data-slot='product-serum'][data-tone='apricot'] {
+      --product-bottle-fill: var(--primary-yellow);
+    }
+
+    [data-slot='product-serum'][data-tone='coral'] {
+      --product-bottle-fill: var(--primary-pink);
+    }
+
+    .product-bottle__fill {
+      fill: var(--product-bottle-fill);
+    }
+
+    .product-bottle__label {
+      fill: var(--product-bottle-label);
+    }
+
+    .product-bottle__cap {
+      fill: var(--product-bottle-cap);
+    }
+  </style>
+
+  <rect class="product-bottle__cap" x="28" y="3" width="8" height="10" rx="4" />
+  <rect class="product-bottle__cap" x="29.5" y="12" width="5" height="7" rx="1.5" />
+  <rect class="product-bottle__fill" x="19" y="18" width="26" height="42" rx="9" />
+  <rect
+    class="product-bottle__label"
+    x="24"
+    y="27"
+    width="16"
+    height="18"
+    rx="4"
+    opacity="0.55"
+  />
+  <path
+    class="product-bottle__label"
+    d="M23.5 25c0-2 1.6-3.6 3.6-3.6h1.4v37.2h-1.4c-2 0-3.6-1.6-3.6-3.6V25Z"
+    opacity="0.28"
+  />
+</svg>

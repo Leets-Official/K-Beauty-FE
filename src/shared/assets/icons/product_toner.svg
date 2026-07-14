@@ -1,0 +1,59 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 64"
+  width="56"
+  height="56"
+  data-slot="product-toner"
+>
+  <style>
+    [data-slot='product-toner'] {
+      --product-bottle-fill: var(--primary-mint);
+      --product-bottle-label: var(--surface);
+      --product-bottle-cap: var(--text-subtle);
+    }
+
+    [data-slot='product-toner'][data-tone='lavender'] {
+      --product-bottle-fill: var(--primary-lavender);
+    }
+
+    [data-slot='product-toner'][data-tone='apricot'] {
+      --product-bottle-fill: var(--primary-yellow);
+    }
+
+    [data-slot='product-toner'][data-tone='coral'] {
+      --product-bottle-fill: var(--primary-pink);
+    }
+
+    .product-bottle__fill {
+      fill: var(--product-bottle-fill);
+    }
+
+    .product-bottle__label {
+      fill: var(--product-bottle-label);
+    }
+
+    .product-bottle__cap {
+      fill: var(--product-bottle-cap);
+    }
+  </style>
+
+  <rect class="product-bottle__cap" x="27" y="4" width="10" height="4" rx="2" />
+  <rect class="product-bottle__cap" x="24" y="7" width="16" height="9" rx="3" />
+  <rect class="product-bottle__fill" x="26" y="14" width="12" height="5" />
+  <rect class="product-bottle__fill" x="12" y="17" width="40" height="42" rx="12" />
+  <rect
+    class="product-bottle__label"
+    x="19"
+    y="27"
+    width="26"
+    height="17"
+    rx="6"
+    opacity="0.55"
+  />
+  <circle class="product-bottle__fill" cx="32" cy="35.5" r="4" opacity="0.35" />
+  <path
+    class="product-bottle__label"
+    d="M18 24c0-2.8 2.2-5 5-5h3v38h-3c-2.8 0-5-2.2-5-5V24Z"
+    opacity="0.28"
+  />
+</svg>
