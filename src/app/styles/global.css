@@ -71,9 +71,17 @@
   --app-mobile-width: 430px;
   --color-primary-pink: var(--primary-pink);
   --color-primary-yellow: var(--primary-yellow);
+  --color-primary-yellow-badge-text: var(--primary-yellow-badge-text);
   --color-primary-mint: var(--primary-mint);
+  --color-primary-mint-badge: var(--primary-mint-badge);
+  --color-primary-mint-badge-text: var(--primary-mint-badge-text);
   --color-primary-lavender: var(--primary-lavender);
+  --color-primary-lavender-badge-text: var(--primary-lavender-badge-text);
   --color-primary-brown: var(--primary-brown);
+  --color-primary-brown-badge: var(--primary-brown-badge);
+  --color-primary-brown-badge-text: var(--primary-brown-badge-text);
+  --color-primary-outline: var(--primary-outline);
+  --color-primary-outline-badge-text: var(--primary-outline-badge-text);
   --color-secondary-cream: var(--secondary-cream);
   --color-secondary-blush: var(--secondary-blush);
   --color-secondary-pink: var(--secondary-pink);
@@ -123,6 +131,11 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-action-active: var(--action-active);
+  --color-action-secondary-active-bg: var(--action-secondary-active-bg);
+  --color-action-disabled-bg: var(--action-disabled-bg);
+  --color-action-disabled-text: var(--action-disabled-text);
+  --color-text-ghost: var(--text-ghost);
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-full: 9999px;
@@ -188,9 +201,17 @@
 :root {
   --primary-pink: #f77b6a;
   --primary-yellow: #f7c361;
+  --primary-yellow-badge-text: #3d2b1f;
   --primary-mint: #82d3d1;
+  --primary-mint-badge: #dfefec;
+  --primary-mint-badge-text: #519b99;
   --primary-lavender: #e5d4ef;
+  --primary-lavender-badge-text: #886db0;
   --primary-brown: #955e3b;
+  --primary-brown-badge: #f5ece8;
+  --primary-brown-badge-text: #a69286;
+  --primary-outline: #fdd3cc;
+  --primary-outline-badge-text: #a89388;
   --secondary-cream: #fff8f5;
   --secondary-blush: #fff0e9;
   --secondary-pink: #fddfd9;
@@ -274,6 +295,11 @@
   --sidebar-accent-foreground: var(--text);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+  --action-active: #e56854;
+  --action-secondary-active-bg: #fff0e9;
+  --action-disabled-bg: #f0e6e1;
+  --action-disabled-text: #c4b5ae;
+  --text-ghost: #9b8578;
 }
 
 .dark {
