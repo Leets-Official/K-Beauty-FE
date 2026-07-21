@@ -29,7 +29,7 @@ function ProgressTrack({ className, style, ...props }: ProgressPrimitive.Track.P
   return (
     <ProgressPrimitive.Track
       className={cn(
-        'bg-secondary-blush relative h-3 w-full overflow-hidden rounded-full',
+        'bg-background-subtle relative h-3 w-full overflow-hidden rounded-full',
         className,
       )}
       data-slot="progress-track"
@@ -43,7 +43,7 @@ function ProgressIndicator({ className, style, ...props }: ProgressPrimitive.Ind
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn('bg-primary-gradient h-full transition-all duration-500 ease-out', className)}
+      className={cn('bg-progress-gradient h-full transition-all duration-500 ease-out', className)}
       style={style}
       {...props}
     />
@@ -53,7 +53,7 @@ function ProgressIndicator({ className, style, ...props }: ProgressPrimitive.Ind
 function ProgressLabel({ className, style, ...props }: ProgressPrimitive.Label.Props) {
   return (
     <ProgressPrimitive.Label
-      className={cn('typo-caption1 text-secondary-mist', className)}
+      className={cn('typo-caption1 text-text-muted', className)}
       data-slot="progress-label"
       style={style}
       {...props}
@@ -64,7 +64,7 @@ function ProgressLabel({ className, style, ...props }: ProgressPrimitive.Label.P
 function ProgressValue({ className, style, ...props }: ProgressPrimitive.Value.Props) {
   return (
     <ProgressPrimitive.Value
-      className={cn('typo-caption1 text-secondary-mist ml-auto tabular-nums', className)}
+      className={cn('typo-caption1 text-text-muted ml-auto tabular-nums', className)}
       data-slot="progress-value"
       style={style}
       {...props}

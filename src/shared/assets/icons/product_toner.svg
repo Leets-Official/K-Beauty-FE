@@ -7,21 +7,21 @@
 >
   <style>
     [data-slot='product-toner'] {
-      --product-bottle-fill: var(--primary-mint);
-      --product-bottle-label: var(--surface);
-      --product-bottle-cap: var(--text-subtle);
+      --product-bottle-fill: var(--accent-mint);
+      --product-bottle-label: var(--surface-default);
+      --product-bottle-cap: var(--text-muted);
     }
 
     [data-slot='product-toner'][data-tone='lavender'] {
-      --product-bottle-fill: var(--primary-lavender);
+      --product-bottle-fill: var(--accent-lavender);
     }
 
     [data-slot='product-toner'][data-tone='apricot'] {
-      --product-bottle-fill: var(--primary-yellow);
+      --product-bottle-fill: var(--accent-apricot);
     }
 
     [data-slot='product-toner'][data-tone='coral'] {
-      --product-bottle-fill: var(--primary-pink);
+      --product-bottle-fill: var(--action-primary);
     }
 
     .product-bottle__fill {

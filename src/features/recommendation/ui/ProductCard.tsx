@@ -44,12 +44,14 @@ function ProductCard({
     <article
       data-slot="product-card"
       className={cn(
-        'bg-card text-card-foreground overflow-hidden rounded-[32px] shadow-sm ring-1 ring-[color-mix(in_srgb,var(--secondary-mist)_35%,transparent)]',
+        'bg-card text-card-foreground ring-border-subtle overflow-hidden rounded-[32px] shadow-sm ring-1',
         className,
       )}
       {...props}
     >
-      <div className="bg-surface-soft flex aspect-[2.2/1] items-center justify-center">{image}</div>
+      <div className="bg-background-subtle flex aspect-[2.2/1] items-center justify-center">
+        {image}
+      </div>
 
       <div className="flex flex-col gap-2 p-5">
         <div className="flex items-center gap-2">
@@ -78,7 +80,7 @@ function ProductCard({
                     <Star className="size-4" fill="currentColor" strokeWidth={0} />
                     {fillRatio > 0 ? (
                       <span
-                        className="absolute inset-y-0 left-0 overflow-hidden text-[var(--primary-yellow)]"
+                        className="text-accent-apricot absolute inset-y-0 left-0 overflow-hidden"
                         style={{ width: `${fillRatio * 100}%` }}
                       >
                         <Star className="size-4" fill="currentColor" strokeWidth={0} />

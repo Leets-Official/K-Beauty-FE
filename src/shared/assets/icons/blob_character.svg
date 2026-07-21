@@ -1,20 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <path
     d="M32.3 6.1c13.1 0 24 8.8 25.4 21.9 1.3 12.3-6.6 25.4-19.3 28.5-12.8 3.1-27-2.6-31-15.2C3.5 29.2 9.2 15.4 20.5 9.5c3.7-2 7.6-3.2 11.8-3.4Z"
-    fill="var(--blob-shadow, var(--text-subtle))"
+    fill="var(--blob-shadow, var(--text-muted))"
     opacity="0.34"
     transform="translate(0 3)"
   />
   <path
     d="M32.3 5.6c12.8 0 23.8 8.8 25.2 21.5 1.4 12.4-6.8 24.7-19.4 27.8-12.7 3.1-26.7-2.3-30.6-14.7C3.7 28 9.4 14.9 20.5 9.1c3.7-2 7.6-3.2 11.8-3.5Z"
-    fill="var(--blob-fill, var(--primary-pink))"
+    fill="var(--blob-fill, var(--primary-500))"
   />
   <ellipse
     cx="23.6"
     cy="17"
     rx="8.9"
     ry="4.5"
-    fill="var(--blob-highlight, var(--surface-tint))"
+    fill="var(--blob-highlight, var(--surface-petal))"
     opacity="0.9"
     transform="rotate(-27 23.6 17)"
   />
