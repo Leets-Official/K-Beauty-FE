@@ -8,6 +8,7 @@ K-Beauty client는 사용자의 피부 고민과 선호를 바탕으로 K-Beauty
 
 - React 19 + TypeScript
 - React Router 7, Vite 8
+- React Compiler enabled via `babel-plugin-react-compiler`
 - Tailwind CSS v4, `tw-animate-css`
 - `class-variance-authority` (`cva`) for component variants
 - `cn()` from `@/shared/utils/cn` — className merge utility
@@ -31,29 +32,9 @@ src/
 
 ## Design Tokens
 
-No hardcoded values. Always use token classes first. Ask the user before adding new tokens.
+Design tokens are defined in `src/app/styles/global.css`. Do not use hardcoded values; use token classes first and ask the user before adding new tokens.
 
-Design tokens are defined in `src/app/styles/global.css`.
-
-| Category   | Class examples                                                                                     |
-| ---------- | -------------------------------------------------------------------------------------------------- |
-| Text       | `text-text-primary` `text-text-secondary` `text-text-muted` `text-text-inverse`                    |
-| Background | `bg-background-canvas` `bg-background-subtle` `bg-surface-default` `bg-surface-petal`              |
-| Action     | `bg-action-primary` `bg-action-active` `bg-action-disabled` `text-action-primary`                  |
-| Accent     | `bg-accent-apricot` `bg-accent-mint` `bg-accent-lavender` `bg-accent-petal` `bg-accent-deep`       |
-| Border     | `border-border-subtle` `border-border-action` `border-border-action-soft` `border-border-disabled` |
-| Gradient   | `bg-button-gradient` `bg-progress-gradient`                                                        |
-| Typography | `typo-title1` `typo-title2` `typo-body1` `typo-button1` `typo-button2` `typo-caption1~2`           |
-
-Primitive token groups:
-
-- `neutral-0~900`
-- `primary-50~900`
-- `apricot-100/500/700`
-- `mint-100/500/700`
-- `lavender-100/500/700`
-- `brown-600/900`
-- `alpha-primary-*`, `alpha-mint-*`
+For detailed token usage rules, refer to `.claude/rules/code-style.md`.
 
 ## Component Pattern
 
@@ -84,6 +65,7 @@ export { Component, variants, type Props };
 - Keep component styles token-based.
 - Avoid hardcoded color, spacing, or typography values unless there is no token yet and the user agrees to add one.
 - Prefer React 19 style refs as regular props. Do not introduce new `forwardRef` unless a dependency requires it.
+- React Compiler handles most memoization automatically. Do not add unnecessary `useMemo`, `useCallback`, `React.memo`, or `useRef`; use them only when there is a clear correctness or imperative DOM/state reason.
 
 ## Routing
 

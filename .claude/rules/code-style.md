@@ -41,8 +41,10 @@ export default function OnboardingRoute() {
 ### React 19
 
 - React 19 기준으로 작성합니다.
+- React Compiler가 활성화되어 있으므로 대부분의 수동 memoization은 불필요합니다.
 - 새 컴포넌트에 `forwardRef`를 도입하지 않습니다. `ref`가 필요하면 일반 prop처럼 받는 방식을 우선합니다.
 - `useMemo`, `useCallback`, `React.memo`는 실제 성능 문제가 있거나 참조 안정성이 필요한 경우에만 사용합니다.
+- `useRef`는 DOM 접근, imperative handle, 렌더링과 무관한 mutable value처럼 명확한 목적이 있을 때만 사용합니다. 단순 캐싱이나 불필요한 재렌더 회피 목적으로 추가하지 않습니다.
 
 ## Import
 
