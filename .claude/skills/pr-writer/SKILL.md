@@ -5,13 +5,13 @@ description: Analyze the current branch changes and write a PR title/body that f
 
 # PR Writer
 
-이 스킬은 현재 브랜치의 변경사항을 분석해서 `.github/pull_request_template.md` 형식에 맞는 PR title과 PR body를 작성한다.
+This skill analyzes the current branch changes and generates a PR title and PR body that follow `.github/pull_request_template.md`.
 
-반드시 프로젝트의 실제 PR 템플릿을 먼저 읽고, 템플릿 구조를 유지한 채 내용을 채운다.
+Always read the project's actual PR template first, then preserve the template structure while filling in the content.
 
 ## Step 0. Pre-flight Checks
 
-PR description을 작성하기 전에 아래 검증을 실행한다.
+Before writing the PR description, run these checks:
 
 ```bash
 pnpm typecheck
@@ -20,23 +20,23 @@ pnpm format:check
 pnpm build
 ```
 
-규칙:
+Rules:
 
-- 새로 변경한 파일 때문에 실패하면 수정 후 다시 실행한다.
-- 현재 브랜치와 무관한 기존 이슈로 실패하면 PR body의 `기타 사항 or 추가 코멘트`에 명시한다.
-- `pnpm typecheck` 또는 `pnpm build`가 missing-module 오류로 실패하면 `pnpm install` 후 재시도한다.
-- `pnpm format:check`가 변경 파일에서 실패하면 변경 파일만 포맷한 뒤 재실행한다.
-- 검증 결과는 PR body에 길게 나열하지 않는다. 실패/예외가 있을 때만 `기타 사항 or 추가 코멘트`에 짧게 적는다.
+- If a check fails because of newly changed files, fix the issue and re-run the check.
+- If a check fails because of a pre-existing issue unrelated to the current branch, mention it in the PR body's `기타 사항 or 추가 코멘트` section.
+- If `pnpm typecheck` or `pnpm build` fails with missing-module errors, run `pnpm install` and retry.
+- If `pnpm format:check` fails on changed files, format only those files and re-run the check.
+- Do not list verification results verbosely in the PR body. Only mention failures, skipped checks, or exceptions briefly in `기타 사항 or 추가 코멘트`.
 
 ## Step 1. Read PR Template
 
-항상 실제 템플릿을 읽는다.
+Always read the actual template:
 
 ```bash
 cat .github/pull_request_template.md
 ```
 
-현재 템플릿의 주요 섹션:
+Main sections in the current template:
 
 ```markdown
 ## ✅ PR 유형
@@ -50,11 +50,11 @@ cat .github/pull_request_template.md
 ## 🎸 기타 사항 or 추가 코멘트
 ```
 
-템플릿의 제목, 구분선, 체크박스 문구는 임의로 바꾸지 않는다.
+Do not rename template headings, separators, or checkbox labels.
 
 ## Step 2. Analyze Changes
 
-기준 브랜치를 찾아 현재 브랜치 변경사항을 분석한다.
+Find the base branch and analyze the current branch changes.
 
 ```bash
 BASE_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
@@ -63,36 +63,36 @@ git log "origin/${BASE_BRANCH}"...HEAD --oneline
 git diff "origin/${BASE_BRANCH}"...HEAD
 ```
 
-`origin/HEAD`를 알 수 없으면 `origin/develop`, `origin/main`, `HEAD~1` 순서로 합리적인 기준을 선택한다.
+If `origin/HEAD` cannot be determined, choose a reasonable base in this order: `origin/develop`, `origin/main`, then `HEAD~1`.
 
-분석할 때 확인할 것:
+Check for:
 
-- 변경된 파일 목록과 변경 범위
-- 신규 기능인지, 버그 수정인지, 리팩토링/문서/설정 변경인지
-- 사용자에게 의미 있는 주요 변경사항
-- package/dependency/build 설정 변경 여부
-- 문서만 변경한 PR인지 여부
+- Changed files and scope
+- Whether the change is a feature, bug fix, refactor, documentation change, or configuration change
+- Key user-facing or developer-facing changes
+- Package/dependency/build configuration changes
+- Whether the PR is documentation-only
 
 ## Step 3. Extract Issue Number
 
-브랜치명에서 이슈 번호를 추출한다.
+Extract the issue number from the branch name.
 
 ```bash
 git branch --show-current
 ```
 
-지원하는 예:
+Supported examples:
 
 - `feat/#22-onboarding` → `#22`
-- `style/#22-컬러토큰-수정` → `#22`
+- `style/#22-color-token-update` → `#22`
 - `fix/KBT-22-route` → `#22`
 - `feat/22-button` → `#22`
 
-번호를 찾을 수 없으면 `Closed #`는 비워둔다.
+If no issue number is found, leave `Closed #` empty.
 
 ## Step 4. Determine PR Type
 
-`.github/pull_request_template.md`의 체크박스 중 해당하는 항목만 `[x]`로 표시한다. 여러 유형이 섞이면 주요 변경 1개를 우선 체크하고, 패키지/문서 변경이 의미 있게 포함된 경우 추가 체크한다.
+Mark only the matching checkbox from `.github/pull_request_template.md` with `[x]`. If multiple categories apply, prioritize the main change. Also check package/documentation categories when those changes are meaningful.
 
 | Change                                             | PR Type                                                                  |
 | -------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -108,16 +108,16 @@ git branch --show-current
 
 ## Step 5. Generate PR Title
 
-PR title 형식:
+PR title format:
 
 ```text
-[Type] #{number}: 작업 내용 요약
+[Type] #{number}: summary of the work
 ```
 
-이슈 번호가 없으면:
+If there is no issue number:
 
 ```text
-[Type] 작업 내용 요약
+[Type] summary of the work
 ```
 
 Prefix mapping:
@@ -134,25 +134,25 @@ Prefix mapping:
 | 파일 혹은 폴더명 수정             | `[Chore]`    |
 | 파일 혹은 폴더 삭제               | `[Chore]`    |
 
-예:
+Example:
 
 ```text
-[Style] #22: 컬러 토큰 및 공통 컴포넌트 색상명 정리
+[Style] #22: update color tokens and shared component color names
 ```
 
 ## Step 6. Generate PR Body
 
-`.github/pull_request_template.md` 내용을 그대로 기반으로 채운다.
+Fill the PR body based on `.github/pull_request_template.md`.
 
-작성 규칙:
+Writing rules:
 
-- `PR 유형`: 해당 체크박스만 `[x]`, 나머지는 `[ ]`.
-- `관련 이슈번호`: 이슈 번호가 있으면 `- Closed #22`, 없으면 `- Closed #`.
-- `Key Changes`: 변경사항을 2~5개 bullet로 요약한다.
-- `스크린샷 or 실행영상`: 템플릿 placeholder를 남긴다. UI 변경이 있으면 “첨부 예정” 정도로 둔다.
-- `기타 사항 or 추가 코멘트`: 검증 결과 특이사항, 미실행 사유, 기존 이슈를 적는다. 없으면 `- 없음`.
+- `PR 유형`: mark only matching checkboxes with `[x]`; leave the rest as `[ ]`.
+- `관련 이슈번호`: use `- Closed #22` when an issue number exists; otherwise use `- Closed #`.
+- `Key Changes`: summarize changes in 2-5 bullets.
+- `스크린샷 or 실행영상`: keep the template placeholder. For UI changes, leave a short placeholder such as "to be attached".
+- `기타 사항 or 추가 코멘트`: mention verification exceptions, skipped checks, or pre-existing issues. If there are none, write `- 없음`.
 
-예시 형식:
+Example format:
 
 ```markdown
 ## ✅ PR 유형
@@ -196,7 +196,7 @@ Prefix mapping:
 
 ## Step 7. PR Update
 
-기존 PR description 업데이트 요청이면 마지막 push 이후 변경만 분석한다.
+When updating an existing PR description after additional commits, analyze only changes since the last push.
 
 ```bash
 LAST_PUSH=$(git rev-parse @{push} 2>/dev/null || git rev-parse origin/$(git branch --show-current) 2>/dev/null || echo "HEAD")
@@ -205,7 +205,7 @@ git log "${LAST_PUSH}"..HEAD --oneline
 git diff "${LAST_PUSH}"
 ```
 
-기존 `Key Changes` 아래에 구분자를 두고 추가한다.
+Append under the existing `Key Changes` with a separator.
 
 ```markdown
 #### 🔄 추가 변경사항 (2차)
@@ -214,8 +214,8 @@ git diff "${LAST_PUSH}"
 - change 2
 ```
 
-규칙:
+Rules:
 
-- 몇 번째 업데이트인지 명시한다. 예: `2차`, `3차`.
-- 변경 성격이 달라졌으면 PR 유형 체크박스도 업데이트한다.
-- 기존 사용자가 작성한 문구는 보존하고 필요한 부분만 덧붙인다.
+- Indicate the update iteration, such as `2차` or `3차`.
+- Update PR type checkboxes if the nature of the change has changed.
+- Preserve user-written text in the existing PR body and append only what is necessary.

@@ -1,8 +1,8 @@
 # Project Overview
 
-K-Beauty client는 사용자의 피부 고민과 선호를 바탕으로 K-Beauty 제품 추천 경험을 제공하는 서비스입니다.
+K-Beauty client is a service that provides K-Beauty product recommendations based on each user's skin concerns and preferences.
 
-온보딩, 피부 설문, 제품 탐색, 추천 결과 화면을 중심으로 구성하며, 모바일 우선 UI를 기준으로 개발합니다.
+The product focuses on onboarding, skin surveys, product discovery, and recommendation result screens, with a mobile-first UI.
 
 ## Tech Stack
 
@@ -21,7 +21,7 @@ K-Beauty client는 사용자의 피부 고민과 선호를 바탕으로 K-Beauty
 
 ## Project Structure
 
-프로젝트는 React Router 7 framework mode를 기준으로 `app`, `features`, `shared` 레이어로 나눕니다. 자세한 아키텍처와 배치 규칙은 `.claude/rules/architecture.md`를 참고합니다.
+The project is organized around React Router 7 framework mode and is split into `app`, `features`, and `shared` layers. For detailed architecture and placement rules, refer to `.claude/rules/architecture.md`.
 
 ```text
 src/

@@ -1,29 +1,29 @@
 # Architecture
 
-K-Beauty client는 React Router 7 framework mode를 기반으로 구성합니다.
+The K-Beauty client is built on React Router 7 framework mode.
 
-최상위 코드는 `app`, `features`, `shared` 3개 레이어로 나누며, 라우팅과 앱 설정은 `app`, 도메인 기능은 `features`, 여러 기능에서 재사용하는 코드는 `shared`에 둡니다.
+Top-level source code is split into three layers: `app`, `features`, and `shared`. Routing and application setup belong in `app`, domain-specific functionality belongs in `features`, and code reused across multiple features belongs in `shared`.
 
 ## Folder Structure
 
 ```text
 src/
   app/                          # React Router framework mode app layer
-    routes/                     # 실제 URL 경로와 연결되는 route files
+    routes/                     # Route files connected to actual URL paths
       onboarding/
         index.tsx
-    layouts/                    # 라우트/앱 레이아웃 컴포넌트
-    providers/                  # React Query, 전역 상태 Provider 등 앱 전역 Provider
+    layouts/                    # Route/app layout components
+    providers/                  # App-wide providers such as React Query and global state providers
     styles/
-      global.css                # 전역 CSS, Tailwind, shadcn 스타일, design tokens
-    root.tsx                    # HTML 문서 구조와 전역 스크립트 설정
-    routes.ts                   # React Router 라우트 설정
+      global.css                # Global CSS, Tailwind, shadcn styles, design tokens
+    root.tsx                    # HTML document structure and global scripts
+    routes.ts                   # React Router route configuration
 
-  features/                     # 도메인/기능 단위 모듈
+  features/                     # Domain/feature modules
     onboarding/
-      ui/                       # 화면에 보이는 feature 컴포넌트
-      model/                    # 상태, store, feature 내부 타입, 데이터 흐름
-      lib/                      # 계산, 변환, 검증 등 순수 함수
+      ui/                       # Feature components rendered on screen
+      model/                    # State, stores, feature-local types, data flow
+      lib/                      # Pure functions for calculation, transformation, validation
     survey/
       ui/
       model/
@@ -37,74 +37,74 @@ src/
       model/
       lib/
 
-  shared/                       # 여러 feature에서 재사용되는 공통 코드
-    apis/                       # 공통 API 클라이언트, axios 인스턴스
+  shared/                       # Shared code reused across features
+    apis/                       # Shared API clients, axios instances
     assets/
-      icons/                    # SVG 아이콘, 정적 아이콘 에셋
-        index.ts                # 아이콘 re-export
-    constants/                  # 앱 전역 상수
-    hooks/                      # 여러 feature에서 재사용되는 공통 hook
-    mocks/                      # mock 데이터, MSW 핸들러 등
-    stores/                     # 앱 전역 상태 store
-    types/                      # 여러 feature에서 공유하는 타입
-    ui/                         # shadcn/Base UI 기반 공통 UI 컴포넌트
-    utils/                      # 공통 유틸 함수
+      icons/                    # SVG icons and static icon assets
+        index.ts                # Icon re-exports
+    constants/                  # App-wide constants
+    hooks/                      # Shared hooks reused across features
+    mocks/                      # Mock data, MSW handlers, etc.
+    stores/                     # App-wide Zustand stores
+    types/                      # Types shared across features
+    ui/                         # Shared UI components based on shadcn/Base UI conventions
+    utils/                      # Shared utility functions
 ```
 
 ## Core Rules
 
 ### Layer Responsibilities
 
-- `app/`은 라우팅, 앱 부트스트랩, 전역 provider, 전역 스타일만 담당합니다.
-- `features/`는 도메인별 화면 조각과 해당 기능 내부의 상태/타입/순수 로직을 담당합니다.
-- `shared/`는 여러 feature에서 재사용되는 코드만 둡니다.
+- `app/` is responsible only for routing, app bootstrap, app-wide providers, and global styles.
+- `features/` owns domain-specific UI pieces, feature-local state/types, and pure logic.
+- `shared/` contains only code reused by multiple features.
 
 ### Component Placement
 
-- 특정 도메인에서만 쓰는 컴포넌트 → `features/{feature}/ui/`
-- 여러 feature에서 재사용하는 UI → `shared/ui/`
-- 라우트와 직접 연결되는 페이지 컴포넌트 → `app/routes/`
-- 앱 전체 레이아웃 → `app/layouts/`
+- Components used only in one domain → `features/{feature}/ui/`
+- UI reused across multiple features → `shared/ui/`
+- Page components directly connected to routes → `app/routes/`
+- App-wide layouts → `app/layouts/`
 
 ### Feature Folder Convention
 
-각 feature는 필요한 범위에서 아래 구조를 사용합니다.
+Use this structure for each feature as needed.
 
 ```text
 features/{feature}/
-  ui/       # 화면에 렌더링되는 컴포넌트
-  model/    # 상태, store, feature 내부 타입, 데이터 흐름
-  lib/      # 계산, 변환, 검증 등 순수 함수
+  ui/       # Components rendered on screen
+  model/    # State, stores, feature-local types, data flow
+  lib/      # Pure functions for calculation, transformation, validation
 ```
 
-- `ui/`에서 서버/API 호출 세부 구현을 직접 늘리지 않습니다.
-- `lib/`는 React에 의존하지 않는 순수 로직을 우선합니다.
-- feature 내부에서만 쓰는 타입은 `model/`에 두고, 여러 feature가 공유하면 `shared/types/`로 올립니다.
+- Do not grow detailed server/API implementation inside `ui/`.
+- Prefer React-independent pure logic in `lib/`.
+- Keep feature-only types in `model/`; move types shared by multiple features to `shared/types/`.
 
 ### Shared Folder Convention
 
-- `shared/apis/` — 공통 API 클라이언트, axios 인스턴스, 여러 feature에서 공유하는 API helpers
-- `shared/assets/` — 이미지, 아이콘, SVG 등 정적 에셋
-- `shared/constants/` — 앱 전역 상수
-- `shared/hooks/` — 여러 feature에서 재사용하는 custom hook
-- `shared/mocks/` — mock 데이터, MSW 핸들러 등
-- `shared/stores/` — 앱 전역 Zustand store
-- `shared/types/` — 여러 feature에서 공유하는 TypeScript 타입
-- `shared/ui/` — 공통 UI 컴포넌트
-- `shared/utils/` — 공통 유틸 함수
+- `shared/apis/` — shared API clients, axios instances, API helpers reused across features
+- `shared/assets/` — static assets such as images, icons, and SVGs
+- `shared/constants/` — app-wide constants
+- `shared/hooks/` — custom hooks reused across features
+- `shared/mocks/` — mock data, MSW handlers, etc.
+- `shared/stores/` — app-wide Zustand stores
+- `shared/types/` — TypeScript types shared across features
+- `shared/ui/` — shared UI components
+- `shared/utils/` — shared utility functions
 
 ### Routing
 
-- 라우트 설정은 `src/app/routes.ts`에서 관리합니다.
-- 실제 URL과 연결되는 route file은 `src/app/routes/` 아래에 둡니다.
-- React Router 7 framework mode의 파일/설정 방식을 따릅니다.
-- 현재 앱은 `react-router.config.ts`에서 `ssr: false`로 SPA 모드로 동작합니다.
+- Route configuration is managed in `src/app/routes.ts`.
+- Route files connected to actual URL paths live under `src/app/routes/`.
+- Follow React Router 7 framework mode conventions for route files and configuration.
+- The app currently runs in SPA mode with `ssr: false` in `react-router.config.ts`.
 
 ### Re-export
 
-- 공통 UI 컴포넌트가 늘어나면 `shared/ui/index.ts`를 만들어 re-export하는 방식을 우선합니다.
-- 아이콘은 `shared/assets/icons/index.ts`에서 re-export합니다.
-- route files는 barrel export 대상이 아닙니다.
+- When shared UI components grow, prefer adding `shared/ui/index.ts` for re-exports.
+- Icons are re-exported from `shared/assets/icons/index.ts`.
+- Route files are not barrel-export targets.
 
 ```ts
 // Good
@@ -116,7 +116,7 @@ import ProductTonerIcon from '@/shared/assets/icons/product_toner.svg?react';
 
 ### Data Flow
 
-- Server state(fetch/mutate) → `@tanstack/react-query` + `shared/apis/`
+- Server state (fetch/mutate) → `@tanstack/react-query` + `shared/apis/`
 - Client global state → Zustand (`shared/stores/`)
 - Feature-local state and types → `features/{feature}/model/`
 - Local component state → `useState`
@@ -124,6 +124,6 @@ import ProductTonerIcon from '@/shared/assets/icons/product_toner.svg?react';
 
 ### Design Tokens
 
-- 전역 design token은 `src/app/styles/global.css`에서 관리합니다.
-- 색상, typography, gradient 등은 token class를 우선 사용합니다.
-- hardcoded color/spacing/typography value가 필요하면 먼저 사용자에게 새 토큰 추가 여부를 확인합니다.
+- Global design tokens are managed in `src/app/styles/global.css`.
+- Prefer token classes for color, typography, gradients, and related styling.
+- Ask the user before adding a new token when a hardcoded color, spacing, or typography value seems necessary.

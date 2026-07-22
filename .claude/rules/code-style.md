@@ -4,8 +4,8 @@
 
 ### Type vs Interface
 
-- Props, object shapes → `interface`를 우선 사용합니다. 확장 가능성을 열어둡니다.
-- Union, mapped type, utility type, tuple → `type`을 사용합니다.
+- Props and object shapes → prefer `interface` so they remain extendable.
+- Unions, mapped types, utility types, and tuples → use `type`.
 
 ```ts
 // Good
@@ -23,8 +23,8 @@ type ButtonProps = {
 
 ### Type Export
 
-- 일반 컴포넌트와 유틸은 named export를 기본으로 합니다.
-- route/root 같은 framework entry file은 React Router 요구사항에 따라 default export를 허용합니다.
+- Use named exports by default for regular components and utilities.
+- Default exports are allowed for framework entry files required by React Router.
   - Includes: `src/app/root.tsx`, `src/app/routes/**/index.tsx`, route module files
 
 ```tsx
@@ -40,18 +40,18 @@ export default function OnboardingRoute() {
 
 ### React 19
 
-- React 19 기준으로 작성합니다.
-- React Compiler가 활성화되어 있으므로 대부분의 수동 memoization은 불필요합니다.
-- 새 컴포넌트에 `forwardRef`를 도입하지 않습니다. `ref`가 필요하면 일반 prop처럼 받는 방식을 우선합니다.
-- `useMemo`, `useCallback`, `React.memo`는 실제 성능 문제가 있거나 참조 안정성이 필요한 경우에만 사용합니다.
-- `useRef`는 DOM 접근, imperative handle, 렌더링과 무관한 mutable value처럼 명확한 목적이 있을 때만 사용합니다. 단순 캐싱이나 불필요한 재렌더 회피 목적으로 추가하지 않습니다.
+- Write code for React 19.
+- React Compiler is enabled, so most manual memoization is unnecessary.
+- Do not introduce `forwardRef` in new components. If a `ref` is needed, prefer receiving it as a regular prop.
+- Use `useMemo`, `useCallback`, and `React.memo` only when there is a real performance issue or a clear need for reference stability.
+- Use `useRef` only for clear purposes such as DOM access, imperative handles, or mutable values that do not participate in rendering. Do not add it for simple caching or unnecessary re-render avoidance.
 
 ## Import
 
 ### Path Alias
 
-- `src` 내부 모듈 import는 `@/` alias를 우선 사용합니다.
-- 같은 폴더의 아주 가까운 파일이 아니면 `../` 상대 경로 import를 피합니다.
+- Prefer the `@/` alias for imports from inside `src`.
+- Avoid `../` relative imports unless the file is very close in the same folder.
 
 ```ts
 // Good
@@ -64,7 +64,7 @@ import { cn } from '../../shared/utils/cn';
 
 ### Import Order
 
-Prettier와 ESLint의 정렬 결과를 따릅니다. 수동 정렬이 필요하면 아래 순서를 기준으로 합니다.
+Follow Prettier and ESLint output. When manual ordering is needed, use this order:
 
 1. React
 2. external libraries
@@ -126,14 +126,14 @@ import { cn } from '@/shared/utils/cn';
 
 - Color tokens are defined in `src/app/styles/global.css`.
 - Prefer semantic tokens such as `text-text-primary`, `bg-background-canvas`, `border-border-subtle`.
-- Use primitive tokens such as `bg-primary-500` only when a semantic token does not fit the purpose.
+- Use primitive tokens such as `bg-primary-500` only when no semantic token fits the purpose.
 - Ask the user before adding or changing global tokens.
 
 ## Responsive
 
-Mobile first로 작성합니다.
+Write mobile-first styles.
 
-현재 프로젝트는 고정 모바일 앱 폭(`--app-mobile-width`)을 기준으로 시작합니다. breakpoint token이 추가되기 전까지 임의의 custom breakpoint를 만들지 않습니다.
+The current project starts from a fixed mobile app width (`--app-mobile-width`). Do not invent custom breakpoints until breakpoint tokens are added.
 
 ```tsx
 // Good
