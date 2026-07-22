@@ -7,12 +7,12 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        pink: 'border-transparent bg-primary-pink text-white',
-        yellow: 'border-transparent bg-primary-yellow text-primary-yellow-badge-text',
-        mint: 'border-transparent bg-primary-mint-badge text-primary-mint-badge-text',
-        lavender: 'border-transparent bg-primary-lavender text-primary-lavender-badge-text',
-        brown: 'border-transparent bg-primary-brown-badge text-primary-brown-badge-text',
-        outline: 'border-primary-outline bg-transparent text-primary-outline-badge-text',
+        pink: 'border-transparent bg-action-primary text-text-inverse',
+        yellow: 'border-transparent bg-accent-apricot text-text-primary',
+        mint: 'border-transparent bg-badge-mint-soft text-text-mint',
+        lavender: 'border-transparent bg-accent-lavender text-text-lavender',
+        brown: 'border-transparent bg-badge-neutral text-text-secondary',
+        outline: 'border-border-action-soft bg-transparent text-text-secondary',
       },
     },
     defaultVariants: {

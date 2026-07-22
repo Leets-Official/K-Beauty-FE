@@ -4,24 +4,24 @@ import { cn } from '@/shared/utils/cn';
 
 const bottleToneMap = {
   mint: {
-    fill: 'var(--primary-mint)',
-    label: 'var(--surface)',
-    cap: 'var(--text-subtle)',
+    fill: 'var(--accent-mint)',
+    label: 'var(--surface-default)',
+    cap: 'var(--text-muted)',
   },
   lavender: {
-    fill: 'var(--primary-lavender)',
-    label: 'var(--surface)',
-    cap: 'var(--text-subtle)',
+    fill: 'var(--accent-lavender)',
+    label: 'var(--surface-default)',
+    cap: 'var(--text-muted)',
   },
   apricot: {
-    fill: 'var(--primary-yellow)',
-    label: 'var(--surface)',
-    cap: 'var(--text-subtle)',
+    fill: 'var(--accent-apricot)',
+    label: 'var(--surface-default)',
+    cap: 'var(--text-muted)',
   },
   coral: {
-    fill: 'var(--primary-pink)',
-    label: 'var(--surface)',
-    cap: 'var(--text-subtle)',
+    fill: 'var(--action-primary)',
+    label: 'var(--surface-default)',
+    cap: 'var(--text-muted)',
   },
 } as const;
 

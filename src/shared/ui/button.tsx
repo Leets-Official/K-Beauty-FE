@@ -8,13 +8,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-button-gradient text-white active:transition-none active:bg-none active:bg-action-active disabled:bg-none disabled:bg-action-disabled-bg disabled:text-action-disabled-text data-[disabled]:bg-none data-[disabled]:bg-action-disabled-bg data-[disabled]:text-action-disabled-text',
+          'bg-button-gradient text-text-inverse active:transition-none active:bg-none active:bg-action-active disabled:bg-none disabled:bg-action-disabled disabled:text-text-muted data-[disabled]:bg-none data-[disabled]:bg-action-disabled data-[disabled]:text-text-muted',
 
         secondary:
-          'border-brand text-brand bg-transparent active:border-action-active active:text-action-active active:bg-action-secondary-active-bg disabled:border-action-disabled-bg disabled:text-action-disabled-text disabled:bg-transparent data-[disabled]:border-action-disabled-bg data-[disabled]:text-action-disabled-text data-[disabled]:bg-transparent',
+          'border-border-action text-action-primary bg-transparent active:border-action-active active:text-action-active active:bg-background-subtle disabled:border-border-disabled disabled:text-text-muted disabled:bg-transparent data-[disabled]:border-border-disabled data-[disabled]:text-text-muted data-[disabled]:bg-transparent',
 
         ghost:
-          'text-text-ghost bg-transparent active:text-action-active disabled:text-action-disabled-text data-[disabled]:text-action-disabled-text',
+          'text-text-secondary bg-transparent active:text-action-active disabled:text-text-muted data-[disabled]:text-text-muted',
       },
     },
     defaultVariants: {

@@ -16,46 +16,46 @@ import { cn } from '@/shared/utils/cn';
 type SvgIcon = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 const blobBasePalette = {
-  face: 'var(--text)',
-  shadow: 'var(--text-subtle)',
+  face: 'var(--text-primary)',
+  shadow: 'var(--text-muted)',
 } as const;
 
 const blobVariantMap = {
   radiant: {
     ...blobBasePalette,
-    fill: 'var(--primary-pink)',
-    highlight: 'var(--surface-tint)',
-    detail: 'var(--primary-yellow)',
+    fill: 'var(--primary-500)',
+    highlight: 'var(--surface-petal)',
+    detail: 'var(--accent-apricot)',
   },
   apricot: {
     ...blobBasePalette,
-    fill: 'var(--primary-yellow)',
-    highlight: 'var(--surface)',
-    detail: 'var(--primary-pink)',
+    fill: 'var(--accent-apricot)',
+    highlight: 'var(--surface-default)',
+    detail: 'var(--action-primary)',
   },
   mint: {
     ...blobBasePalette,
-    fill: 'var(--primary-mint)',
-    highlight: 'var(--surface)',
-    detail: 'var(--primary-pink)',
+    fill: 'var(--accent-mint)',
+    highlight: 'var(--surface-default)',
+    detail: 'var(--action-primary)',
   },
   lavender: {
     ...blobBasePalette,
-    fill: 'var(--primary-lavender)',
-    highlight: 'var(--surface)',
-    detail: 'var(--primary-pink)',
+    fill: 'var(--accent-lavender)',
+    highlight: 'var(--surface-default)',
+    detail: 'var(--action-primary)',
   },
   petal: {
     ...blobBasePalette,
-    fill: 'var(--surface-tint)',
-    highlight: 'var(--surface)',
-    detail: 'var(--primary-mint)',
+    fill: 'var(--surface-petal)',
+    highlight: 'var(--surface-default)',
+    detail: 'var(--accent-mint)',
   },
   warm: {
     ...blobBasePalette,
-    fill: 'var(--surface-soft)',
-    highlight: 'var(--surface)',
-    detail: 'var(--primary-pink)',
+    fill: 'var(--background-subtle)',
+    highlight: 'var(--surface-default)',
+    detail: 'var(--action-primary)',
   },
 } as const;
 
@@ -105,7 +105,7 @@ function resolveDetailColor(
 ): string {
   if (detailColor) return detailColor;
   if (detail === 'drop') return palette.fill;
-  if (detail === 'bubble') return 'var(--surface)';
+  if (detail === 'bubble') return 'var(--surface-default)';
   return palette.detail;
 }
 
