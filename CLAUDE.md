@@ -76,13 +76,13 @@ export { Component, variants, type Props };
 ## Assets
 
 - Local SVG icons live in `src/shared/assets/icons/`.
-- Use SVGR imports when a component needs to render an SVG as React:
+- Components should import icons from `src/shared/assets/icons/index.ts` re-exports:
 
 ```tsx
-import Icon from '@/shared/assets/icons/example.svg?react';
+import { ProductTonerIcon } from '@/shared/assets/icons';
 ```
 
-- Shared icon exports should be added to `src/shared/assets/icons/index.ts` when needed.
+- Direct `*.svg?react` imports are reserved for the icon barrel file itself. Add shared icon exports to `src/shared/assets/icons/index.ts` when needed.
 
 ## Commands
 

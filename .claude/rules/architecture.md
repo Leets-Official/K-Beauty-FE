@@ -103,7 +103,8 @@ features/{feature}/
 ### Re-export
 
 - When shared UI components grow, prefer adding `shared/ui/index.ts` for re-exports.
-- Icons are re-exported from `shared/assets/icons/index.ts`.
+- Icons must be re-exported from `shared/assets/icons/index.ts`.
+- Direct `*.svg?react` imports should be used only inside the icon barrel file; application code should import from `@/shared/assets/icons`.
 - Route files are not barrel-export targets.
 
 ```ts

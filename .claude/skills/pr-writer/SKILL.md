@@ -57,13 +57,23 @@ Do not rename template headings, separators, or checkbox labels.
 Find the base branch and analyze the current branch changes.
 
 ```bash
-BASE_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
-git diff "origin/${BASE_BRANCH}"...HEAD --stat
-git log "origin/${BASE_BRANCH}"...HEAD --oneline
-git diff "origin/${BASE_BRANCH}"...HEAD
+BASE_REF=""
+for CANDIDATE in "$(git remote show origin 2>/dev/null | sed -n '/HEAD branch/s/.*: //p')" develop main; do
+  if [ -n "${CANDIDATE}" ] && git rev-parse --verify "origin/${CANDIDATE}" >/dev/null 2>&1; then
+    BASE_REF="origin/${CANDIDATE}"
+    break
+  fi
+done
+if [ -z "${BASE_REF}" ]; then
+  BASE_REF="HEAD~1"
+fi
+
+git diff "${BASE_REF}"...HEAD --stat 2>/dev/null || git diff "${BASE_REF}" HEAD --stat
+git log "${BASE_REF}"..HEAD --oneline
+git diff "${BASE_REF}"...HEAD 2>/dev/null || git diff "${BASE_REF}" HEAD
 ```
 
-If `origin/HEAD` cannot be determined, choose a reasonable base in this order: `origin/develop`, `origin/main`, then `HEAD~1`.
+The command must actually verify each candidate base branch. Use `HEAD~1` only when no remote base branch is available.
 
 Check for:
 
