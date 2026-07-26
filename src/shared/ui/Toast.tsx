@@ -93,7 +93,7 @@ function ToastList({ className }: Pick<ToastProviderProps, 'className'>) {
               toast={toastItem}
               swipeDirection={['down', 'right']}
               className={cn(
-                'text-text-primary pointer-events-auto grid w-full grid-cols-[auto_1fr] items-start gap-4 rounded-3xl border-2 px-6 py-5 shadow-sm transition-[opacity,transform] duration-200 data-[ending-style]:translate-y-2 data-[ending-style]:opacity-0 data-[starting-style]:translate-y-2 data-[starting-style]:opacity-0',
+                'text-text-primary pointer-events-auto grid w-full grid-cols-[auto_1fr] items-start gap-4 rounded-3xl border-2 px-6 py-5 shadow-sm transition-[opacity,transform] duration-200 data-[ending-style]:translate-y-2 data-[ending-style]:opacity-0 data-[limited]:hidden data-[starting-style]:translate-y-2 data-[starting-style]:opacity-0',
                 config.rootClassName,
               )}
               data-slot="toast"
