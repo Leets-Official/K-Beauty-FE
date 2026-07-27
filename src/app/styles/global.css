@@ -158,6 +158,7 @@
   --color-border-disabled: var(--border-disabled);
   --color-border-subtle: var(--border-subtle);
   --color-surface-default: var(--surface-default);
+  --color-surface-candidate: var(--surface-candidate);
   --color-surface-petal: var(--surface-petal);
   --color-text-inverse: var(--text-inverse);
   --color-text-lavender: var(--text-lavender);
@@ -387,6 +388,7 @@
   --border-disabled: var(--neutral-300);
   --border-subtle: var(--alpha-primary-15);
   --surface-default: var(--neutral-0);
+  --surface-candidate: #fafafa;
   --surface-petal: var(--primary-100);
   --text-inverse: var(--neutral-0);
   --text-lavender: var(--lavender-700);
