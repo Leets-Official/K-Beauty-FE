@@ -28,7 +28,7 @@ export const ONBOARDING_SLIDES = [
     character: {
       size: 136,
       variant: 'lavender',
-      detail: 'leaf',
+      detail: 'none',
       expression: 'happy',
     },
   },
