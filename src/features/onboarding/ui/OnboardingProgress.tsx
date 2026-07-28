@@ -8,7 +8,7 @@ interface OnboardingProgressProps {
 
 function OnboardingProgress({ currentIndex, total, className }: OnboardingProgressProps) {
   return (
-    <ol className={cn('flex justify-center gap-1', className)} aria-label="Onboarding progress">
+    <ol className={cn('flex justify-center gap-1', className)} aria-label="온보딩 진행 상태">
       {Array.from({ length: total }, (_, index) => (
         <li key={index}>
           <span
