@@ -17,12 +17,12 @@ import { BookOpenIcon, EyeIcon, EyeOffIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 
 const RESEARCH_ICONS: Record<ResearchPreference, SurveyOptionIconConfig> = {
-  OFTEN: {
+  FREQUENTLY: {
     Icon: BookOpenIcon,
     containerClassName: 'bg-lavender-100/70',
     iconClassName: 'text-text-lavender',
   },
-  SOMETIMES: {
+  OCCASIONALLY: {
     Icon: EyeIcon,
     containerClassName: 'bg-mint-100/70',
     iconClassName: 'text-accent-mint',

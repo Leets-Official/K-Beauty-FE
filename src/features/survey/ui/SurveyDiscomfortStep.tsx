@@ -33,12 +33,12 @@ const DISCOMFORT_ICONS: Record<ProductDiscomfortType, SurveyOptionIconConfig> = 
     containerClassName: 'bg-primary-100/60',
     iconClassName: 'text-action-primary',
   },
-  OILY: {
+  OILY_TEXTURE: {
     Icon: LayersIcon,
     containerClassName: 'bg-neutral-150/80',
     iconClassName: 'text-text-muted',
   },
-  EXFOLIATING: {
+  EXFOLIATION: {
     Icon: FlaskConicalIcon,
     containerClassName: 'bg-mint-100/70',
     iconClassName: 'text-accent-mint',

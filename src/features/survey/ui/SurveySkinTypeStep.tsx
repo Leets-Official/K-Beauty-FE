@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 import { getSkinTypeNextRoute } from '@/features/survey/lib/getNextRoute';
 import { SKIN_TYPE_OPTIONS, type SkinType } from '@/features/survey/model/skinType';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { SURVEY_ROUTES } from '@/features/survey/model/surveyRoutes';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SkinTypeGuideBottomSheet } from '@/features/survey/ui/SkinTypeGuideBottomSheet';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
@@ -72,7 +71,7 @@ function SurveySkinTypeStep() {
   const handleRecommendAsUnknown = () => {
     setSkinType('UNKNOWN');
     setIsGuideOpen(false);
-    navigate(SURVEY_ROUTES.skinType);
+    navigate(getSkinTypeNextRoute('recommend'));
   };
 
   return (

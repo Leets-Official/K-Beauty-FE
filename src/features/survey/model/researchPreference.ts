@@ -1,4 +1,4 @@
-export type ResearchPreference = 'OFTEN' | 'SOMETIMES' | 'RARELY';
+export type ResearchPreference = 'FREQUENTLY' | 'OCCASIONALLY' | 'RARELY';
 
 export interface ResearchPreferenceOption {
   value: ResearchPreference;
@@ -8,12 +8,12 @@ export interface ResearchPreferenceOption {
 
 export const RESEARCH_PREFERENCE_OPTIONS: ResearchPreferenceOption[] = [
   {
-    value: 'OFTEN',
+    value: 'FREQUENTLY',
     label: '자주 찾아봐요',
     caption: '성분이나 리뷰를 꼼꼼히 확인해요',
   },
   {
-    value: 'SOMETIMES',
+    value: 'OCCASIONALLY',
     label: '가끔 봐요',
     caption: '마음에 드는 제품이 있을 때 확인해요',
   },

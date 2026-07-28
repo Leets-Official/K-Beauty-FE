@@ -228,6 +228,7 @@ function BottomSheetDescription({
 function BottomSheetClose({ children, className, ...props }: ComponentProps<typeof Dialog.Close>) {
   return (
     <Dialog.Close
+      aria-label={children == null ? '바텀시트 닫기' : undefined}
       className={cn(
         'text-text-secondary -mt-2 -mr-2 flex size-10 shrink-0 items-center justify-center rounded-full',
         className,

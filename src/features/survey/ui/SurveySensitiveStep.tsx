@@ -2,6 +2,7 @@ import { CircleAlert, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 import { getSensitiveNextRoute } from '@/features/survey/lib/getNextRoute';
+import { SENSITIVITY_OPTIONS, type Sensitivity } from '@/features/survey/model/sensitivity';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
@@ -12,30 +13,18 @@ import {
 import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
 import { Button } from '@/shared/ui/button';
 
-interface SensitiveOption extends SurveyOptionIconConfig {
-  value: boolean;
-  label: string;
-  caption: string;
-}
-
-const SENSITIVE_OPTIONS = [
-  {
-    value: true,
-    label: '네, 쉽게 예민해져요',
-    caption: '트러블이나 자극을 자주 느껴요',
+const SENSITIVITY_ICONS: Record<Sensitivity, SurveyOptionIconConfig> = {
+  SENSITIVE_YES: {
     Icon: CircleAlert,
     containerClassName: 'bg-primary-100/60',
     iconClassName: 'text-action-primary',
   },
-  {
-    value: false,
-    label: '아니요, 괜찮아요',
-    caption: '웬만한 제품은 다 잘 맞아요',
+  SENSITIVE_NO: {
     Icon: ShieldCheck,
     containerClassName: 'bg-mint-100/70',
     iconClassName: 'text-accent-mint',
   },
-] as const satisfies readonly SensitiveOption[];
+};
 
 function SurveySensitiveStep() {
   const navigate = useNavigate();
@@ -63,18 +52,18 @@ function SurveySensitiveStep() {
         <Button
           className="w-full"
           disabled={sensitive === null}
-          onClick={() => navigate(getSensitiveNextRoute(sensitive ?? false))}
+          onClick={() => sensitive && navigate(getSensitiveNextRoute(sensitive))}
         >
           다음
         </Button>
       }
     >
-      {SENSITIVE_OPTIONS.map((option) => (
+      {SENSITIVITY_OPTIONS.map((option) => (
         <SurveyOptionCard
-          key={String(option.value)}
+          key={option.value}
           label={option.label}
           caption={option.caption}
-          icon={<SurveyOptionIcon {...option} />}
+          icon={<SurveyOptionIcon {...SENSITIVITY_ICONS[option.value]} />}
           selected={sensitive === option.value}
           onSelect={() => setSensitive(option.value)}
           variant="large"

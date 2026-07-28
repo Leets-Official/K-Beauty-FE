@@ -1,3 +1,4 @@
+import type { Sensitivity } from '@/features/survey/model/sensitivity';
 import { SURVEY_ROUTES, type SurveyRoute } from '@/features/survey/model/surveyRoutes';
 
 export type SkinTypeChoice = 'recommend' | 'detail';
@@ -12,8 +13,8 @@ export function getSkinTypeNextRoute(choice: SkinTypeChoice): SurveyRoute {
 }
 
 // 예민 여부: 예 → 불편했던 제품 유형, 아니오 → 성분/리뷰 질문
-export function getSensitiveNextRoute(sensitive: boolean): SurveyRoute {
-  return sensitive ? SURVEY_ROUTES.discomfort : SURVEY_ROUTES.research;
+export function getSensitiveNextRoute(sensitive: Sensitivity): SurveyRoute {
+  return sensitive === 'SENSITIVE_YES' ? SURVEY_ROUTES.discomfort : SURVEY_ROUTES.research;
 }
 
 export function getDiscomfortNextRoute(): SurveyRoute {
