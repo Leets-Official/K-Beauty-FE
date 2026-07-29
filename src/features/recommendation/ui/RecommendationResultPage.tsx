@@ -49,7 +49,7 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
         </div>
       </section>
 
-      <RecommendationActions className="px-4 pb-8" />
+      <RecommendationActions steps={steps} className="px-4 pb-8" />
     </main>
   );
 }
