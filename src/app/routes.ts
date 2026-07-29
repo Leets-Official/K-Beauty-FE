@@ -2,7 +2,7 @@ import { index, route, type RouteConfig } from '@react-router/dev/routes';
 
 export default [
   index('routes/onboarding/index.tsx'),
-  route('survey/concern', 'routes/survey/concern.tsx'),
+  route('survey', 'routes/survey/concern.tsx'),
   route('survey/skin-type', 'routes/survey/skin-type.tsx'),
   route('survey/sensitive', 'routes/survey/sensitive.tsx'),
   route('survey/discomfort', 'routes/survey/discomfort.tsx'),
