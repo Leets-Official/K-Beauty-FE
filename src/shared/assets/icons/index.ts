@@ -1,8 +1,11 @@
+export { default as AlertCircleIcon } from './alert_circle.svg?react';
 export { default as ArrowLeftRightIcon } from './arrow_left_right.svg?react';
 export { default as BookOpenIcon } from './book_open.svg?react';
+export { default as CheckCircleIcon } from './check_circle.svg?react';
 export { default as CircleHelpIcon } from './circle_help.svg?react';
 export { default as CirclesIcon } from './circles.svg?react';
 export { default as CloseIcon } from './close.svg?react';
+export { default as CosmetchMarkIcon } from './cosmetch_mark.svg?react';
 export { default as DropletIcon } from './droplet.svg?react';
 export { default as DropletsIcon } from './droplets.svg?react';
 export { default as EyeIcon } from './eye.svg?react';
