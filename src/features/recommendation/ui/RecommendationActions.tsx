@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { formatRecommendationText } from '@/features/recommendation/lib/formatRecommendationText';
 import { CompareIcon, CopyIcon, ResetIcon } from '@/features/recommendation/ui/RecommendationIcons';
+import { RecommendationComparisonBottomSheet } from '@/features/recommendation/ui/RecommendationComparisonBottomSheet';
 import { Button } from '@/shared/ui/button';
 import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
@@ -14,6 +16,7 @@ interface RecommendationActionsProps extends React.ComponentProps<'div'> {
 
 function RecommendationActions({ className, steps, ...props }: RecommendationActionsProps) {
   const navigate = useNavigate();
+  const [isComparisonOpen, setIsComparisonOpen] = useState(false);
 
   async function copyRecommendation() {
     try {
@@ -36,7 +39,13 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
         추천 결과 텍스트 복사
       </Button>
 
-      <Button type="button" variant="secondary" className="bg-surface-default w-full">
+      <Button
+        type="button"
+        variant="secondary"
+        className="bg-surface-default w-full"
+        aria-haspopup="dialog"
+        onClick={() => setIsComparisonOpen(true)}
+      >
         <CompareIcon aria-hidden="true" />
         핵심 비교 정보 확인
       </Button>
@@ -50,6 +59,12 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
         <ResetIcon aria-hidden="true" />
         처음부터 다시 하기
       </Button>
+
+      <RecommendationComparisonBottomSheet
+        open={isComparisonOpen}
+        onOpenChange={setIsComparisonOpen}
+        steps={steps}
+      />
     </div>
   );
 }
