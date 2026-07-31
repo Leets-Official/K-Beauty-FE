@@ -157,6 +157,8 @@
   --color-border-action-soft: var(--border-action-soft);
   --color-border-disabled: var(--border-disabled);
   --color-border-subtle: var(--border-subtle);
+  --color-bottom-sheet-handle: var(--bottom-sheet-handle-color);
+  --color-overlay-scrim: var(--overlay-scrim);
   --color-surface-default: var(--surface-default);
   --color-surface-candidate: var(--surface-candidate);
   --color-surface-petal: var(--surface-petal);
@@ -201,7 +203,14 @@
   --color-background: var(--background);
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-bottom-sheet: var(--bottom-sheet-radius);
   --radius-full: 9999px;
+
+  /* Sizing tokens */
+  --spacing-bottom-sheet-handle-height: var(--bottom-sheet-handle-height);
+  --spacing-bottom-sheet-handle-touch-height: var(--bottom-sheet-handle-touch-height);
+  --spacing-bottom-sheet-handle-touch-width: var(--bottom-sheet-handle-touch-width);
+  --spacing-bottom-sheet-handle-width: var(--bottom-sheet-handle-width);
 }
 
 @utility typo-title1 {
@@ -387,6 +396,8 @@
   --border-action-soft: var(--alpha-primary-35);
   --border-disabled: var(--neutral-300);
   --border-subtle: var(--alpha-primary-15);
+  --bottom-sheet-handle-color: var(--neutral-300);
+  --overlay-scrim: rgb(0 0 0 / 35%);
   --surface-default: var(--neutral-0);
   --surface-candidate: #fafafa;
   --surface-petal: var(--primary-100);
@@ -429,6 +440,21 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* Bottom sheet */
+  --bottom-sheet-backdrop-duration: 200ms;
+  --bottom-sheet-bottom-padding: 24px;
+  --bottom-sheet-dismiss-distance: 120px;
+  --bottom-sheet-dismiss-velocity: 0.5;
+  --bottom-sheet-enter-duration: 300ms;
+  --bottom-sheet-flick-min-distance: 24px;
+  --bottom-sheet-handle-height: 4px;
+  --bottom-sheet-handle-touch-height: 44px;
+  --bottom-sheet-handle-touch-width: 72px;
+  --bottom-sheet-handle-width: 40px;
+  --bottom-sheet-max-height: 90dvh;
+  --bottom-sheet-radius: 28px;
+  --bottom-sheet-snap-duration: 200ms;
 }
 
 .dark {
