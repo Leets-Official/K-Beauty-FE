@@ -4,23 +4,30 @@ import { NoticeAlertIcon, UnassessedInfoIcon } from '@/shared/assets/icons';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { ProductBottle, type BottleTone } from '@/shared/ui/ProductBottle';
+import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
 const PRODUCT_TONES: BottleTone[] = ['mint', 'lavender', 'apricot'];
 
-interface ProductVisualProps {
+interface ProductVisualProps extends React.ComponentProps<'div'> {
   stepId: number;
   name: string;
 }
 
-function ProductVisual({ stepId, name }: ProductVisualProps) {
+function ProductVisual({ className, stepId, name, ...props }: ProductVisualProps) {
   const tone = PRODUCT_TONES[stepId - 1] ?? 'mint';
   const variant = stepId === 2 ? 'serum' : 'toner';
 
   return (
-    <div className="bg-background-subtle relative flex h-36 items-center justify-center overflow-hidden rounded-2xl">
+    <div
+      className={cn(
+        'bg-background-subtle relative flex h-36 items-center justify-center overflow-hidden rounded-2xl',
+        className,
+      )}
+      {...props}
+    >
       <div className="bg-surface-default/60 absolute -top-8 -left-5 size-28 rounded-full" />
       <div className="bg-accent-petal/50 absolute -right-4 -bottom-10 size-32 rounded-full" />
       <ProductBottle variant={variant} tone={tone} size={116} title={name} className="relative" />
@@ -165,6 +172,8 @@ function RecommendationCandidates({ candidates, onReplaceProduct }: Recommendati
 
 export {
   IngredientTags,
+  ProductVisual,
+  Rating,
   RecommendationCandidates,
   RecommendationEasyView,
   RecommendedProductSummary,

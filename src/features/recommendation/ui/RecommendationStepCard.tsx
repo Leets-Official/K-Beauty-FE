@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router';
+
 import { ChevronIcon } from '@/features/recommendation/ui/RecommendationIcons';
 import {
   IngredientTags,
@@ -26,6 +28,8 @@ function RecommendationStepCard({
   onReplaceProduct,
   ...props
 }: RecommendationStepCardProps) {
+  const navigate = useNavigate();
+
   return (
     <article
       data-slot="recommendation-step-card"
@@ -59,7 +63,11 @@ function RecommendationStepCard({
 
         <IngredientTags tags={product.tags} />
 
-        <Button type="button" className="w-full">
+        <Button
+          type="button"
+          className="w-full"
+          onClick={() => navigate(`/recommendation/product/${encodeURIComponent(product.id)}`)}
+        >
           자세히 보기
         </Button>
       </div>
