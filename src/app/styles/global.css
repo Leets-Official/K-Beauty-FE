@@ -66,6 +66,14 @@
   --caption1-line-height: 1.4;
   --caption2-size: 10px;
   --caption2-line-height: 1.4;
+  --title3-size: 24px;
+  --title3-line-height: 1.4;
+  --label1-size: 16px;
+  --label1-line-height: 1.4;
+  --body2-size: 16px;
+  --body2-line-height: 1.5;
+  --caption3-size: 12px;
+  --caption3-line-height: 1.4;
   --title-letter-spacing: -0.02em;
   --body-letter-spacing: -0.01em;
   --app-mobile-width: 430px;
@@ -105,7 +113,9 @@
   --color-mint-700: var(--mint-700);
   --color-lavender-100: var(--lavender-100);
   --color-lavender-500: var(--lavender-500);
+  --color-lavender-600: var(--lavender-600);
   --color-lavender-700: var(--lavender-700);
+  --color-orange-500: var(--orange-500);
   --color-brown-600: var(--brown-600);
   --color-brown-900: var(--brown-900);
   --color-alpha-primary-15: var(--alpha-primary-15);
@@ -157,6 +167,8 @@
   --color-border-action-soft: var(--border-action-soft);
   --color-border-disabled: var(--border-disabled);
   --color-border-subtle: var(--border-subtle);
+  --color-bottom-sheet-handle: var(--bottom-sheet-handle-color);
+  --color-overlay-scrim: var(--overlay-scrim);
   --color-surface-default: var(--surface-default);
   --color-surface-petal: var(--surface-petal);
   --color-text-inverse: var(--text-inverse);
@@ -198,9 +210,47 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 24px;
+  --radius-2xl: 26px;
+  --radius-bottom-sheet: var(--bottom-sheet-radius);
   --radius-full: 9999px;
+
+  /* Sizing tokens */
+  --spacing-bottom-sheet-handle-height: var(--bottom-sheet-handle-height);
+  --spacing-bottom-sheet-handle-touch-height: var(--bottom-sheet-handle-touch-height);
+  --spacing-bottom-sheet-handle-touch-width: var(--bottom-sheet-handle-touch-width);
+  --spacing-bottom-sheet-handle-width: var(--bottom-sheet-handle-width);
+  --spacing-check: 22px;
+  --spacing-control-lg: 60px;
+  --spacing-option-card: 88px;
+}
+
+@theme {
+  --animate-blob-pulse: blob-pulse 1.4s ease-in-out infinite;
+  --animate-orbit: orbit 1.8s linear infinite;
+  --animate-orbit-reverse: orbit 2.4s linear infinite reverse;
+
+  @keyframes blob-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @utility typo-title1 {
@@ -252,6 +302,34 @@
   letter-spacing: var(--body-letter-spacing);
 }
 
+@utility typo-caption3 {
+  font-size: var(--caption3-size);
+  line-height: var(--caption3-line-height);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--body-letter-spacing);
+}
+
+@utility typo-title3 {
+  font-size: var(--title3-size);
+  line-height: var(--title3-line-height);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--title-letter-spacing);
+}
+
+@utility typo-label1 {
+  font-size: var(--label1-size);
+  line-height: var(--label1-line-height);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--body-letter-spacing);
+}
+
+@utility typo-body2 {
+  font-size: var(--body2-size);
+  line-height: var(--body2-line-height);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--body-letter-spacing);
+}
+
 @utility bg-primary-gradient {
   background-image: var(--primary-gradient);
 }
@@ -295,7 +373,9 @@
   --mint-700: #3d8f8d;
   --lavender-100: #f2eaf7;
   --lavender-500: #e5d4ef;
+  --lavender-600: #c4a3d4;
   --lavender-700: #7b5ea7;
+  --orange-500: #f7a261;
   --brown-600: #955e3b;
   --brown-900: #3d2b1f;
   --alpha-primary-15: color-mix(in srgb, var(--primary-500) 15%, transparent);
@@ -386,6 +466,8 @@
   --border-action-soft: var(--alpha-primary-35);
   --border-disabled: var(--neutral-300);
   --border-subtle: var(--alpha-primary-15);
+  --bottom-sheet-handle-color: var(--neutral-300);
+  --overlay-scrim: rgb(0 0 0 / 35%);
   --surface-default: var(--neutral-0);
   --surface-petal: var(--primary-100);
   --text-inverse: var(--neutral-0);
@@ -427,6 +509,21 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* Bottom sheet */
+  --bottom-sheet-backdrop-duration: 200ms;
+  --bottom-sheet-bottom-padding: 24px;
+  --bottom-sheet-dismiss-distance: 120px;
+  --bottom-sheet-dismiss-velocity: 0.5;
+  --bottom-sheet-enter-duration: 300ms;
+  --bottom-sheet-flick-min-distance: 24px;
+  --bottom-sheet-handle-height: 4px;
+  --bottom-sheet-handle-touch-height: 44px;
+  --bottom-sheet-handle-touch-width: 72px;
+  --bottom-sheet-handle-width: 40px;
+  --bottom-sheet-max-height: 90dvh;
+  --bottom-sheet-radius: 28px;
+  --bottom-sheet-snap-duration: 200ms;
 }
 
 .dark {
