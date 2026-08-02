@@ -1,9 +1,11 @@
+import type { ComponentProps } from 'react';
+
 import { NoticeAlertIcon, UnassessedInfoIcon } from '@/shared/assets/icons';
 import { cn } from '@/shared/utils/cn';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
-interface RecommendationEasyViewProps extends React.ComponentProps<'div'> {
+interface RecommendationEasyViewProps extends ComponentProps<'div'> {
   product: RecommendationProduct;
 }
 

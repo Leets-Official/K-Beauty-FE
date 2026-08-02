@@ -1,10 +1,11 @@
+import type { ComponentProps } from 'react';
+
 import { Badge } from '@/shared/ui/badge';
 import { cn } from '@/shared/utils/cn';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
-interface IngredientTagsProps
-  extends React.ComponentProps<'div'>, Pick<RecommendationProduct, 'tags'> {
+interface IngredientTagsProps extends ComponentProps<'div'>, Pick<RecommendationProduct, 'tags'> {
   variant?: 'lavender' | 'brown';
 }
 

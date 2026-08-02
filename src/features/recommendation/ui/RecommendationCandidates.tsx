@@ -1,9 +1,11 @@
+import type { ComponentProps } from 'react';
+
 import { CandidateCard } from '@/features/recommendation/ui/CandidateCard';
 import { cn } from '@/shared/utils/cn';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
-interface RecommendationCandidatesProps extends React.ComponentProps<'div'> {
+interface RecommendationCandidatesProps extends ComponentProps<'div'> {
   candidates: RecommendationProduct[];
   onReplaceProduct: (productId: string) => void;
 }

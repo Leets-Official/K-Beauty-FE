@@ -1,9 +1,11 @@
+import type { ComponentProps } from 'react';
+
 import { ProductBottle, type BottleTone } from '@/shared/ui/ProductBottle';
 import { cn } from '@/shared/utils/cn';
 
 const PRODUCT_TONES: BottleTone[] = ['mint', 'lavender', 'apricot'];
 
-interface ProductVisualProps extends React.ComponentProps<'div'> {
+interface ProductVisualProps extends ComponentProps<'div'> {
   stepId: number;
   name: string;
 }

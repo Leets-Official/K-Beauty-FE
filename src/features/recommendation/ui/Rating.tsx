@@ -1,10 +1,12 @@
+import type { ComponentProps } from 'react';
+
 import { formatRatingStars } from '@/features/recommendation/lib/formatRatingStars';
 import { cn } from '@/shared/utils/cn';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
 interface RatingProps
-  extends React.ComponentProps<'div'>, Pick<RecommendationProduct, 'rating' | 'reviewCount'> {}
+  extends ComponentProps<'div'>, Pick<RecommendationProduct, 'rating' | 'reviewCount'> {}
 
 function Rating({ className, rating, reviewCount, ...props }: RatingProps) {
   return (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { formatRecommendationText } from '@/features/recommendation/lib/formatRecommendationText';
@@ -10,7 +10,7 @@ import { cn } from '@/shared/utils/cn';
 
 import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
 
-interface RecommendationActionsProps extends React.ComponentProps<'div'> {
+interface RecommendationActionsProps extends ComponentProps<'div'> {
   steps: RecommendationStep[];
 }
 

@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'react';
+
 import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
 import { Rating } from '@/features/recommendation/ui/Rating';
 import { SwapIcon } from '@/shared/assets/icons';
@@ -7,7 +9,7 @@ import { formatPrice } from '@/shared/utils/format';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
-interface CandidateCardProps extends React.ComponentProps<'article'> {
+interface CandidateCardProps extends ComponentProps<'article'> {
   product: RecommendationProduct;
   onReplace: () => void;
 }

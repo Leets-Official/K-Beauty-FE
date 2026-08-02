@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react';
 import { useNavigate } from 'react-router';
 
 import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
@@ -12,7 +13,7 @@ import { cn } from '@/shared/utils/cn';
 import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
 
 interface RecommendationStepCardProps
-  extends Omit<React.ComponentProps<'article'>, 'children' | 'id'>, RecommendationStep {
+  extends Omit<ComponentProps<'article'>, 'children' | 'id'>, RecommendationStep {
   onReplaceProduct: (candidateId: string) => void;
 }
 

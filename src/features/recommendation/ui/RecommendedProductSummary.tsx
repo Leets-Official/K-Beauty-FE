@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'react';
+
 import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
 import { Rating } from '@/features/recommendation/ui/Rating';
 import { SparkleIcon } from '@/shared/assets/icons';
@@ -6,7 +8,7 @@ import { formatPrice } from '@/shared/utils/format';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 
-interface RecommendedProductSummaryProps extends React.ComponentProps<'div'> {
+interface RecommendedProductSummaryProps extends ComponentProps<'div'> {
   stepId: number;
   product: RecommendationProduct;
 }

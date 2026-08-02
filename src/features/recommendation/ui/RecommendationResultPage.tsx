@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'react';
+
 import { RECOMMENDATION_STEPS } from '@/features/recommendation/model/recommendation';
 import { useRecommendationSteps } from '@/features/recommendation/model/useRecommendationSteps';
 import { RecommendationActions } from '@/features/recommendation/ui/RecommendationActions';
@@ -5,7 +7,7 @@ import { RecommendationStepCard } from '@/features/recommendation/ui/Recommendat
 import { BackIcon, SparkleIcon } from '@/shared/assets/icons';
 import { cn } from '@/shared/utils/cn';
 
-type RecommendationResultPageProps = React.ComponentProps<'main'>;
+type RecommendationResultPageProps = ComponentProps<'main'>;
 
 function RecommendationResultPage({ className, ...props }: RecommendationResultPageProps) {
   const { steps, replaceProduct } = useRecommendationSteps(RECOMMENDATION_STEPS);
