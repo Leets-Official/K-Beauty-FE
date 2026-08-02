@@ -170,6 +170,7 @@
   --color-bottom-sheet-handle: var(--bottom-sheet-handle-color);
   --color-overlay-scrim: var(--overlay-scrim);
   --color-surface-default: var(--surface-default);
+  --color-surface-candidate: var(--surface-candidate);
   --color-surface-petal: var(--surface-petal);
   --color-text-inverse: var(--text-inverse);
   --color-text-lavender: var(--text-lavender);
@@ -469,6 +470,7 @@
   --bottom-sheet-handle-color: var(--neutral-300);
   --overlay-scrim: rgb(0 0 0 / 35%);
   --surface-default: var(--neutral-0);
+  --surface-candidate: #fafafa;
   --surface-petal: var(--primary-100);
   --text-inverse: var(--neutral-0);
   --text-lavender: var(--lavender-700);

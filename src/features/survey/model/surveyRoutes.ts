@@ -5,7 +5,7 @@ export const SURVEY_ROUTES = {
   discomfort: '/survey/discomfort',
   research: '/survey/research',
   loading: '/loading',
-  result: '/result',
+  result: '/recommendation',
 } as const;
 
 export type SurveyRoute = (typeof SURVEY_ROUTES)[keyof typeof SURVEY_ROUTES];
