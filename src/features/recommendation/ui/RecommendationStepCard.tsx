@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router';
 
-import { ChevronIcon } from '@/features/recommendation/ui/RecommendationIcons';
 import {
   IngredientTags,
   RecommendationCandidates,
   RecommendationEasyView,
   RecommendedProductSummary,
 } from '@/features/recommendation/ui/RecommendationProductContent';
+import { ChevronIcon } from '@/shared/assets/icons';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';

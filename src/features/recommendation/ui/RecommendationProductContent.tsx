@@ -1,6 +1,5 @@
 import { formatRatingStars } from '@/features/recommendation/lib/formatRatingStars';
-import { SparkleIcon, SwapIcon } from '@/features/recommendation/ui/RecommendationIcons';
-import { NoticeAlertIcon, UnassessedInfoIcon } from '@/shared/assets/icons';
+import { NoticeAlertIcon, SparkleIcon, SwapIcon, UnassessedInfoIcon } from '@/shared/assets/icons';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { ProductBottle, type BottleTone } from '@/shared/ui/ProductBottle';

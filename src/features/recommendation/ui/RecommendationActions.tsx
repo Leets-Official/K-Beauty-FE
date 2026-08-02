@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { formatRecommendationText } from '@/features/recommendation/lib/formatRecommendationText';
-import { CompareIcon, CopyIcon, ResetIcon } from '@/features/recommendation/ui/RecommendationIcons';
 import { RecommendationComparisonBottomSheet } from '@/features/recommendation/ui/RecommendationComparisonBottomSheet';
+import { CompareIcon, CopyIcon, ResetIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';

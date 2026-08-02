@@ -1,8 +1,8 @@
 import { RECOMMENDATION_STEPS } from '@/features/recommendation/model/recommendation';
 import { useRecommendationSteps } from '@/features/recommendation/model/useRecommendationSteps';
 import { RecommendationActions } from '@/features/recommendation/ui/RecommendationActions';
-import { BackIcon, SparkleIcon } from '@/features/recommendation/ui/RecommendationIcons';
 import { RecommendationStepCard } from '@/features/recommendation/ui/RecommendationStepCard';
+import { BackIcon, SparkleIcon } from '@/shared/assets/icons';
 import { cn } from '@/shared/utils/cn';
 
 type RecommendationResultPageProps = React.ComponentProps<'main'>;
@@ -20,10 +20,10 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
             onClick={() => window.history.back()}
             className="text-text-secondary -ml-2 flex size-8 items-center justify-center"
           >
-            <BackIcon aria-hidden="true" />
+            <BackIcon aria-hidden="true" className="size-4" />
           </button>
           <span className="text-action-primary typo-caption1 flex items-center gap-1">
-            <SparkleIcon aria-hidden="true" />
+            <SparkleIcon aria-hidden="true" className="size-4" />
             추천 완료
           </span>
         </div>

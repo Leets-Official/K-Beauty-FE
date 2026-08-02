@@ -2,9 +2,8 @@ import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { findRecommendationProduct } from '@/features/recommendation/lib/findRecommendationProduct';
 import { RECOMMENDATION_STEPS } from '@/features/recommendation/model/recommendation';
-import { BackIcon } from '@/features/recommendation/ui/RecommendationIcons';
 import { ProductVisual, Rating } from '@/features/recommendation/ui/RecommendationProductContent';
-import { HeartIcon, NoticeAlertIcon } from '@/shared/assets/icons';
+import { BackIcon, HeartIcon, NoticeAlertIcon } from '@/shared/assets/icons';
 import { buttonVariants } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
@@ -30,7 +29,7 @@ function RecommendationProductDetailPage() {
           onClick={() => navigate('/recommendation')}
           className="bg-background-subtle text-text-secondary flex size-9 items-center justify-center rounded-full"
         >
-          <BackIcon aria-hidden="true" />
+          <BackIcon aria-hidden="true" className="size-4" />
         </button>
         <h1 className="typo-body1 text-text-primary font-bold">제품 상세</h1>
       </header>
