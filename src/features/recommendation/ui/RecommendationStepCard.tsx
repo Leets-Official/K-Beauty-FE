@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router';
 
-import {
-  IngredientTags,
-  RecommendationCandidates,
-  RecommendationEasyView,
-  RecommendedProductSummary,
-} from '@/features/recommendation/ui/RecommendationProductContent';
+import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
+import { RecommendationCandidates } from '@/features/recommendation/ui/RecommendationCandidates';
+import { RecommendationEasyView } from '@/features/recommendation/ui/RecommendationEasyView';
+import { RecommendedProductSummary } from '@/features/recommendation/ui/RecommendedProductSummary';
 import { ChevronIcon } from '@/shared/assets/icons';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';

@@ -2,7 +2,8 @@ import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { findRecommendationProduct } from '@/features/recommendation/lib/findRecommendationProduct';
 import { RECOMMENDATION_STEPS } from '@/features/recommendation/model/recommendation';
-import { ProductVisual, Rating } from '@/features/recommendation/ui/RecommendationProductContent';
+import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
+import { Rating } from '@/features/recommendation/ui/Rating';
 import { BackIcon, HeartIcon, NoticeAlertIcon } from '@/shared/assets/icons';
 import { buttonVariants } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
