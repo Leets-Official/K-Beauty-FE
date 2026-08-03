@@ -1,12 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? '';
+const API_PREFIX = '/api';
 const API_TIMEOUT = 10_000;
-const SESSION_TOKEN_STORAGE_KEY = 'k-beauty-session-token';
 const SESSION_TOKEN_HEADER = 'X-Session-Token';
+const API_CLIENT_BASE_URL = `${API_BASE_URL}${API_PREFIX}`;
+let sessionToken: string | null = null;
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_CLIENT_BASE_URL,
   timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
@@ -14,19 +16,15 @@ const apiClient = axios.create({
 });
 
 function getSessionToken() {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  return window.sessionStorage.getItem(SESSION_TOKEN_STORAGE_KEY);
+  return sessionToken;
 }
 
-function setSessionToken(sessionToken: string) {
-  window.sessionStorage.setItem(SESSION_TOKEN_STORAGE_KEY, sessionToken);
+function setSessionToken(nextSessionToken: string) {
+  sessionToken = nextSessionToken;
 }
 
 function clearSessionToken() {
-  window.sessionStorage.removeItem(SESSION_TOKEN_STORAGE_KEY);
+  sessionToken = null;
 }
 
 apiClient.interceptors.request.use((config) => {
@@ -39,4 +37,4 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-export { apiClient, clearSessionToken, getSessionToken, setSessionToken };
+export { API_PREFIX, apiClient, clearSessionToken, getSessionToken, setSessionToken };
