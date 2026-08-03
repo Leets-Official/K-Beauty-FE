@@ -219,6 +219,11 @@
   --radius-bottom-sheet: var(--bottom-sheet-radius);
   --radius-full: 9999px;
 
+  /* Shadow tokens */
+  --shadow-logo-mark:
+    0 12px 40px color-mix(in srgb, var(--primary-500) 18%, transparent),
+    0 4px 12px color-mix(in srgb, var(--primary-500) 10%, transparent);
+
   /* Sizing tokens */
   --spacing-bottom-sheet-handle-height: var(--bottom-sheet-handle-height);
   --spacing-bottom-sheet-handle-touch-height: var(--bottom-sheet-handle-touch-height);
