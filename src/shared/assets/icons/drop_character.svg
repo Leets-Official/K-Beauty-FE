@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" data-slot="drop-character">
+  <style>
+    [data-slot='drop-character'] {
+      --drop-character-body: var(--surface-default);
+      --drop-character-face: var(--action-primary);
+    }
+  </style>
+  <path
+    d="M32 5C42 17 53 28 53 38A21 21 0 1 1 11 38C11 28 22 17 32 5Z"
+    fill="var(--drop-character-body)"
+  />
+  <circle cx="24.5" cy="38" r="3.2" fill="var(--drop-character-face)" />
+  <circle cx="39.5" cy="38" r="3.2" fill="var(--drop-character-face)" />
+  <path
+    d="M23.5 45Q32 51.5 40.5 45"
+    fill="none"
+    stroke="var(--drop-character-face)"
+    stroke-width="3.2"
+    stroke-linecap="round"
+  />
+</svg>

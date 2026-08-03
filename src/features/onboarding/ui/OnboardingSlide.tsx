@@ -12,17 +12,18 @@ function OnboardingSlide({ slide, className }: OnboardingSlideProps) {
   return (
     <div className={cn('flex flex-col', className)}>
       <div
-        className="mt-4 flex size-[184px] items-center justify-center self-center rounded-full"
+        className="relative mt-4 flex size-60 items-center justify-center self-center"
         data-slot="onboarding-illustration"
       >
         <div
-          className={cn(
-            'flex size-full items-center justify-center rounded-full',
-            slide.circleClassName,
-          )}
-        >
-          <BlobCharacter {...slide.character} />
-        </div>
+          aria-hidden="true"
+          className={cn('absolute inset-0 rounded-full', slide.circleClassName)}
+        />
+        <div
+          aria-hidden="true"
+          className="bg-accent-apricot absolute top-3 left-45 size-12 rounded-full opacity-[0.35] blur-[20px]"
+        />
+        <BlobCharacter {...slide.character} className="relative" />
       </div>
 
       <div className="mt-6">

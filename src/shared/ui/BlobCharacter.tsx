@@ -17,7 +17,7 @@ type SvgIcon = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 const blobBasePalette = {
   face: 'var(--text-primary)',
-  shadow: 'var(--text-muted)',
+  shadow: 'var(--neutral-900)',
 } as const;
 
 const blobVariantMap = {
