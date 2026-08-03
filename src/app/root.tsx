@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
+import { QueryProvider } from '@/app/providers/QueryProvider';
 import { ToastProvider } from '@/shared/ui/Toast';
 
 import './styles/global.css';
@@ -16,12 +17,14 @@ export default function Root() {
       </head>
 
       <body>
-        <ToastProvider>
-          <Outlet />
+        <QueryProvider>
+          <ToastProvider>
+            <Outlet />
 
-          <ScrollRestoration />
-          <Scripts />
-        </ToastProvider>
+            <ScrollRestoration />
+            <Scripts />
+          </ToastProvider>
+        </QueryProvider>
       </body>
     </html>
   );
