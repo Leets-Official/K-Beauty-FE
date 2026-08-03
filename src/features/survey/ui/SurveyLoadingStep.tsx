@@ -11,7 +11,7 @@ import {
   LOADING_MESSAGES,
 } from '@/features/survey/model/surveyLoading';
 import { SURVEY_ROUTES } from '@/features/survey/model/surveyRoutes';
-import { BlobCharacter } from '@/shared/ui/BlobCharacter';
+import { DropCharacterIcon } from '@/shared/assets/icons';
 import { Progress } from '@/shared/ui/progress';
 
 function SurveyLoadingStep() {
@@ -54,34 +54,33 @@ function SurveyLoadingStep() {
   return (
     <main className="bg-background-canvas mx-auto flex min-h-dvh w-full max-w-[var(--app-mobile-width)] flex-col items-center justify-center px-8">
       <div className="relative mb-10 flex size-30 items-center justify-center">
-        <span className="bg-action-primary animate-blob-pulse absolute inset-0 rounded-full opacity-15 motion-reduce:animate-none" />
+        <span className="bg-action-primary animate-blob-pulse absolute inset-0 rounded-full opacity-20 motion-reduce:animate-none" />
         <span
-          className="bg-action-primary animate-blob-pulse absolute inset-4 rounded-full opacity-20 motion-reduce:animate-none"
+          className="bg-action-primary animate-blob-pulse absolute inset-3 rounded-full opacity-30 motion-reduce:animate-none"
           style={{ animationDelay: '200ms' }}
         />
-        <BlobCharacter
-          variant="radiant"
-          expression="calm"
-          detail="spark"
-          size={72}
-          className="relative"
-        />
+        <div className="bg-action-primary absolute inset-6 flex items-center justify-center rounded-full opacity-80">
+          <DropCharacterIcon width={20} height={20} aria-hidden="true" />
+        </div>
         <div className="animate-orbit absolute inset-0 motion-reduce:animate-none">
           <span className="bg-accent-apricot absolute top-0 left-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full" />
         </div>
         <div className="animate-orbit-reverse absolute inset-0 motion-reduce:animate-none">
-          <span className="bg-accent-mint absolute bottom-0 left-1/2 size-2 -translate-x-1/2 translate-y-1/2 rounded-full" />
+          <span className="bg-accent-mint absolute bottom-0 left-1/2 size-1.75 -translate-x-1/2 translate-y-1/2 rounded-full" />
         </div>
       </div>
 
-      <p className="typo-title2 text-text-primary text-center">
-        {isLastMessage ? '딱 맞는 제품을 찾았어요' : '분석 중이에요'}
+      <p
+        key={`title-${messageIndex}`}
+        className="typo-title2 text-text-primary animate-in fade-in slide-in-from-bottom-1 text-center duration-400"
+      >
+        {isLastMessage ? '딱 맞는 제품을' : '분석 중이에요'}
       </p>
       <p
         key={messageIndex}
         role="status"
         aria-live="polite"
-        className="typo-body1 text-text-secondary animate-in fade-in slide-in-from-bottom-1 mt-2 mb-10 text-center duration-300"
+        className="typo-body1 text-text-secondary animate-in fade-in slide-in-from-bottom-1 mt-2 mb-10 text-center duration-400"
       >
         {LOADING_MESSAGES[messageIndex]}
       </p>
@@ -90,6 +89,7 @@ function SurveyLoadingStep() {
         value={progress}
         aria-label="추천 결과 분석 진행률"
         className="w-full"
+        trackClassName="h-1.5"
         indicatorClassName="transition-none"
         style={{ width: '100%', height: 'auto' }}
       />
