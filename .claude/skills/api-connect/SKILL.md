@@ -1,6 +1,6 @@
 ---
 name: api-connect
-description: K-Beauty React Router SPA에서 Swagger/OpenAPI 명세를 참고해 API 타입, shared API 함수, React Query hook, 세션 토큰 처리 흐름을 연결한다. 사용자가 "API 연결", "API 붙여줘", "swagger 연결", "엔드포인트 연결", "React Query로 연결"을 요청하거나 Swagger/OpenAPI URL 또는 명세를 제공했을 때 사용한다.
+description: K-Beauty React Router SPA에서 Swagger/OpenAPI 명세를 참고해 API 타입, shared API 함수, React Query hook, 세션 토큰 처리 흐름을 연결한다. 사용자가 "API 연결", "API 붙여줘", "엔드포인트 연결", "React Query로 연결"을 요청하거나 Swagger/OpenAPI URL 또는 명세를 제공했을 때 사용한다.
 ---
 
 # API Connect
@@ -43,8 +43,6 @@ Swagger/OpenAPI URL이나 붙여넣은 명세가 있으면 먼저 엔드포인�
 ```
 
 ## 2. 연결 전략 결정
-
-K-Beauty는 SPA이므로 RSC/Server Action 전략을 사용하지 않는다.
 
 | 상황                          | 전략                                    | 위치                                                 |
 | ----------------------------- | --------------------------------------- | ---------------------------------------------------- |
@@ -271,9 +269,9 @@ function SessionStatusView() {
 }
 ```
 
-## 10. 지향 / 지양
+## 10. Good/Bad
 
-지향:
+Good:
 
 - `apiClient` 인스턴스를 재사용한다.
 - API 함수는 `shared/apis`, DTO는 `shared/types`, hook은 `features/{feature}/model`에 둔다.
@@ -281,25 +279,10 @@ function SessionStatusView() {
 - query key는 배열과 객체로 구조화한다.
 - 세션 토큰은 `setSessionToken`, `clearSessionToken` 유틸로만 다룬다.
 
-지양:
+Bad:
 
 - UI 컴포넌트에서 `axios`, `fetch`, `apiClient`를 직접 호출한다.
 - API 함수마다 baseURL, timeout, session header를 반복한다.
 - `queryKey: ['domain-id']`처럼 문자열 조합 key를 쓴다.
 - DTO 타입을 UI 컴포넌트 파일 안에 임시로 만든다.
 - 명세가 불명확한 값을 `any`로 처리한다.
-
-## 11. 검증
-
-작업 후 실행한다.
-
-```bash
-pnpm run lint
-pnpm run typecheck
-```
-
-React Query provider 또는 라우팅 연결을 바꿨다면 가능하면 빌드도 확인한다.
-
-```bash
-pnpm run build
-```

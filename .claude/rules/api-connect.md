@@ -39,7 +39,7 @@ src/
 
 ## API 함수 작성
 
-### 지향
+### Good
 
 ```ts
 // src/shared/apis/recommendation.ts
@@ -59,7 +59,7 @@ const recommendationApi = {
 export { recommendationApi };
 ```
 
-### 지양
+### Bad
 
 ```ts
 // UI에서 직접 axios/fetch 호출 금지
@@ -80,7 +80,7 @@ axios.get('/api/sessions/current', {
 
 ## React Query Hook 작성
 
-### 지향
+### Good
 
 ```ts
 // src/features/recommendation/model/recommendationQueries.ts
@@ -133,7 +133,7 @@ function useCreateRecommendationMutation() {
 export { useCreateRecommendationMutation };
 ```
 
-### 지양
+### Bad
 
 ```ts
 // queryKey를 문자열 하나로 뭉개지 않는다.
@@ -196,12 +196,3 @@ async function createSession() {
 - 사용자에게 보여줄 에러 메시지는 hook 또는 UI 가까운 곳에서 도메인 문맥에 맞게 정한다.
 - 400, 404처럼 API 명세에 있는 에러는 hook 사용처에서 명확한 fallback UI를 둔다.
 - React Query의 `isPending`, `isError`, `error`, `data` 상태를 UI 흐름에 맞게 처리한다.
-
-## 검증
-
-API 연결 작업 후 최소한 아래 명령을 실행한다.
-
-```bash
-pnpm run lint
-pnpm run typecheck
-```
