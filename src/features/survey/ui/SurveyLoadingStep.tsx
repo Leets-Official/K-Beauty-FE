@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router';
 
@@ -21,7 +21,16 @@ function SurveyLoadingStep() {
   const [isAnimationDone, setIsAnimationDone] = useState(false);
   const { mutate: completeSurvey, isSuccess, isError } = useCompleteSurvey();
 
+  // completeSurvey는 마운트 직후 한 번 참조가 바뀌어 이 effect가 다시 실행됩니다.
+  // 완료 요청이 두 번 나가지 않도록 첫 호출 여부를 직접 기억합니다.
+  const hasRequestedRef = useRef(false);
+
   useEffect(() => {
+    if (hasRequestedRef.current) {
+      return;
+    }
+
+    hasRequestedRef.current = true;
     completeSurvey();
   }, [completeSurvey]);
 
