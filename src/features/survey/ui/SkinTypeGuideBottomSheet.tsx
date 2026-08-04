@@ -1,4 +1,4 @@
-import type { SkinType } from '@/features/survey/model/skinType';
+import type { SkinType } from '@/features/survey/model';
 import {
   BottomSheet,
   BottomSheetClose,

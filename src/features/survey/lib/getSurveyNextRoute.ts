@@ -1,10 +1,10 @@
-import { SURVEY_ROUTES, type SurveyRoute } from '@/features/survey/model/surveyRoutes';
-
-import type {
-  DiagnosisMode,
-  QuestionCode,
-  SurveyNextStep,
-} from '@/features/survey/model/surveyAnswer';
+import {
+  SURVEY_ROUTES,
+  type DiagnosisMode,
+  type QuestionCode,
+  type SurveyNextStep,
+  type SurveyRoute,
+} from '@/features/survey/model';
 
 const ROUTE_BY_QUESTION_CODE: Record<QuestionCode, SurveyRoute> = {
   CONCERN: SURVEY_ROUTES.concern,

@@ -1,7 +1,6 @@
+import type { OnboardingSlideData } from '@/features/onboarding/model';
 import { BlobCharacter } from '@/shared/ui/BlobCharacter';
 import { cn } from '@/shared/utils/cn';
-
-import type { OnboardingSlideData } from '@/features/onboarding/model/onboardingSlides';
 
 interface OnboardingSlideProps {
   slide: OnboardingSlideData;

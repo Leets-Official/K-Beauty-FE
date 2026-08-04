@@ -1,17 +1,18 @@
 import {
+  QUESTION_CODE,
   RESEARCH_PREFERENCE_OPTIONS,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  useSurveyAnswerSubmit,
+  useSurveyStore,
   type ResearchPreference,
-} from '@/features/survey/model/researchPreference';
-import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
-import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
+} from '@/features/survey/model';
 import {
+  SurveyOptionCard,
   SurveyOptionIcon,
+  SurveyStepLayout,
   type SurveyOptionIconConfig,
-} from '@/features/survey/ui/SurveyOptionIcon';
-import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
+} from '@/features/survey/ui';
 import { BookOpenIcon, EyeIcon, EyeOffIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 

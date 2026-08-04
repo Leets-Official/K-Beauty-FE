@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { getSurveyNextRoute } from '@/features/survey/lib/getSurveyNextRoute';
+import { getSurveyNextRoute } from '@/features/survey/lib';
 import { surveyApi } from '@/features/survey/model/surveyApi';
 import { ensureSurveyId } from '@/features/survey/model/useStartSurveyMutation';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';

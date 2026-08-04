@@ -1,17 +1,21 @@
 import { useState } from 'react';
 
-import { SKIN_TYPE_OPTIONS, type SkinType } from '@/features/survey/model/skinType';
-import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
-import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { SkinTypeGuideBottomSheet } from '@/features/survey/ui/SkinTypeGuideBottomSheet';
-import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
+  QUESTION_CODE,
+  SKIN_TYPE_OPTIONS,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  useSurveyAnswerSubmit,
+  useSurveyStore,
+  type SkinType,
+} from '@/features/survey/model';
+import {
+  SkinTypeGuideBottomSheet,
+  SurveyOptionCard,
   SurveyOptionIcon,
+  SurveyStepLayout,
   type SurveyOptionIconConfig,
-} from '@/features/survey/ui/SurveyOptionIcon';
-import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
+} from '@/features/survey/ui';
 import {
   CircleHelpIcon,
   CirclesIcon,

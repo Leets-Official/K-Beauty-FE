@@ -1,14 +1,18 @@
-import { CONCERN_OPTIONS, type Concern } from '@/features/survey/model/concern';
-import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
-import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
+  CONCERN_OPTIONS,
+  QUESTION_CODE,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  useSurveyAnswerSubmit,
+  useSurveyStore,
+  type Concern,
+} from '@/features/survey/model';
+import {
+  SurveyOptionCard,
   SurveyOptionIcon,
+  SurveyStepLayout,
   type SurveyOptionIconConfig,
-} from '@/features/survey/ui/SurveyOptionIcon';
-import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
+} from '@/features/survey/ui';
 import {
   DropletsIcon,
   ScanFaceIcon,

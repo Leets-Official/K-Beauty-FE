@@ -1,16 +1,20 @@
 import { CircleAlert, ShieldCheck } from 'lucide-react';
 
-import { SENSITIVITY_OPTIONS, type Sensitivity } from '@/features/survey/model/sensitivity';
-import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
-import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
+  QUESTION_CODE,
+  SENSITIVITY_OPTIONS,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  useSurveyAnswerSubmit,
+  useSurveyStore,
+  type Sensitivity,
+} from '@/features/survey/model';
+import {
+  SurveyOptionCard,
   SurveyOptionIcon,
+  SurveyStepLayout,
   type SurveyOptionIconConfig,
-} from '@/features/survey/ui/SurveyOptionIcon';
-import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
+} from '@/features/survey/ui';
 import { Button } from '@/shared/ui/button';
 
 const SENSITIVITY_ICONS: Record<Sensitivity, SurveyOptionIconConfig> = {

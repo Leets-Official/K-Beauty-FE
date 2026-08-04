@@ -2,16 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import { getLoadingMessageIndex } from '@/features/survey/lib/getLoadingMessageIndex';
-import { getLoadingProgress } from '@/features/survey/lib/getLoadingProgress';
+import { getLoadingMessageIndex, getLoadingProgress } from '@/features/survey/lib';
 import {
   LOADING_COMPLETE_DELAY_MS,
   LOADING_DURATION_MS,
   LOADING_MESSAGE_INTERVAL_MS,
   LOADING_MESSAGES,
-} from '@/features/survey/model/surveyLoading';
-import { SURVEY_ROUTES } from '@/features/survey/model/surveyRoutes';
-import { useCompleteSurvey } from '@/features/survey/model/useCompleteSurvey';
+  SURVEY_ROUTES,
+  useCompleteSurvey,
+} from '@/features/survey/model';
 import { DropCharacterIcon } from '@/shared/assets/icons';
 import { Progress } from '@/shared/ui/progress';
 

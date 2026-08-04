@@ -1,5 +1,4 @@
-import { useSurveyStepGuard } from '@/features/survey/model/useSurveyStepGuard';
-import { SurveySensitiveStep } from '@/features/survey/ui/SurveySensitiveStep';
+import { SurveySensitiveStep, useSurveyStepGuard } from '@/features/survey';
 
 export default function SurveySensitiveRoute() {
   const isAllowed = useSurveyStepGuard(['concern', 'skinType']);
