@@ -1,4 +1,5 @@
 export const SURVEY_ROUTES = {
+  onboarding: '/',
   concern: '/survey',
   skinType: '/survey/skin-type',
   sensitive: '/survey/sensitive',

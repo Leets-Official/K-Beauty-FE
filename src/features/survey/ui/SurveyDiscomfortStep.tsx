@@ -1,11 +1,10 @@
-import { useNavigate } from 'react-router';
-
-import { getDiscomfortNextRoute } from '@/features/survey/lib/getNextRoute';
 import {
   PRODUCT_DISCOMFORT_OPTIONS,
   type ProductDiscomfortType,
 } from '@/features/survey/model/productDiscomfort';
+import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
+import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
@@ -51,9 +50,9 @@ const DISCOMFORT_ICONS: Record<ProductDiscomfortType, SurveyOptionIconConfig> = 
 };
 
 function SurveyDiscomfortStep() {
-  const navigate = useNavigate();
   const discomfortTypes = useSurveyStore((state) => state.discomfortTypes);
   const setDiscomfortTypes = useSurveyStore((state) => state.setDiscomfortTypes);
+  const { submit, isPending } = useSurveyAnswerSubmit();
 
   const toggle = (value: ProductDiscomfortType) => {
     if (value === 'UNKNOWN') {
@@ -91,8 +90,8 @@ function SurveyDiscomfortStep() {
       footer={
         <Button
           className="w-full"
-          disabled={discomfortTypes.length === 0}
-          onClick={() => navigate(getDiscomfortNextRoute())}
+          disabled={discomfortTypes.length === 0 || isPending}
+          onClick={() => submit(QUESTION_CODE.discomfort, discomfortTypes)}
         >
           다음
         </Button>

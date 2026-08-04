@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 
-import { getSkinTypeNextRoute } from '@/features/survey/lib/getNextRoute';
 import { SKIN_TYPE_OPTIONS, type SkinType } from '@/features/survey/model/skinType';
+import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
+import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SkinTypeGuideBottomSheet } from '@/features/survey/ui/SkinTypeGuideBottomSheet';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
@@ -50,9 +50,9 @@ const SKIN_TYPE_ICONS: Record<SkinType, SurveyOptionIconConfig> = {
 };
 
 function SurveySkinTypeStep() {
-  const navigate = useNavigate();
   const skinType = useSurveyStore((state) => state.skinType);
   const setSkinType = useSurveyStore((state) => state.setSkinType);
+  const { submit, isPending } = useSurveyAnswerSubmit();
   const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   const handleSelect = (value: SkinType) => {
@@ -71,7 +71,7 @@ function SurveySkinTypeStep() {
   const handleRecommendAsUnknown = () => {
     setSkinType('UNKNOWN');
     setIsGuideOpen(false);
-    navigate(getSkinTypeNextRoute('recommend'));
+    submit(QUESTION_CODE.skinType, ['UNKNOWN'], 'QUICK');
   };
 
   return (
@@ -106,16 +106,16 @@ function SurveySkinTypeStep() {
               <Button
                 variant="secondary"
                 className="h-control-lg flex-1 border-2 px-3"
-                disabled={!skinType}
-                onClick={() => navigate(getSkinTypeNextRoute('detail'))}
+                disabled={!skinType || isPending}
+                onClick={() => skinType && submit(QUESTION_CODE.skinType, [skinType], 'DETAILED')}
               >
                 더 자세히 알아보고 싶어요
               </Button>
               <Button
                 variant="secondary"
                 className="h-control-lg flex-1 border-2 px-3"
-                disabled={!skinType}
-                onClick={() => navigate(getSkinTypeNextRoute('recommend'))}
+                disabled={!skinType || isPending}
+                onClick={() => skinType && submit(QUESTION_CODE.skinType, [skinType], 'QUICK')}
               >
                 바로 추천해주세요
               </Button>

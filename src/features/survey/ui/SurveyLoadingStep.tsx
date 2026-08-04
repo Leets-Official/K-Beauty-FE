@@ -11,12 +11,19 @@ import {
   LOADING_MESSAGES,
 } from '@/features/survey/model/surveyLoading';
 import { SURVEY_ROUTES } from '@/features/survey/model/surveyRoutes';
+import { useCompleteSurvey } from '@/features/survey/model/useCompleteSurvey';
 import { DropCharacterIcon } from '@/shared/assets/icons';
 import { Progress } from '@/shared/ui/progress';
 
 function SurveyLoadingStep() {
   const navigate = useNavigate();
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [isAnimationDone, setIsAnimationDone] = useState(false);
+  const { mutate: completeSurvey, isSuccess, isError } = useCompleteSurvey();
+
+  useEffect(() => {
+    completeSurvey();
+  }, [completeSurvey]);
 
   useEffect(() => {
     const start = performance.now();
@@ -32,16 +39,28 @@ function SurveyLoadingStep() {
         return;
       }
 
-      completeTimer = setTimeout(() => {
-        navigate(SURVEY_ROUTES.result, { replace: true });
-      }, LOADING_COMPLETE_DELAY_MS);
+      completeTimer = setTimeout(() => setIsAnimationDone(true), LOADING_COMPLETE_DELAY_MS);
     }
 
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(completeTimer);
     };
-  }, [navigate]);
+  }, []);
+
+  // 애니메이션이 끝나도 완료 처리가 되기 전에는 넘어가지 않습니다.
+  useEffect(() => {
+    if (isAnimationDone && isSuccess) {
+      navigate(SURVEY_ROUTES.result, { replace: true });
+    }
+  }, [isAnimationDone, isSuccess, navigate]);
+
+  // 완료에 실패하면 토스트로 알리고, 답변을 다시 확인할 수 있게 직전 질문으로 돌려보냅니다.
+  useEffect(() => {
+    if (isError) {
+      navigate(-1);
+    }
+  }, [isError, navigate]);
 
   const progress = getLoadingProgress(elapsedMs, LOADING_DURATION_MS);
   const messageIndex = getLoadingMessageIndex(

@@ -1,11 +1,10 @@
-import { useNavigate } from 'react-router';
-
-import { getResearchNextRoute } from '@/features/survey/lib/getNextRoute';
 import {
   RESEARCH_PREFERENCE_OPTIONS,
   type ResearchPreference,
 } from '@/features/survey/model/researchPreference';
+import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
+import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
@@ -35,9 +34,9 @@ const RESEARCH_ICONS: Record<ResearchPreference, SurveyOptionIconConfig> = {
 };
 
 function SurveyResearchStep() {
-  const navigate = useNavigate();
   const research = useSurveyStore((state) => state.research);
   const setResearch = useSurveyStore((state) => state.setResearch);
+  const { submit, isPending } = useSurveyAnswerSubmit();
 
   return (
     <SurveyStepLayout
@@ -60,8 +59,8 @@ function SurveyResearchStep() {
       footer={
         <Button
           className="w-full"
-          disabled={research === null}
-          onClick={() => navigate(getResearchNextRoute())}
+          disabled={research === null || isPending}
+          onClick={() => research && submit(QUESTION_CODE.research, [research])}
         >
           다음
         </Button>

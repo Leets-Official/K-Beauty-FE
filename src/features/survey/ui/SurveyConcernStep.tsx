@@ -1,8 +1,7 @@
-import { useNavigate } from 'react-router';
-
-import { getConcernNextRoute } from '@/features/survey/lib/getNextRoute';
 import { CONCERN_OPTIONS, type Concern } from '@/features/survey/model/concern';
+import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
+import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
@@ -48,9 +47,9 @@ const CONCERN_ICONS: Record<Concern, SurveyOptionIconConfig> = {
 };
 
 function SurveyConcernStep() {
-  const navigate = useNavigate();
   const concern = useSurveyStore((state) => state.concern);
   const setConcern = useSurveyStore((state) => state.setConcern);
+  const { submit, isPending } = useSurveyAnswerSubmit();
 
   const handleSelect = (value: Concern) => {
     setConcern(value);
@@ -74,8 +73,8 @@ function SurveyConcernStep() {
       footer={
         <Button
           className="w-full"
-          disabled={!concern}
-          onClick={() => navigate(getConcernNextRoute())}
+          disabled={!concern || isPending}
+          onClick={() => concern && submit(QUESTION_CODE.concern, [concern])}
         >
           다음
         </Button>

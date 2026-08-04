@@ -1,9 +1,9 @@
 import { CircleAlert, ShieldCheck } from 'lucide-react';
-import { useNavigate } from 'react-router';
 
-import { getSensitiveNextRoute } from '@/features/survey/lib/getNextRoute';
 import { SENSITIVITY_OPTIONS, type Sensitivity } from '@/features/survey/model/sensitivity';
+import { QUESTION_CODE } from '@/features/survey/model/surveyAnswer';
 import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
+import { useSurveyAnswerSubmit } from '@/features/survey/model/useSaveSurveyAnswer';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
@@ -27,9 +27,9 @@ const SENSITIVITY_ICONS: Record<Sensitivity, SurveyOptionIconConfig> = {
 };
 
 function SurveySensitiveStep() {
-  const navigate = useNavigate();
   const sensitive = useSurveyStore((state) => state.sensitive);
   const setSensitive = useSurveyStore((state) => state.setSensitive);
+  const { submit, isPending } = useSurveyAnswerSubmit();
 
   return (
     <SurveyStepLayout
@@ -51,8 +51,8 @@ function SurveySensitiveStep() {
       footer={
         <Button
           className="w-full"
-          disabled={sensitive === null}
-          onClick={() => sensitive && navigate(getSensitiveNextRoute(sensitive))}
+          disabled={sensitive === null || isPending}
+          onClick={() => sensitive && submit(QUESTION_CODE.sensitive, [sensitive])}
         >
           다음
         </Button>
