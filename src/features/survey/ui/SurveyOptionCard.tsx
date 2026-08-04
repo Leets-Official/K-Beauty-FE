@@ -42,6 +42,7 @@ interface SurveyOptionCardProps {
   icon?: React.ReactNode;
   selected: boolean;
   onSelect: () => void;
+  disabled?: boolean;
   className?: string;
   indicatorClassName?: string;
   labelClassName?: string;
@@ -56,6 +57,7 @@ function SurveyOptionCard({
   icon,
   selected,
   onSelect,
+  disabled = false,
   className,
   indicatorClassName,
   labelClassName,
@@ -70,10 +72,12 @@ function SurveyOptionCard({
       type="button"
       role={isMultiple ? 'checkbox' : 'radio'}
       aria-checked={selected}
+      disabled={disabled}
       onClick={onSelect}
       className={cn(
         'bg-surface-default box-border flex w-full items-center text-left transition-all',
         'hover:border-foreground/15 focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
+        'disabled:pointer-events-none disabled:opacity-50',
         CARD_VARIANT_CLASS_NAMES[variant],
         className,
         selected && 'border-border-action',

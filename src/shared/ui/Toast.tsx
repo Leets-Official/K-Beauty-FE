@@ -5,18 +5,16 @@ import { cn } from '@/shared/utils/cn';
 
 const toastConfig = {
   success: {
-    title: '완료',
     icon: CheckCircleIcon,
     priority: 'low',
-    rootClassName: 'border-mint-500/50 bg-mint-100/30',
-    accentClassName: 'text-mint-500',
+    rootClassName: 'border-alpha-mint-25 bg-mint-100 text-text-primary',
+    accentClassName: 'text-text-mint',
   },
   error: {
-    title: '오류',
     icon: AlertCircleIcon,
     priority: 'high',
-    rootClassName: 'border-primary-200 bg-primary-50/50',
-    accentClassName: 'text-primary-500',
+    rootClassName: 'border-primary-200 bg-accent-petal text-text-primary',
+    accentClassName: 'text-primary-600',
   },
 } as const;
 
@@ -50,7 +48,7 @@ function addToast(
   return toastManager.add({
     id,
     type: variant,
-    title: title ?? config.title,
+    title,
     description,
     timeout,
     priority: config.priority,
@@ -71,14 +69,15 @@ const toast = {
   },
 };
 
-function ToastList({ className }: Pick<ToastProviderProps, 'className'>) {
+function ToastViewport({ className }: Pick<ToastProviderProps, 'className'>) {
   const { toasts } = ToastPrimitive.useToastManager<ToastData>();
 
   return (
     <ToastPrimitive.Portal>
       <ToastPrimitive.Viewport
+        data-slot="toast-viewport"
         className={cn(
-          'pointer-events-none fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-[calc(var(--app-mobile-width)-2rem)] flex-col-reverse gap-2',
+          'pointer-events-none fixed inset-x-4 bottom-5 z-50 mx-auto flex w-[min(328px,calc(100vw-32px))] max-w-[calc(var(--app-mobile-width)-32px)] flex-col-reverse gap-2',
           className,
         )}
       >
@@ -92,20 +91,20 @@ function ToastList({ className }: Pick<ToastProviderProps, 'className'>) {
               key={toastItem.id}
               toast={toastItem}
               swipeDirection={['down', 'right']}
+              data-slot="toast"
               className={cn(
-                'text-text-primary pointer-events-auto grid w-full grid-cols-[auto_1fr] items-start gap-4 rounded-3xl border-2 px-6 py-5 shadow-sm transition-[opacity,transform] duration-200 data-[ending-style]:translate-y-2 data-[ending-style]:opacity-0 data-[limited]:hidden data-[starting-style]:translate-y-2 data-[starting-style]:opacity-0',
+                'pointer-events-auto grid w-full grid-cols-[22px_1fr] items-center gap-2.5 rounded-2xl border px-3.5 py-2.5 shadow-[0_8px_24px_0_rgba(61,43,31,0.10)] transition-[opacity,transform] duration-200 data-[ending-style]:translate-y-2 data-[ending-style]:opacity-0 data-[limited]:hidden data-[starting-style]:translate-y-2 data-[starting-style]:opacity-0',
                 config.rootClassName,
               )}
-              data-slot="toast"
             >
               <Icon
                 aria-hidden="true"
-                className={cn('mt-0.5 size-7 shrink-0', config.accentClassName)}
+                className={cn('size-[22px] shrink-0', config.accentClassName)}
               />
 
               <div className="min-w-0">
-                <ToastPrimitive.Title className={cn('typo-button1', config.accentClassName)} />
-                <ToastPrimitive.Description className="typo-body1 mt-1" />
+                {toastItem.title ? <ToastPrimitive.Title className="sr-only" /> : null}
+                <ToastPrimitive.Description className="typo-caption1 break-keep" />
               </div>
             </ToastPrimitive.Root>
           );
@@ -119,7 +118,7 @@ function ToastProvider({ children, className }: ToastProviderProps) {
   return (
     <ToastPrimitive.Provider toastManager={toastManager} timeout={2000} limit={3}>
       {children}
-      <ToastList className={className} />
+      <ToastViewport className={className} />
     </ToastPrimitive.Provider>
   );
 }

@@ -1,40 +1,23 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-
-import { ONBOARDING_SLIDES } from '@/features/onboarding/model/onboardingSlides';
-import { OnboardingProgress } from '@/features/onboarding/ui/OnboardingProgress';
-import { OnboardingSlide } from '@/features/onboarding/ui/OnboardingSlide';
-import { SplashScreen } from '@/features/onboarding/ui/SplashScreen';
+import { useOnboardingFlow } from '@/features/onboarding/model';
+import { OnboardingProgress, OnboardingSlide, SplashScreen } from '@/features/onboarding/ui';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
-
-const SPLASH_DURATION = 2000;
 
 interface OnboardingProps {
   className?: string;
 }
 
 function Onboarding({ className }: OnboardingProps) {
-  const navigate = useNavigate();
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const currentSlide = ONBOARDING_SLIDES[currentSlideIndex];
-  const isLastSlide = currentSlideIndex === ONBOARDING_SLIDES.length - 1;
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => setIsSplashVisible(false), SPLASH_DURATION);
-
-    return () => window.clearTimeout(timeoutId);
-  }, []);
-
-  const handleNext = () => {
-    if (isLastSlide) {
-      navigate('/survey');
-      return;
-    }
-
-    setCurrentSlideIndex((index) => index + 1);
-  };
+  const {
+    isSplashVisible,
+    currentSlide,
+    currentSlideIndex,
+    totalSlides,
+    isLastSlide,
+    isStarting,
+    startSurvey,
+    goToNextSlide,
+  } = useOnboardingFlow();
 
   if (isSplashVisible) {
     return <SplashScreen className={className} />;
@@ -51,7 +34,8 @@ function Onboarding({ className }: OnboardingProps) {
         <button
           className="typo-caption1 text-text-secondary hover:text-text-primary focus-visible:ring-ring rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
           type="button"
-          onClick={() => navigate('/survey')}
+          disabled={isStarting}
+          onClick={startSurvey}
         >
           {'건너뛰기'}
         </button>
@@ -68,10 +52,10 @@ function Onboarding({ className }: OnboardingProps) {
           <OnboardingProgress
             className="mb-3"
             currentIndex={currentSlideIndex}
-            total={ONBOARDING_SLIDES.length}
+            total={totalSlides}
           />
-          <Button className="h-12 w-full shadow-none" onClick={handleNext}>
-            {isLastSlide ? '추천 시작하기' : '다음'}
+          <Button className="h-12 w-full shadow-none" disabled={isStarting} onClick={goToNextSlide}>
+            {isStarting ? '시작하는 중...' : isLastSlide ? '추천 시작하기' : '다음'}
           </Button>
           {isLastSlide ? (
             <p className="typo-caption2 text-text-muted mt-2 text-center">

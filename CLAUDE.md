@@ -98,4 +98,4 @@ Use **pnpm only**. Do not use npm or yarn.
 
 ## Detail Rules
 
-Architecture, code style, component guide, state management, and git conventions are documented in `.claude/rules/`. Refer to those files for comprehensive guidance.
+Architecture, code style, API connection, state management, and git conventions are documented in `.claude/rules/`. Refer to those files for comprehensive guidance.

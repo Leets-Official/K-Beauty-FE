@@ -1,0 +1,66 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+
+import { useStartSurveyMutation } from '@/features/survey';
+import { toast } from '@/shared/ui/Toast';
+
+import { ONBOARDING_SLIDES } from './onboardingSlides';
+
+const SPLASH_DURATION = 2000;
+
+/**
+ * 온보딩 화면의 흐름을 담당합니다. 스플래시 노출, 슬라이드 이동, 설문 시작과 그 성공/실패 처리까지
+ * 여기서 정하고, 화면은 결과값과 핸들러만 받아 그립니다.
+ */
+function useOnboardingFlow() {
+  const navigate = useNavigate();
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const startSurveyMutation = useStartSurveyMutation();
+
+  const currentSlide = ONBOARDING_SLIDES[currentSlideIndex];
+  const isLastSlide = currentSlideIndex === ONBOARDING_SLIDES.length - 1;
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setIsSplashVisible(false), SPLASH_DURATION);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  const startSurvey = () => {
+    if (startSurveyMutation.isPending) {
+      return;
+    }
+
+    startSurveyMutation.mutate(undefined, {
+      onSuccess: () => {
+        navigate('/survey');
+      },
+      onError: () => {
+        toast.error('설문을 시작하지 못했어요. 잠시 후 다시 시도해주세요.');
+      },
+    });
+  };
+
+  const goToNextSlide = () => {
+    if (isLastSlide) {
+      startSurvey();
+      return;
+    }
+
+    setCurrentSlideIndex((index) => index + 1);
+  };
+
+  return {
+    isSplashVisible,
+    currentSlide,
+    currentSlideIndex,
+    totalSlides: ONBOARDING_SLIDES.length,
+    isLastSlide,
+    isStarting: startSurveyMutation.isPending,
+    startSurvey,
+    goToNextSlide,
+  };
+}
+
+export { useOnboardingFlow };
