@@ -8,4 +8,4 @@ export {
   getSessionToken,
   setSessionToken,
 } from './apiClient';
-export { createSession } from './session';
+export { createSession, sessionApi } from './session';

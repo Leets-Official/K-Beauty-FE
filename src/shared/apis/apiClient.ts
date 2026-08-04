@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { ApiResponse } from '@/shared/types/api';
 
 const API_PREFIX = '/api';
+const API_TIMEOUT = 10_000;
 const SESSION_TOKEN_HEADER = 'X-Session-Token';
 const DEFAULT_ERROR_MESSAGE = '문제가 발생했어요. 잠시 후 다시 시도해주세요.';
 
@@ -34,13 +35,15 @@ const apiOrigin = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') ?? '';
 
 const apiClient = axios.create({
   baseURL: `${apiOrigin}${API_PREFIX}`,
-  timeout: 10_000,
+  timeout: API_TIMEOUT,
   headers: { 'Content-Type': 'application/json' },
 });
 
 apiClient.interceptors.request.use((config) => {
-  if (sessionToken) {
-    config.headers.set(SESSION_TOKEN_HEADER, sessionToken);
+  const token = getSessionToken();
+
+  if (token) {
+    config.headers.set(SESSION_TOKEN_HEADER, token);
   }
 
   return config;

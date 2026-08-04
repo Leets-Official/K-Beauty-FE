@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/apis';
+import { apiClient } from '@/shared/apis/apiClient';
 
 import type {
   AnswerSaveRequest,
