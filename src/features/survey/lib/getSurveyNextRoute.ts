@@ -30,12 +30,12 @@ export function getSurveyNextRoute(
   nextStep: SurveyNextStep,
   diagnosisMode?: DiagnosisMode,
 ): SurveyRoute {
-  if (nextStep.nextAction === 'GO_TO_ONBOARDING') {
-    return SURVEY_ROUTES.onboarding;
-  }
-
   if (diagnosisMode) {
     return ROUTE_BY_DIAGNOSIS_MODE[diagnosisMode];
+  }
+
+  if (nextStep.nextAction === 'GO_TO_ONBOARDING') {
+    return SURVEY_ROUTES.onboarding;
   }
 
   switch (nextStep.nextAction) {

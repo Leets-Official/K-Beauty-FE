@@ -67,6 +67,7 @@ const SKIN_TYPE_GUIDES: SkinTypeGuide[] = [
 
 interface SkinTypeGuideBottomSheetProps {
   open: boolean;
+  disabled?: boolean;
   onOpenChange: (open: boolean) => void;
   onSelect: (skinType: KnownSkinType) => void;
   onRecommendAsUnknown: () => void;
@@ -74,6 +75,7 @@ interface SkinTypeGuideBottomSheetProps {
 
 function SkinTypeGuideBottomSheet({
   open,
+  disabled = false,
   onOpenChange,
   onSelect,
   onRecommendAsUnknown,
@@ -95,10 +97,12 @@ function SkinTypeGuideBottomSheet({
           <button
             key={guide.value}
             type="button"
+            disabled={disabled}
             onClick={() => onSelect(guide.value)}
             className={cn(
               'group border-border-subtle bg-background-canvas flex min-h-[52px] w-full items-center gap-3 rounded-[20px] border px-4 py-3 text-left transition-colors',
               'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
+              'disabled:pointer-events-none disabled:opacity-50',
               guide.interactionClassName,
             )}
           >
@@ -122,7 +126,12 @@ function SkinTypeGuideBottomSheet({
       </BottomSheetContent>
 
       <BottomSheetFooter>
-        <Button variant="secondary" className="w-full border-2" onClick={onRecommendAsUnknown}>
+        <Button
+          variant="secondary"
+          className="w-full border-2"
+          disabled={disabled}
+          onClick={onRecommendAsUnknown}
+        >
           이대로 추천받기
         </Button>
       </BottomSheetFooter>

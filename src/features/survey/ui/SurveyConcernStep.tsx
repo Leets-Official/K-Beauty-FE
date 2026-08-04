@@ -52,6 +52,8 @@ function SurveyConcernStep() {
   const { submit, isPending } = useSurveyAnswerSubmit();
 
   const handleSelect = (value: Concern) => {
+    if (isPending) return;
+
     setConcern(value);
   };
 
@@ -88,6 +90,7 @@ function SurveyConcernStep() {
           icon={<SurveyOptionIcon {...CONCERN_ICONS[option.value]} />}
           selected={concern === option.value}
           onSelect={() => handleSelect(option.value)}
+          disabled={isPending}
           variant="large"
         />
       ))}

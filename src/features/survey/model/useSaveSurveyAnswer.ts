@@ -29,17 +29,17 @@ function useSaveSurveyAnswer() {
       const surveyId = await ensureSurveyId();
       const answer = await surveyApi.saveAnswer(surveyId, questionCode, { optionCodes });
 
+      // 서버가 무효화한 답변은 진단 모드 갱신 성공 여부와 무관하게 즉시 로컬에도 반영합니다.
+      if (answer.clearedQuestionCodes.length > 0) {
+        clearAnswers(answer.clearedQuestionCodes);
+      }
+
       // 진단 모드를 함께 보낸 경우, 다음 화면 판단은 더 나중에 받은 응답을 따릅니다.
       const nextStep: SurveyNextStep = diagnosisMode
         ? await surveyApi.updateDiagnosisMode(surveyId, { diagnosisMode })
         : answer;
 
       return { answer, nextStep };
-    },
-    onSuccess: ({ answer }) => {
-      if (answer.clearedQuestionCodes.length > 0) {
-        clearAnswers(answer.clearedQuestionCodes);
-      }
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : DEFAULT_ERROR_MESSAGE);

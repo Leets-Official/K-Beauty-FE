@@ -55,6 +55,8 @@ function SurveyDiscomfortStep() {
   const { submit, isPending } = useSurveyAnswerSubmit();
 
   const toggle = (value: ProductDiscomfortType) => {
+    if (isPending) return;
+
     if (value === 'UNKNOWN') {
       setDiscomfortTypes(discomfortTypes.includes('UNKNOWN') ? [] : ['UNKNOWN']);
       return;
@@ -105,6 +107,7 @@ function SurveyDiscomfortStep() {
           icon={<SurveyOptionIcon {...DISCOMFORT_ICONS[option.value]} />}
           selected={discomfortTypes.includes(option.value)}
           onSelect={() => toggle(option.value)}
+          disabled={isPending}
           selectionMode="multiple"
           variant="large"
           captionClassName="typo-caption3 text-text-muted"

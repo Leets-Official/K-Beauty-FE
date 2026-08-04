@@ -73,7 +73,8 @@ function SurveyResearchStep() {
           caption={option.caption}
           icon={<SurveyOptionIcon {...RESEARCH_ICONS[option.value]} />}
           selected={research === option.value}
-          onSelect={() => setResearch(option.value)}
+          onSelect={() => !isPending && setResearch(option.value)}
+          disabled={isPending}
           variant="large"
         />
       ))}

@@ -56,6 +56,8 @@ function SurveySkinTypeStep() {
   const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   const handleSelect = (value: SkinType) => {
+    if (isPending) return;
+
     setSkinType(value);
 
     if (value === 'UNKNOWN') {
@@ -64,11 +66,15 @@ function SurveySkinTypeStep() {
   };
 
   const handleGuideSelect = (value: Exclude<SkinType, 'UNKNOWN'>) => {
+    if (isPending) return;
+
     setSkinType(value);
     setIsGuideOpen(false);
   };
 
   const handleRecommendAsUnknown = () => {
+    if (isPending) return;
+
     setSkinType('UNKNOWN');
     setIsGuideOpen(false);
     submit(QUESTION_CODE.skinType, ['UNKNOWN'], 'QUICK');
@@ -133,6 +139,7 @@ function SurveySkinTypeStep() {
             }
             selected={skinType === option.value}
             onSelect={() => handleSelect(option.value)}
+            disabled={isPending}
             variant="skinType"
           />
         ))}
@@ -140,6 +147,7 @@ function SurveySkinTypeStep() {
 
       <SkinTypeGuideBottomSheet
         open={isGuideOpen}
+        disabled={isPending}
         onOpenChange={setIsGuideOpen}
         onSelect={handleGuideSelect}
         onRecommendAsUnknown={handleRecommendAsUnknown}

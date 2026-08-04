@@ -65,7 +65,8 @@ function SurveySensitiveStep() {
           caption={option.caption}
           icon={<SurveyOptionIcon {...SENSITIVITY_ICONS[option.value]} />}
           selected={sensitive === option.value}
-          onSelect={() => setSensitive(option.value)}
+          onSelect={() => !isPending && setSensitive(option.value)}
+          disabled={isPending}
           variant="large"
           indicatorClassName="size-6"
         />
