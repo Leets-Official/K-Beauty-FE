@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFlow } from '@/features/onboarding/model';
-import { OnboardingProgress, OnboardingSlide, SplashScreen } from '@/features/onboarding/ui';
+import {
+  OnboardingProgress,
+  OnboardingSlideImage,
+  OnboardingSlideText,
+  SplashScreen,
+} from '@/features/onboarding/ui';
 import { Button } from '@/shared/ui/button';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/shared/ui/carousel';
 import { cn } from '@/shared/utils/cn';
@@ -14,6 +19,7 @@ function Onboarding({ className }: OnboardingProps) {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const {
     isSplashVisible,
+    currentSlide,
     currentSlideIndex,
     slides,
     totalSlides,
@@ -86,11 +92,13 @@ function Onboarding({ className }: OnboardingProps) {
           <CarouselContent className="ml-0">
             {slides.map((slide) => (
               <CarouselItem key={slide.title} className="pl-0">
-                <OnboardingSlide slide={slide} className="px-4" />
+                <OnboardingSlideImage slide={slide} />
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
+
+        <OnboardingSlideText key={currentSlideIndex} slide={currentSlide} />
 
         <div className="mt-auto">
           <OnboardingProgress

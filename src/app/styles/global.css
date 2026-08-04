@@ -238,7 +238,7 @@
   --animate-blob-pulse: blob-pulse 1.4s ease-in-out infinite;
   --animate-onboarding-slide-next: onboarding-slide-next 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-onboarding-slide-prev: onboarding-slide-prev 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-onboarding-text-enter: onboarding-text-enter 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-onboarding-text-enter: onboarding-text-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-orbit: orbit 1.8s linear infinite;
   --animate-orbit-reverse: orbit 2.4s linear infinite reverse;
 

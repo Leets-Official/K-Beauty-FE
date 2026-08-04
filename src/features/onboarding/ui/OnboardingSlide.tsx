@@ -6,7 +6,10 @@ interface OnboardingSlideProps {
   className?: string;
 }
 
-function OnboardingTitle({ slide }: Pick<OnboardingSlideProps, 'slide'>) {
+type OnboardingSlideImageProps = OnboardingSlideProps;
+type OnboardingSlideTextProps = OnboardingSlideProps;
+
+function OnboardingTitle({ slide }: Pick<OnboardingSlideTextProps, 'slide'>) {
   if ('titleAccent' in slide) {
     const restTitle = slide.title.replace(slide.titleAccent, '');
 
@@ -25,26 +28,33 @@ function OnboardingTitle({ slide }: Pick<OnboardingSlideProps, 'slide'>) {
   );
 }
 
-function OnboardingSlide({ slide, className }: OnboardingSlideProps) {
+function OnboardingSlideImage({ slide, className }: OnboardingSlideImageProps) {
   return (
-    <div className={cn('flex flex-col', className)}>
-      <div
-        className="bg-neutral-150 -mx-4 mt-4 flex justify-center overflow-hidden pt-8"
-        data-slot="onboarding-illustration"
-      >
-        <img
-          className="h-auto max-h-[52dvh] w-[min(262px,72vw)] object-contain"
-          src={slide.image.src}
-          alt={slide.image.alt}
-        />
-      </div>
-
-      <div key={slide.title} className="animate-onboarding-text-enter mt-7 text-center">
-        <OnboardingTitle slide={slide} />
-        <p className="typo-caption1 text-text-secondary mt-2">{slide.description}</p>
-      </div>
+    <div
+      className={cn('bg-neutral-150 mt-4 flex justify-center overflow-hidden pt-8', className)}
+      data-slot="onboarding-illustration"
+    >
+      <img
+        className="h-auto max-h-[52dvh] w-[min(262px,72vw)] object-contain"
+        src={slide.image.src}
+        alt={slide.image.alt}
+      />
     </div>
   );
 }
 
-export { OnboardingSlide, type OnboardingSlideProps };
+function OnboardingSlideText({ slide, className }: OnboardingSlideTextProps) {
+  return (
+    <div className={cn('animate-onboarding-text-enter mt-7 text-center', className)}>
+      <OnboardingTitle slide={slide} />
+      <p className="typo-caption1 text-text-secondary mt-2">{slide.description}</p>
+    </div>
+  );
+}
+
+export {
+  OnboardingSlideImage,
+  OnboardingSlideText,
+  type OnboardingSlideImageProps,
+  type OnboardingSlideTextProps,
+};

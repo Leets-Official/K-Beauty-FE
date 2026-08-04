@@ -1,3 +1,8 @@
 export { OnboardingProgress, type OnboardingProgressProps } from './OnboardingProgress';
-export { OnboardingSlide, type OnboardingSlideProps } from './OnboardingSlide';
+export {
+  OnboardingSlideImage,
+  OnboardingSlideText,
+  type OnboardingSlideImageProps,
+  type OnboardingSlideTextProps,
+} from './OnboardingSlide';
 export { SplashScreen, type SplashScreenProps } from './SplashScreen';
