@@ -6,6 +6,4 @@ interface CreateSessionResponse {
   createdAt: string;
 }
 
-type SessionCreateResponse = CreateSessionResponse;
-
-export type { CreateSessionResponse, SessionCreateResponse, SessionStatus };
+export type { CreateSessionResponse, SessionStatus };
