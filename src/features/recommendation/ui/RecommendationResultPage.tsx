@@ -6,6 +6,7 @@ import { useSelectRecommendationCandidateMutation } from '@/features/recommendat
 import { useSharedRecommendationQuery } from '@/features/recommendation/model/useSharedRecommendationQuery';
 import { RecommendationActions } from '@/features/recommendation/ui/RecommendationActions';
 import { RecommendationStepCard } from '@/features/recommendation/ui/RecommendationStepCard';
+import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { BackIcon, SparkleIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { toast } from '@/shared/ui/Toast';
@@ -16,6 +17,7 @@ type RecommendationResultPageProps = ComponentProps<'main'>;
 function RecommendationResultPage({ className, ...props }: RecommendationResultPageProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const concern = useSurveyStore((state) => state.concern);
   const shareToken = searchParams.get('share');
   const currentRecommendationQuery = useCurrentRecommendationQuery(!shareToken);
   const sharedRecommendationQuery = useSharedRecommendationQuery(shareToken);
@@ -64,6 +66,10 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
   const recommendation = recommendationQuery.data;
 
   function replaceProduct(step: number, productId: number) {
+    if (selectCandidateMutation.isPending) {
+      return;
+    }
+
     selectCandidateMutation.mutate(
       { recommendationId: recommendation.id, step, productId },
       {
@@ -107,15 +113,14 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
             <RecommendationStepCard
               key={step.id}
               {...step}
+              concern={isSharedRecommendation ? null : concern}
+              shareToken={shareToken}
               onReplaceProduct={
                 isSharedRecommendation
                   ? undefined
                   : (candidateId) => replaceProduct(step.id, candidateId)
               }
-              isReplacing={
-                selectCandidateMutation.isPending &&
-                selectCandidateMutation.variables?.step === step.id
-              }
+              isReplacing={selectCandidateMutation.isPending}
               showCandidates={!isSharedRecommendation}
             />
           ))}

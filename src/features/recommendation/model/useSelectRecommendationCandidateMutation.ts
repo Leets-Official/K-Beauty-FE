@@ -7,6 +7,7 @@ function useSelectRecommendationCandidateMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    scope: { id: 'recommendation-candidate-selection' },
     mutationFn: (variables: Parameters<typeof recommendationApi.selectCandidate>[0]) =>
       recommendationApi.selectCandidate(variables).then((response) => response.data.data),
     onSuccess: (recommendation) => {

@@ -1,8 +1,9 @@
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 
 import { findRecommendationProduct } from '@/features/recommendation/lib/findRecommendationProduct';
 import { formatRecommendationReason } from '@/features/recommendation/lib/formatRecommendationReason';
 import { useCurrentRecommendationQuery } from '@/features/recommendation/model/useCurrentRecommendationQuery';
+import { useSharedRecommendationQuery } from '@/features/recommendation/model/useSharedRecommendationQuery';
 import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { BackIcon, FlaskConicalIcon, HeartIcon, NoticeAlertIcon } from '@/shared/assets/icons';
@@ -13,9 +14,19 @@ import { formatPrice } from '@/shared/utils/format';
 function RecommendationProductDetailPage() {
   const navigate = useNavigate();
   const { productId } = useParams();
-  const recommendationQuery = useCurrentRecommendationQuery();
+  const [searchParams] = useSearchParams();
+  const shareToken = searchParams.get('share');
+  const currentRecommendationQuery = useCurrentRecommendationQuery(!shareToken);
+  const sharedRecommendationQuery = useSharedRecommendationQuery(shareToken);
+  const isSharedRecommendation = Boolean(shareToken);
+  const recommendationQuery = isSharedRecommendation
+    ? sharedRecommendationQuery
+    : currentRecommendationQuery;
   const concern = useSurveyStore((state) => state.concern);
   const parsedProductId = Number(productId);
+  const recommendationPath = shareToken
+    ? `/recommendation?share=${encodeURIComponent(shareToken)}`
+    : '/recommendation';
 
   if (recommendationQuery.isPending) {
     return (
@@ -46,7 +57,7 @@ function RecommendationProductDetailPage() {
     : undefined;
 
   if (!result) {
-    return <Navigate to="/recommendation" replace />;
+    return <Navigate to={recommendationPath} replace />;
   }
 
   const { product, stepId } = result;
@@ -57,7 +68,7 @@ function RecommendationProductDetailPage() {
         <button
           type="button"
           aria-label="추천 결과로 돌아가기"
-          onClick={() => navigate('/recommendation')}
+          onClick={() => navigate(recommendationPath)}
           className="bg-background-subtle text-text-secondary flex size-9 items-center justify-center rounded-full"
         >
           <BackIcon aria-hidden="true" className="size-4" />
@@ -83,7 +94,7 @@ function RecommendationProductDetailPage() {
             <HeartIcon aria-hidden="true" className="size-3" />내 피부에 추천한 이유
           </h2>
           <p className="typo-caption1 text-text-primary">
-            {formatRecommendationReason(concern, product.tags)}
+            {formatRecommendationReason(isSharedRecommendation ? null : concern, product.tags)}
           </p>
         </section>
 

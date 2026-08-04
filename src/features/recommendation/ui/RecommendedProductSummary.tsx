@@ -2,26 +2,26 @@ import type { ComponentProps } from 'react';
 
 import { formatRecommendationReason } from '@/features/recommendation/lib/formatRecommendationReason';
 import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SparkleIcon } from '@/shared/assets/icons';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
 
 import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
+import type { Concern } from '@/features/survey/model/concern';
 
 interface RecommendedProductSummaryProps extends ComponentProps<'div'> {
   stepId: number;
   product: RecommendationProduct;
+  concern: Concern | null;
 }
 
 function RecommendedProductSummary({
   className,
   stepId,
   product,
+  concern,
   ...props
 }: RecommendedProductSummaryProps) {
-  const concern = useSurveyStore((state) => state.concern);
-
   return (
     <div className={cn('flex flex-col gap-3', className)} {...props}>
       <ProductVisual stepId={stepId} name={product.name} imageUrl={product.imageUrl} />

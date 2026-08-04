@@ -10,9 +10,12 @@ import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 
 import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import type { Concern } from '@/features/survey/model/concern';
 
 interface RecommendationStepCardProps
   extends Omit<ComponentProps<'article'>, 'children' | 'id'>, RecommendationStep {
+  concern: Concern | null;
+  shareToken?: string | null;
   onReplaceProduct?: (productId: number) => void;
   isReplacing?: boolean;
   showCandidates?: boolean;
@@ -25,6 +28,8 @@ function RecommendationStepCard({
   category,
   product,
   candidates,
+  concern,
+  shareToken,
   onReplaceProduct,
   isReplacing,
   showCandidates = true,
@@ -49,14 +54,20 @@ function RecommendationStepCard({
           <p className="typo-caption2 text-text-muted">{category}</p>
         </div>
 
-        <RecommendedProductSummary stepId={id} product={product} />
+        <RecommendedProductSummary stepId={id} product={product} concern={concern} />
 
         <IngredientTags tags={product.tags} />
 
         <Button
           type="button"
           className="w-full"
-          onClick={() => navigate(`/recommendation/product/${encodeURIComponent(product.id)}`)}
+          onClick={() =>
+            navigate(
+              `/recommendation/product/${encodeURIComponent(product.id)}${
+                shareToken ? `?share=${encodeURIComponent(shareToken)}` : ''
+              }`,
+            )
+          }
         >
           자세히 보기
         </Button>
