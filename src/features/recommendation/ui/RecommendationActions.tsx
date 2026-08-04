@@ -2,8 +2,9 @@ import { type ComponentProps, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { formatRecommendationText } from '@/features/recommendation/lib/formatRecommendationText';
+import { useCreateRecommendationShareMutation } from '@/features/recommendation/model/useCreateRecommendationShareMutation';
 import { RecommendationComparisonBottomSheet } from '@/features/recommendation/ui/RecommendationComparisonBottomSheet';
-import { CompareIcon, CopyIcon, ResetIcon } from '@/shared/assets/icons';
+import { CompareIcon, CopyIcon, ResetIcon, ShareIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
@@ -17,6 +18,7 @@ interface RecommendationActionsProps extends ComponentProps<'div'> {
 function RecommendationActions({ className, steps, ...props }: RecommendationActionsProps) {
   const navigate = useNavigate();
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
+  const createShareMutation = useCreateRecommendationShareMutation();
 
   async function copyRecommendation() {
     try {
@@ -25,6 +27,24 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
     } catch {
       toast.error('추천 결과를 복사하지 못했어요.');
     }
+  }
+
+  function shareRecommendation() {
+    createShareMutation.mutate(undefined, {
+      onSuccess: async ({ shareToken }) => {
+        const shareUrl = `${window.location.origin}/recommendation?share=${encodeURIComponent(shareToken)}`;
+
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success('공유 링크가 생성되고 복사되었어요!');
+        } catch {
+          toast.error('공유 링크는 만들었지만 복사하지 못했어요.');
+        }
+      },
+      onError: () => {
+        toast.error('공유 링크를 만들지 못했어요.');
+      },
+    });
   }
 
   return (
@@ -37,6 +57,17 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
       >
         <CopyIcon aria-hidden="true" />
         추천 결과 텍스트 복사
+      </Button>
+
+      <Button
+        type="button"
+        variant="secondary"
+        className="bg-surface-default w-full"
+        disabled={createShareMutation.isPending}
+        onClick={shareRecommendation}
+      >
+        <ShareIcon aria-hidden="true" />
+        {createShareMutation.isPending ? '공유 링크 만드는 중...' : '공유하기'}
       </Button>
 
       <Button

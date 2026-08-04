@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router';
 
+import { useGenerateRecommendationMutation } from '@/features/recommendation/model/useGenerateRecommendationMutation';
 import { getLoadingMessageIndex, getLoadingProgress } from '@/features/survey/lib';
 import {
   LOADING_COMPLETE_DELAY_MS,
@@ -9,29 +10,48 @@ import {
   LOADING_MESSAGE_INTERVAL_MS,
   LOADING_MESSAGES,
   SURVEY_ROUTES,
-  useCompleteSurvey,
+  surveyApi,
+  useSurveyStore,
 } from '@/features/survey/model';
+import { DEFAULT_ERROR_MESSAGE } from '@/shared/apis';
 import { DropCharacterIcon } from '@/shared/assets/icons';
+import { Button } from '@/shared/ui/button';
 import { Progress } from '@/shared/ui/progress';
+import { toast } from '@/shared/ui/Toast';
 
 function SurveyLoadingStep() {
   const navigate = useNavigate();
   const [elapsedMs, setElapsedMs] = useState(0);
   const [isAnimationDone, setIsAnimationDone] = useState(false);
-  const { mutate: completeSurvey, isSuccess, isError } = useCompleteSurvey();
-
-  // completeSurvey는 마운트 직후 한 번 참조가 바뀌어 이 effect가 다시 실행됩니다.
-  // 완료 요청이 두 번 나가지 않도록 첫 호출 여부를 직접 기억합니다.
-  const hasRequestedRef = useRef(false);
+  const hasRequestedCompletion = useRef(false);
+  const {
+    mutate: generateRecommendation,
+    isError: isGenerationError,
+    isSuccess: isGenerationSuccess,
+  } = useGenerateRecommendationMutation();
 
   useEffect(() => {
-    if (hasRequestedRef.current) {
+    if (hasRequestedCompletion.current) {
       return;
     }
 
-    hasRequestedRef.current = true;
-    completeSurvey();
-  }, [completeSurvey]);
+    hasRequestedCompletion.current = true;
+    const { surveyId } = useSurveyStore.getState();
+
+    if (surveyId === null) {
+      toast.error(DEFAULT_ERROR_MESSAGE);
+      navigate(-1);
+      return;
+    }
+
+    void surveyApi
+      .complete(surveyId)
+      .then(() => generateRecommendation())
+      .catch((error: unknown) => {
+        toast.error(error instanceof Error ? error.message : DEFAULT_ERROR_MESSAGE);
+        navigate(-1);
+      });
+  }, [generateRecommendation, navigate]);
 
   useEffect(() => {
     const start = performance.now();
@@ -56,19 +76,11 @@ function SurveyLoadingStep() {
     };
   }, []);
 
-  // 애니메이션이 끝나도 완료 처리가 되기 전에는 넘어가지 않습니다.
   useEffect(() => {
-    if (isAnimationDone && isSuccess) {
+    if (isAnimationDone && isGenerationSuccess) {
       navigate(SURVEY_ROUTES.result, { replace: true });
     }
-  }, [isAnimationDone, isSuccess, navigate]);
-
-  // 완료에 실패하면 토스트로 알리고, 답변을 다시 확인할 수 있게 직전 질문으로 돌려보냅니다.
-  useEffect(() => {
-    if (isError) {
-      navigate(-1);
-    }
-  }, [isError, navigate]);
+  }, [isAnimationDone, isGenerationSuccess, navigate]);
 
   const progress = getLoadingProgress(elapsedMs, LOADING_DURATION_MS);
   const messageIndex = getLoadingMessageIndex(
@@ -103,14 +115,32 @@ function SurveyLoadingStep() {
       >
         {isLastMessage ? '딱 맞는 제품을' : '분석 중이에요'}
       </p>
-      <p
-        key={messageIndex}
-        role="status"
-        aria-live="polite"
-        className="typo-body1 text-text-secondary animate-in fade-in slide-in-from-bottom-1 mt-2 mb-10 text-center duration-400"
-      >
-        {LOADING_MESSAGES[messageIndex]}
-      </p>
+      {isGenerationError ? (
+        <div className="mt-2 mb-10 flex flex-col items-center gap-3 text-center">
+          <p role="alert" className="typo-body1 text-text-secondary">
+            추천 결과를 만들지 못했어요.
+          </p>
+          <Button type="button" onClick={() => generateRecommendation()}>
+            다시 시도하기
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => navigate('/', { replace: true })}
+          >
+            설문 다시 시작하기
+          </Button>
+        </div>
+      ) : (
+        <p
+          key={messageIndex}
+          role="status"
+          aria-live="polite"
+          className="typo-body1 text-text-secondary animate-in fade-in slide-in-from-bottom-1 mt-2 mb-10 text-center duration-400"
+        >
+          {LOADING_MESSAGES[messageIndex]}
+        </p>
+      )}
 
       <Progress
         value={progress}

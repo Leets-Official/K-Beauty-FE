@@ -1,16 +1,78 @@
 import type { ComponentProps } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
 
-import { RECOMMENDATION_STEPS } from '@/features/recommendation/model/recommendation';
-import { useRecommendationSteps } from '@/features/recommendation/model/useRecommendationSteps';
+import { useCurrentRecommendationQuery } from '@/features/recommendation/model/useCurrentRecommendationQuery';
+import { useSelectRecommendationCandidateMutation } from '@/features/recommendation/model/useSelectRecommendationCandidateMutation';
+import { useSharedRecommendationQuery } from '@/features/recommendation/model/useSharedRecommendationQuery';
 import { RecommendationActions } from '@/features/recommendation/ui/RecommendationActions';
 import { RecommendationStepCard } from '@/features/recommendation/ui/RecommendationStepCard';
 import { BackIcon, SparkleIcon } from '@/shared/assets/icons';
+import { Button } from '@/shared/ui/button';
+import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
 
 type RecommendationResultPageProps = ComponentProps<'main'>;
 
 function RecommendationResultPage({ className, ...props }: RecommendationResultPageProps) {
-  const { steps, replaceProduct } = useRecommendationSteps(RECOMMENDATION_STEPS);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const shareToken = searchParams.get('share');
+  const currentRecommendationQuery = useCurrentRecommendationQuery(!shareToken);
+  const sharedRecommendationQuery = useSharedRecommendationQuery(shareToken);
+  const isSharedRecommendation = Boolean(shareToken);
+  const recommendationQuery = isSharedRecommendation
+    ? sharedRecommendationQuery
+    : currentRecommendationQuery;
+  const selectCandidateMutation = useSelectRecommendationCandidateMutation();
+
+  if (recommendationQuery.isPending) {
+    return (
+      <main
+        className={cn(
+          'bg-background-canvas flex min-h-dvh items-center justify-center px-6',
+          className,
+        )}
+        {...props}
+      >
+        <p role="status" className="typo-body1 text-text-secondary">
+          추천 결과를 불러오는 중이에요.
+        </p>
+      </main>
+    );
+  }
+
+  if (recommendationQuery.isError) {
+    return (
+      <main
+        className={cn(
+          'bg-background-canvas flex min-h-dvh flex-col items-center justify-center gap-4 px-6',
+          className,
+        )}
+        {...props}
+      >
+        <p className="typo-body1 text-text-secondary">추천 결과를 불러오지 못했어요.</p>
+        <Button type="button" onClick={() => recommendationQuery.refetch()}>
+          다시 시도하기
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => navigate('/', { replace: true })}>
+          설문 다시 시작하기
+        </Button>
+      </main>
+    );
+  }
+
+  const recommendation = recommendationQuery.data;
+
+  function replaceProduct(step: number, productId: number) {
+    selectCandidateMutation.mutate(
+      { recommendationId: recommendation.id, step, productId },
+      {
+        onError: () => {
+          toast.error('제품을 교체하지 못했어요. 잠시 후 다시 시도해주세요.');
+        },
+      },
+    );
+  }
 
   return (
     <main className={cn('bg-background-canvas min-h-dvh', className)} {...props}>
@@ -26,7 +88,7 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
           </button>
           <span className="text-action-primary typo-caption1 flex items-center gap-1">
             <SparkleIcon aria-hidden="true" className="size-4" />
-            추천 완료
+            {isSharedRecommendation ? '공유된 추천' : '추천 완료'}
           </span>
         </div>
         <h1 className="typo-title2 text-text-primary">
@@ -41,17 +103,28 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
 
       <section aria-label="단계별 추천 결과" className="px-4 py-5">
         <div className="flex flex-col gap-3">
-          {steps.map((step) => (
+          {recommendation.steps.map((step) => (
             <RecommendationStepCard
               key={step.id}
               {...step}
-              onReplaceProduct={(candidateId) => replaceProduct(step.id, candidateId)}
+              onReplaceProduct={
+                isSharedRecommendation
+                  ? undefined
+                  : (candidateId) => replaceProduct(step.id, candidateId)
+              }
+              isReplacing={
+                selectCandidateMutation.isPending &&
+                selectCandidateMutation.variables?.step === step.id
+              }
+              showCandidates={!isSharedRecommendation}
             />
           ))}
         </div>
       </section>
 
-      <RecommendationActions steps={steps} className="px-4 pb-8" />
+      {isSharedRecommendation ? null : (
+        <RecommendationActions steps={recommendation.steps} className="px-4 pb-8" />
+      )}
     </main>
   );
 }

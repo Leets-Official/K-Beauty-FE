@@ -7,13 +7,15 @@ import type { RecommendationProduct } from '@/features/recommendation/model/reco
 
 interface RecommendationCandidatesProps extends ComponentProps<'div'> {
   candidates: RecommendationProduct[];
-  onReplaceProduct: (productId: string) => void;
+  onReplaceProduct: (productId: number) => void;
+  isReplacing?: boolean;
 }
 
 function RecommendationCandidates({
   className,
   candidates,
   onReplaceProduct,
+  isReplacing,
   ...props
 }: RecommendationCandidatesProps) {
   return (
@@ -23,6 +25,7 @@ function RecommendationCandidates({
           key={candidate.id}
           product={candidate}
           onReplace={() => onReplaceProduct(candidate.id)}
+          isReplacing={isReplacing}
         />
       ))}
     </div>

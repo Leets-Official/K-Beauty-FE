@@ -1,7 +1,8 @@
 import type { ComponentProps } from 'react';
 
+import { formatRecommendationReason } from '@/features/recommendation/lib/formatRecommendationReason';
 import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
-import { Rating } from '@/features/recommendation/ui/Rating';
+import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { SparkleIcon } from '@/shared/assets/icons';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
@@ -19,14 +20,15 @@ function RecommendedProductSummary({
   product,
   ...props
 }: RecommendedProductSummaryProps) {
+  const concern = useSurveyStore((state) => state.concern);
+
   return (
     <div className={cn('flex flex-col gap-3', className)} {...props}>
-      <ProductVisual stepId={stepId} name={product.name} />
+      <ProductVisual stepId={stepId} name={product.name} imageUrl={product.imageUrl} />
 
       <div>
         <p className="typo-caption2 text-text-secondary">{product.brand}</p>
         <h3 className="typo-body1 text-text-primary font-bold">{product.name}</h3>
-        <Rating rating={product.rating} reviewCount={product.reviewCount} />
         <p className="typo-title2 text-action-primary mt-1">{formatPrice(product.price)}</p>
       </div>
 
@@ -35,7 +37,9 @@ function RecommendedProductSummary({
           <SparkleIcon aria-hidden="true" className="size-3" />
           나에게 추천한 이유
         </p>
-        <p className="typo-caption1 text-text-primary">{product.reason}</p>
+        <p className="typo-caption1 text-text-primary">
+          {formatRecommendationReason(concern, product.tags)}
+        </p>
       </div>
     </div>
   );

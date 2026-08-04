@@ -24,6 +24,7 @@ export { default as ProductSerumIcon } from './product_serum.svg?react';
 export { default as ProductTonerIcon } from './product_toner.svg?react';
 export { default as ResetIcon } from './reset.svg?react';
 export { default as ScanFaceIcon } from './scan_face.svg?react';
+export { default as ShareIcon } from './share.svg?react';
 export { default as ShieldAlertIcon } from './shield_alert.svg?react';
 export { default as SparkleIcon } from './sparkle.svg?react';
 export { default as SunIcon } from './sun.svg?react';
