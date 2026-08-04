@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
+import { QueryProvider } from '@/app/providers/QueryProvider';
 import { ToastProvider } from '@/shared/ui/Toast';
 
 import './styles/global.css';
@@ -10,18 +11,21 @@ export default function Root() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>K-Beauty</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>Cosmetch</title>
         <Meta />
         <Links />
       </head>
 
       <body>
-        <ToastProvider>
-          <Outlet />
+        <QueryProvider>
+          <ToastProvider>
+            <Outlet />
 
-          <ScrollRestoration />
-          <Scripts />
-        </ToastProvider>
+            <ScrollRestoration />
+            <Scripts />
+          </ToastProvider>
+        </QueryProvider>
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-import { SurveyConcernStep } from '@/features/survey/ui/SurveyConcernStep';
+import { SurveyConcernStep } from '@/features/survey';
 
 export default function SurveyConcernRoute() {
   return <SurveyConcernStep />;

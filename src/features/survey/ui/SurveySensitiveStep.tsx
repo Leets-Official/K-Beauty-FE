@@ -1,16 +1,20 @@
 import { CircleAlert, ShieldCheck } from 'lucide-react';
-import { useNavigate } from 'react-router';
 
-import { getSensitiveNextRoute } from '@/features/survey/lib/getNextRoute';
-import { SENSITIVITY_OPTIONS, type Sensitivity } from '@/features/survey/model/sensitivity';
-import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
 import {
+  QUESTION_CODE,
+  SENSITIVITY_OPTIONS,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  useSurveyAnswerSubmit,
+  useSurveyStore,
+  type Sensitivity,
+} from '@/features/survey/model';
+import {
+  SurveyOptionCard,
   SurveyOptionIcon,
+  SurveyStepLayout,
   type SurveyOptionIconConfig,
-} from '@/features/survey/ui/SurveyOptionIcon';
-import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
+} from '@/features/survey/ui';
 import { Button } from '@/shared/ui/button';
 
 const SENSITIVITY_ICONS: Record<Sensitivity, SurveyOptionIconConfig> = {
@@ -27,9 +31,9 @@ const SENSITIVITY_ICONS: Record<Sensitivity, SurveyOptionIconConfig> = {
 };
 
 function SurveySensitiveStep() {
-  const navigate = useNavigate();
   const sensitive = useSurveyStore((state) => state.sensitive);
   const setSensitive = useSurveyStore((state) => state.setSensitive);
+  const { submit, isPending } = useSurveyAnswerSubmit();
 
   return (
     <SurveyStepLayout
@@ -51,8 +55,8 @@ function SurveySensitiveStep() {
       footer={
         <Button
           className="w-full"
-          disabled={sensitive === null}
-          onClick={() => sensitive && navigate(getSensitiveNextRoute(sensitive))}
+          disabled={sensitive === null || isPending}
+          onClick={() => sensitive && submit(QUESTION_CODE.sensitive, [sensitive])}
         >
           다음
         </Button>
@@ -65,7 +69,8 @@ function SurveySensitiveStep() {
           caption={option.caption}
           icon={<SurveyOptionIcon {...SENSITIVITY_ICONS[option.value]} />}
           selected={sensitive === option.value}
-          onSelect={() => setSensitive(option.value)}
+          onSelect={() => !isPending && setSensitive(option.value)}
+          disabled={isPending}
           variant="large"
           indicatorClassName="size-6"
         />

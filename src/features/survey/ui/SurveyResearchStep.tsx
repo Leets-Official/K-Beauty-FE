@@ -1,18 +1,18 @@
-import { useNavigate } from 'react-router';
-
-import { getResearchNextRoute } from '@/features/survey/lib/getNextRoute';
 import {
+  QUESTION_CODE,
   RESEARCH_PREFERENCE_OPTIONS,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  useSurveyAnswerSubmit,
+  useSurveyStore,
   type ResearchPreference,
-} from '@/features/survey/model/researchPreference';
-import { SURVEY_STEP, SURVEY_TOTAL_STEPS } from '@/features/survey/model/surveyProgress';
-import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { SurveyOptionCard } from '@/features/survey/ui/SurveyOptionCard';
+} from '@/features/survey/model';
 import {
+  SurveyOptionCard,
   SurveyOptionIcon,
+  SurveyStepLayout,
   type SurveyOptionIconConfig,
-} from '@/features/survey/ui/SurveyOptionIcon';
-import { SurveyStepLayout } from '@/features/survey/ui/SurveyStepLayout';
+} from '@/features/survey/ui';
 import { BookOpenIcon, EyeIcon, EyeOffIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 
@@ -35,9 +35,9 @@ const RESEARCH_ICONS: Record<ResearchPreference, SurveyOptionIconConfig> = {
 };
 
 function SurveyResearchStep() {
-  const navigate = useNavigate();
   const research = useSurveyStore((state) => state.research);
   const setResearch = useSurveyStore((state) => state.setResearch);
+  const { submit, isPending } = useSurveyAnswerSubmit();
 
   return (
     <SurveyStepLayout
@@ -60,8 +60,8 @@ function SurveyResearchStep() {
       footer={
         <Button
           className="w-full"
-          disabled={research === null}
-          onClick={() => navigate(getResearchNextRoute())}
+          disabled={research === null || isPending}
+          onClick={() => research && submit(QUESTION_CODE.research, [research])}
         >
           다음
         </Button>
@@ -74,7 +74,8 @@ function SurveyResearchStep() {
           caption={option.caption}
           icon={<SurveyOptionIcon {...RESEARCH_ICONS[option.value]} />}
           selected={research === option.value}
-          onSelect={() => setResearch(option.value)}
+          onSelect={() => !isPending && setResearch(option.value)}
+          disabled={isPending}
           variant="large"
         />
       ))}
