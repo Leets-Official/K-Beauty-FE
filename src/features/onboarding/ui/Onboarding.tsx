@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
+
 import { useOnboardingFlow } from '@/features/onboarding/model';
 import { OnboardingProgress, OnboardingSlide, SplashScreen } from '@/features/onboarding/ui';
 import { Button } from '@/shared/ui/button';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/shared/ui/carousel';
 import { cn } from '@/shared/utils/cn';
 
 interface OnboardingProps {
@@ -8,16 +11,45 @@ interface OnboardingProps {
 }
 
 function Onboarding({ className }: OnboardingProps) {
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const {
     isSplashVisible,
-    currentSlide,
     currentSlideIndex,
+    slides,
     totalSlides,
     isLastSlide,
     isStarting,
     startSurvey,
     goToNextSlide,
+    goToSlide,
   } = useOnboardingFlow();
+
+  useEffect(() => {
+    if (!carouselApi) {
+      return;
+    }
+
+    const handleSelect = () => {
+      goToSlide(carouselApi.selectedScrollSnap());
+    };
+
+    handleSelect();
+    carouselApi.on('select', handleSelect);
+    carouselApi.on('reInit', handleSelect);
+
+    return () => {
+      carouselApi.off('select', handleSelect);
+      carouselApi.off('reInit', handleSelect);
+    };
+  }, [carouselApi, goToSlide]);
+
+  useEffect(() => {
+    if (!carouselApi || carouselApi.selectedScrollSnap() === currentSlideIndex) {
+      return;
+    }
+
+    carouselApi.scrollTo(currentSlideIndex);
+  }, [carouselApi, currentSlideIndex]);
 
   if (isSplashVisible) {
     return <SplashScreen className={className} />;
@@ -46,7 +78,19 @@ function Onboarding({ className }: OnboardingProps) {
         aria-labelledby="onboarding-slide-title"
         aria-live="polite"
       >
-        <OnboardingSlide slide={currentSlide} />
+        <Carousel
+          className="-mx-4"
+          opts={{ align: 'start', containScroll: 'trimSnaps', skipSnaps: false }}
+          setApi={setCarouselApi}
+        >
+          <CarouselContent className="ml-0">
+            {slides.map((slide) => (
+              <CarouselItem key={slide.title} className="pl-0">
+                <OnboardingSlide slide={slide} className="px-4" />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
 
         <div className="mt-auto">
           <OnboardingProgress
