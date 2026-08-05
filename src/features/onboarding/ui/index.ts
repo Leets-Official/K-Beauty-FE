@@ -5,4 +5,5 @@ export {
   type OnboardingSlideImageProps,
   type OnboardingSlideTextProps,
 } from './OnboardingSlide';
+export { OngoingSurveyDialog, type OngoingSurveyDialogProps } from './OngoingSurveyDialog';
 export { SplashScreen, type SplashScreenProps } from './SplashScreen';

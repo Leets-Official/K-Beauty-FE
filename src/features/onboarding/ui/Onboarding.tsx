@@ -5,8 +5,10 @@ import {
   OnboardingProgress,
   OnboardingSlideImage,
   OnboardingSlideText,
+  OngoingSurveyDialog,
   SplashScreen,
 } from '@/features/onboarding/ui';
+import { cosmetchMarkImage } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/shared/ui/carousel';
 import { cn } from '@/shared/utils/cn';
@@ -24,8 +26,11 @@ function Onboarding({ className }: OnboardingProps) {
     slides,
     totalSlides,
     isLastSlide,
+    isOngoingSurveyDialogOpen,
     isStarting,
+    continueOngoingSurvey,
     startSurvey,
+    setIsOngoingSurveyDialogOpen,
     goToNextSlide,
     goToSlide,
   } = useOnboardingFlow();
@@ -68,7 +73,14 @@ function Onboarding({ className }: OnboardingProps) {
         className,
       )}
     >
-      <header className="flex h-4 justify-end">
+      <header className="flex h-6 items-center justify-between">
+        <div className="flex items-center gap-1.5" aria-label="Cosmetch">
+          <img className="size-5 rounded-md" src={cosmetchMarkImage} alt="" aria-hidden="true" />
+          <span className="cosmetch-wordmark text-primary-600 text-[14px] leading-5">
+            {'Cosmetch'}
+          </span>
+        </div>
+
         <button
           className="typo-caption1 text-text-secondary hover:text-text-primary focus-visible:ring-ring rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
           type="button"
@@ -116,6 +128,12 @@ function Onboarding({ className }: OnboardingProps) {
           ) : null}
         </div>
       </section>
+
+      <OngoingSurveyDialog
+        open={isOngoingSurveyDialogOpen}
+        onContinue={continueOngoingSurvey}
+        onOpenChange={setIsOngoingSurveyDialogOpen}
+      />
     </main>
   );
 }
