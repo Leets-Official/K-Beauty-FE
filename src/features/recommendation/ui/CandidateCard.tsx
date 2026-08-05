@@ -1,20 +1,26 @@
 import type { ComponentProps } from 'react';
 
-import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
-import { Rating } from '@/features/recommendation/ui/Rating';
+import type { RecommendationProduct } from '@/features/recommendation/model';
 import { SwapIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
 
-import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
+import { IngredientTags } from './IngredientTags';
 
 interface CandidateCardProps extends ComponentProps<'article'> {
   product: RecommendationProduct;
   onReplace: () => void;
+  isReplacing?: boolean;
 }
 
-function CandidateCard({ className, product, onReplace, ...props }: CandidateCardProps) {
+function CandidateCard({
+  className,
+  product,
+  onReplace,
+  isReplacing,
+  ...props
+}: CandidateCardProps) {
   return (
     <article
       className={cn('border-border-subtle bg-surface-candidate rounded-2xl border p-3', className)}
@@ -29,11 +35,16 @@ function CandidateCard({ className, product, onReplace, ...props }: CandidateCar
           {formatPrice(product.price)}
         </span>
       </div>
-      <Rating rating={product.rating} reviewCount={product.reviewCount} />
-      <p className="typo-caption2 text-text-secondary my-2">{product.description}</p>
       <IngredientTags tags={product.tags} variant="brown" />
-      <Button type="button" variant="secondary" className="mt-3 h-10 w-full" onClick={onReplace}>
-        <SwapIcon aria-hidden="true" />이 제품으로 교체하기
+      <Button
+        type="button"
+        variant="secondary"
+        className="mt-3 h-10 w-full"
+        disabled={isReplacing}
+        onClick={onReplace}
+      >
+        <SwapIcon aria-hidden="true" />
+        {isReplacing ? '교체하는 중...' : '이 제품으로 교체하기'}
       </Button>
     </article>
   );

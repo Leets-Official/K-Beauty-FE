@@ -1,19 +1,21 @@
 import type { ComponentProps } from 'react';
 
-import { CandidateCard } from '@/features/recommendation/ui/CandidateCard';
+import type { RecommendationProduct } from '@/features/recommendation/model';
 import { cn } from '@/shared/utils/cn';
 
-import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
+import { CandidateCard } from './CandidateCard';
 
 interface RecommendationCandidatesProps extends ComponentProps<'div'> {
   candidates: RecommendationProduct[];
-  onReplaceProduct: (productId: string) => void;
+  onReplaceProduct: (productId: number) => void;
+  isReplacing?: boolean;
 }
 
 function RecommendationCandidates({
   className,
   candidates,
   onReplaceProduct,
+  isReplacing,
   ...props
 }: RecommendationCandidatesProps) {
   return (
@@ -23,6 +25,7 @@ function RecommendationCandidates({
           key={candidate.id}
           product={candidate}
           onReplace={() => onReplaceProduct(candidate.id)}
+          isReplacing={isReplacing}
         />
       ))}
     </div>

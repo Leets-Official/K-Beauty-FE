@@ -7,7 +7,7 @@ import {
 } from '@/shared/ui/BottomSheet';
 import { formatPrice } from '@/shared/utils/format';
 
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import type { RecommendationStep } from '@/features/recommendation/model';
 
 interface RecommendationComparisonBottomSheetProps {
   open: boolean;
@@ -105,26 +105,6 @@ function RecommendationComparisonBottomSheet({
                 scope="row"
                 className="typo-caption2 text-text-secondary px-1 py-3 text-left align-top font-normal"
               >
-                별점
-              </th>
-              {steps.map(({ id, product }) => (
-                <td
-                  key={id}
-                  className="border-border-subtle typo-caption1 text-text-primary border-l px-1.5 py-3 align-top font-bold"
-                >
-                  <span className="text-accent-apricot mr-1" aria-hidden="true">
-                    ★
-                  </span>
-                  {product.rating.toFixed(1)}
-                </td>
-              ))}
-            </tr>
-
-            <tr className="bg-primary-50/50">
-              <th
-                scope="row"
-                className="typo-caption2 text-text-secondary px-1 py-3 text-left align-top font-normal"
-              >
                 주요 성분
               </th>
               {steps.map(({ id, product }) => (
@@ -143,33 +123,6 @@ function RecommendationComparisonBottomSheet({
               ))}
             </tr>
 
-            <tr>
-              <th
-                scope="row"
-                className="typo-caption2 text-text-secondary px-1 py-3 text-left align-top font-normal"
-              >
-                장점
-              </th>
-              {steps.map(({ id, product }) => (
-                <td
-                  key={id}
-                  className="border-border-subtle border-l px-1.5 py-3 align-top break-keep"
-                >
-                  <ul className="flex flex-col gap-2">
-                    {product.easyGuide.map((guide) => (
-                      <li key={guide} className="typo-caption2 text-text-primary flex gap-1.5">
-                        <span
-                          aria-hidden="true"
-                          className="bg-accent-mint mt-1.5 size-1.5 shrink-0 rounded-full"
-                        />
-                        {guide}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-              ))}
-            </tr>
-
             <tr className="bg-primary-50/50">
               <th
                 scope="row"
@@ -182,7 +135,7 @@ function RecommendationComparisonBottomSheet({
                   key={id}
                   className="border-border-subtle typo-caption2 text-text-muted border-l px-1.5 py-3 align-top break-keep"
                 >
-                  {product.notice}
+                  {product.notices.length > 0 ? product.notices.join(' · ') : '-'}
                 </td>
               ))}
             </tr>
