@@ -11,11 +11,17 @@ import { Button } from '@/shared/ui/button';
 
 interface OngoingSurveyDialogProps {
   open: boolean;
+  isContinuing?: boolean;
   onContinue: () => void;
   onOpenChange: (open: boolean) => void;
 }
 
-function OngoingSurveyDialog({ open, onContinue, onOpenChange }: OngoingSurveyDialogProps) {
+function OngoingSurveyDialog({
+  open,
+  isContinuing = false,
+  onContinue,
+  onOpenChange,
+}: OngoingSurveyDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-3" showCloseButton={false}>
@@ -29,11 +35,13 @@ function OngoingSurveyDialog({ open, onContinue, onOpenChange }: OngoingSurveyDi
         </DialogHeader>
 
         <DialogFooter className="grid grid-cols-2 gap-2 sm:grid-cols-2">
-          <DialogClose render={<Button className="h-11 px-4" variant="secondary" />}>
+          <DialogClose
+            render={<Button className="h-11 px-4" variant="secondary" disabled={isContinuing} />}
+          >
             {'취소'}
           </DialogClose>
-          <Button className="h-11 px-4" onClick={onContinue}>
-            {'이동하기'}
+          <Button className="h-11 px-4" disabled={isContinuing} onClick={onContinue}>
+            {isContinuing ? '이동 중...' : '이동하기'}
           </Button>
         </DialogFooter>
       </DialogContent>

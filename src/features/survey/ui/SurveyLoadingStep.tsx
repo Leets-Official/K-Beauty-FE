@@ -90,6 +90,29 @@ function SurveyLoadingStep() {
   );
   const isLastMessage = messageIndex === LOADING_MESSAGES.length - 1;
 
+  if (isGenerationError) {
+    return (
+      <main className="bg-background-canvas mx-auto flex min-h-dvh w-full max-w-[var(--app-mobile-width)] flex-col items-center justify-center px-8 text-center">
+        <p className="typo-title2 text-text-primary">추천 결과를 만들지 못했어요.</p>
+        <p role="alert" className="typo-body1 text-text-secondary mt-2 mb-8">
+          잠시 후 다시 시도해주세요.
+        </p>
+        <div className="flex w-full flex-col gap-3">
+          <Button type="button" onClick={() => generateRecommendation()}>
+            다시 시도하기
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => navigate('/', { replace: true })}
+          >
+            설문 다시 시작하기
+          </Button>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="bg-background-canvas mx-auto flex min-h-dvh w-full max-w-[var(--app-mobile-width)] flex-col items-center justify-center px-8">
       <div className="relative mb-10 flex size-30 items-center justify-center">
@@ -115,32 +138,14 @@ function SurveyLoadingStep() {
       >
         {isLastMessage ? '딱 맞는 제품을' : '분석 중이에요'}
       </p>
-      {isGenerationError ? (
-        <div className="mt-2 mb-10 flex flex-col items-center gap-3 text-center">
-          <p role="alert" className="typo-body1 text-text-secondary">
-            추천 결과를 만들지 못했어요.
-          </p>
-          <Button type="button" onClick={() => generateRecommendation()}>
-            다시 시도하기
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate('/', { replace: true })}
-          >
-            설문 다시 시작하기
-          </Button>
-        </div>
-      ) : (
-        <p
-          key={messageIndex}
-          role="status"
-          aria-live="polite"
-          className="typo-body1 text-text-secondary animate-in fade-in slide-in-from-bottom-1 mt-2 mb-10 text-center duration-400"
-        >
-          {LOADING_MESSAGES[messageIndex]}
-        </p>
-      )}
+      <p
+        key={messageIndex}
+        role="status"
+        aria-live="polite"
+        className="typo-body1 text-text-secondary animate-in fade-in slide-in-from-bottom-1 mt-2 mb-10 text-center duration-400"
+      >
+        {LOADING_MESSAGES[messageIndex]}
+      </p>
 
       <Progress
         value={progress}

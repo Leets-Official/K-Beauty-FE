@@ -5,6 +5,7 @@ import type {
   AnswerSaveResponse,
   DiagnosisModeRequest,
   DiagnosisModeResponse,
+  CurrentSurveyResponse,
   QuestionCode,
   Survey,
   SurveyCompletionResponse,
@@ -16,6 +17,11 @@ const SURVEY_BASE_PATH = '/surveys';
 const surveyApi = {
   create: () =>
     apiClient.post<ApiResponse<Survey>>(SURVEY_BASE_PATH).then((response) => response.data.data),
+
+  current: () =>
+    apiClient
+      .get<ApiResponse<CurrentSurveyResponse>>(`${SURVEY_BASE_PATH}/current`)
+      .then((response) => response.data.data),
 
   saveAnswer: (surveyId: number, questionCode: QuestionCode, body: AnswerSaveRequest) =>
     apiClient

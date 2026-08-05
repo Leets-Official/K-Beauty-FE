@@ -1,7 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { SURVEY_ROUTES, useStartSurveyMutation, useSurveyStore } from '@/features/survey';
+import {
+  SURVEY_ROUTES,
+  surveyApi,
+  useStartSurveyMutation,
+  useSurveyStore,
+  type Concern,
+  type CurrentSurveyResponse,
+  type ProductDiscomfortType,
+  type QuestionCode,
+  type ResearchPreference,
+  type Sensitivity,
+  type SkinType,
+  type SurveyRoute,
+} from '@/features/survey/model';
 import { ApiError } from '@/shared/apis';
 import { toast } from '@/shared/ui/Toast';
 
@@ -9,30 +22,73 @@ import { ONBOARDING_SLIDES } from './onboardingSlides';
 
 const SPLASH_DURATION = 4000;
 
-function getOngoingSurveyRoute() {
-  const { isAnswerSaved } = useSurveyStore.getState();
+const ROUTE_BY_QUESTION_CODE: Record<QuestionCode, SurveyRoute> = {
+  CONCERN: SURVEY_ROUTES.concern,
+  SKIN_TYPE: SURVEY_ROUTES.skinType,
+  SENSITIVITY: SURVEY_ROUTES.sensitive,
+  CAUTION: SURVEY_ROUTES.discomfort,
+  EXPLORATION_HABIT: SURVEY_ROUTES.research,
+};
 
-  if (!isAnswerSaved('CONCERN')) {
-    return SURVEY_ROUTES.concern;
+function syncCurrentSurveyToStore(currentSurvey: CurrentSurveyResponse) {
+  const store = useSurveyStore.getState();
+
+  store.reset();
+  store.setSurveyId(currentSurvey.surveyResponseId);
+
+  for (const answer of currentSurvey.answers) {
+    const firstOptionCode = answer.optionCodes[0];
+
+    switch (answer.questionCode) {
+      case 'CONCERN':
+        if (firstOptionCode) {
+          store.setConcern(firstOptionCode as Concern);
+        }
+        break;
+      case 'SKIN_TYPE':
+        if (firstOptionCode) {
+          store.setSkinType(firstOptionCode as SkinType);
+        }
+        break;
+      case 'SENSITIVITY':
+        if (firstOptionCode) {
+          store.setSensitive(firstOptionCode as Sensitivity);
+        }
+        break;
+      case 'CAUTION':
+        store.setDiscomfortTypes(answer.optionCodes as ProductDiscomfortType[]);
+        break;
+      case 'EXPLORATION_HABIT':
+        if (firstOptionCode) {
+          store.setResearch(firstOptionCode as ResearchPreference);
+        }
+        break;
+    }
+
+    store.markAnswerSaved(answer.questionCode);
+  }
+}
+
+function getCurrentSurveyRoute(currentSurvey: CurrentSurveyResponse) {
+  if (currentSurvey.status === 'COMPLETED') {
+    return SURVEY_ROUTES.result;
   }
 
-  if (!isAnswerSaved('SKIN_TYPE')) {
+  if (currentSurvey.nextAction === 'GO_TO_ONBOARDING') {
+    return SURVEY_ROUTES.onboarding;
+  }
+
+  if (currentSurvey.nextAction === 'READY_TO_COMPLETE') {
+    return SURVEY_ROUTES.loading;
+  }
+
+  if (currentSurvey.nextAction === 'SELECT_DIAGNOSIS_MODE') {
     return SURVEY_ROUTES.skinType;
   }
 
-  if (!isAnswerSaved('SENSITIVITY')) {
-    return SURVEY_ROUTES.sensitive;
-  }
-
-  if (!isAnswerSaved('CAUTION')) {
-    return SURVEY_ROUTES.discomfort;
-  }
-
-  if (!isAnswerSaved('EXPLORATION_HABIT')) {
-    return SURVEY_ROUTES.research;
-  }
-
-  return SURVEY_ROUTES.loading;
+  return currentSurvey.currentQuestionCode
+    ? ROUTE_BY_QUESTION_CODE[currentSurvey.currentQuestionCode]
+    : SURVEY_ROUTES.concern;
 }
 
 /**
@@ -44,6 +100,7 @@ function useOnboardingFlow() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isOngoingSurveyDialogOpen, setIsOngoingSurveyDialogOpen] = useState(false);
+  const [isContinuing, setIsContinuing] = useState(false);
   const startSurveyMutation = useStartSurveyMutation();
 
   const currentSlide = ONBOARDING_SLIDES[currentSlideIndex];
@@ -96,10 +153,25 @@ function useOnboardingFlow() {
     setCurrentSlideIndex(Math.min(Math.max(index, 0), ONBOARDING_SLIDES.length - 1));
   }, []);
 
-  const continueOngoingSurvey = useCallback(() => {
-    setIsOngoingSurveyDialogOpen(false);
-    navigate(getOngoingSurveyRoute());
-  }, [navigate]);
+  const continueOngoingSurvey = useCallback(async () => {
+    if (isContinuing) {
+      return;
+    }
+
+    setIsContinuing(true);
+
+    try {
+      const currentSurvey = await surveyApi.current();
+
+      syncCurrentSurveyToStore(currentSurvey);
+      setIsOngoingSurveyDialogOpen(false);
+      navigate(getCurrentSurveyRoute(currentSurvey));
+    } catch {
+      toast.error('진행 중인 설문을 불러오지 못했어요. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setIsContinuing(false);
+    }
+  }, [isContinuing, navigate]);
 
   return {
     isSplashVisible,
@@ -109,7 +181,8 @@ function useOnboardingFlow() {
     totalSlides: ONBOARDING_SLIDES.length,
     isLastSlide,
     isOngoingSurveyDialogOpen,
-    isStarting: startSurveyMutation.isPending,
+    isStarting: startSurveyMutation.isPending || isContinuing,
+    isContinuing,
     continueOngoingSurvey,
     startSurvey,
     setIsOngoingSurveyDialogOpen,

@@ -15,6 +15,8 @@ export {
   QUESTION_CODE,
   type AnswerSaveRequest,
   type AnswerSaveResponse,
+  type CurrentSurveyAnswer,
+  type CurrentSurveyResponse,
   type DiagnosisMode,
   type DiagnosisModeRequest,
   type DiagnosisModeResponse,

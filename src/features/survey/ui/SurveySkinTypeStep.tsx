@@ -53,11 +53,14 @@ const SKIN_TYPE_ICONS: Record<SkinType, SurveyOptionIconConfig> = {
   },
 };
 
+type KnownSkinType = Exclude<SkinType, 'UNKNOWN'>;
+
 function SurveySkinTypeStep() {
   const skinType = useSurveyStore((state) => state.skinType);
   const setSkinType = useSurveyStore((state) => state.setSkinType);
   const { submit, isPending } = useSurveyAnswerSubmit();
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [guideSkinType, setGuideSkinType] = useState<KnownSkinType | null>(null);
 
   const handleSelect = (value: SkinType) => {
     if (isPending) return;
@@ -65,19 +68,21 @@ function SurveySkinTypeStep() {
     setSkinType(value);
 
     if (value === 'UNKNOWN') {
+      setGuideSkinType(null);
       setIsGuideOpen(true);
     }
   };
 
-  const handleGuideSelect = (value: Exclude<SkinType, 'UNKNOWN'>) => {
+  const handleGuideSelect = (value: KnownSkinType) => {
     if (isPending) return;
 
-    setSkinType(value);
+    setGuideSkinType(value);
   };
 
   const handleGuideConfirm = () => {
-    if (isPending || !skinType || skinType === 'UNKNOWN') return;
+    if (isPending || guideSkinType === null) return;
 
+    setSkinType('UNKNOWN');
     setIsGuideOpen(false);
   };
 
@@ -149,7 +154,7 @@ function SurveySkinTypeStep() {
       <SkinTypeGuideBottomSheet
         open={isGuideOpen}
         disabled={isPending}
-        selectedSkinType={skinType === 'UNKNOWN' ? null : skinType}
+        selectedSkinType={guideSkinType}
         onOpenChange={setIsGuideOpen}
         onSelect={handleGuideSelect}
         onConfirm={handleGuideConfirm}

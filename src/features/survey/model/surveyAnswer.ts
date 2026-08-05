@@ -77,3 +77,20 @@ export interface Survey {
   updatedAt: string;
   completedAt: string | null;
 }
+
+export interface CurrentSurveyAnswer {
+  questionCode: QuestionCode;
+  optionCodes: string[];
+}
+
+export interface CurrentSurveyResponse {
+  surveyResponseId: number;
+  status: SurveyStatus;
+  diagnosisMode: DiagnosisMode | null;
+  sensitivityStatus: SensitivityStatus;
+  typeNeutralMode: boolean;
+  answers: CurrentSurveyAnswer[];
+  currentQuestionCode: QuestionCode | null;
+  currentStep: number;
+  nextAction: SurveyNextAction;
+}

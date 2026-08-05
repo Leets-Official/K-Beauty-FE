@@ -28,6 +28,7 @@ function Onboarding({ className }: OnboardingProps) {
     isLastSlide,
     isOngoingSurveyDialogOpen,
     isStarting,
+    isContinuing,
     continueOngoingSurvey,
     startSurvey,
     setIsOngoingSurveyDialogOpen,
@@ -131,6 +132,7 @@ function Onboarding({ className }: OnboardingProps) {
 
       <OngoingSurveyDialog
         open={isOngoingSurveyDialogOpen}
+        isContinuing={isContinuing}
         onContinue={continueOngoingSurvey}
         onOpenChange={setIsOngoingSurveyDialogOpen}
       />
