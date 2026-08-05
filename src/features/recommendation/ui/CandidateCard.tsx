@@ -1,12 +1,12 @@
 import type { ComponentProps } from 'react';
 
-import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
+import type { RecommendationProduct } from '@/features/recommendation/model';
 import { SwapIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
 
-import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
+import { IngredientTags } from './IngredientTags';
 
 interface CandidateCardProps extends ComponentProps<'article'> {
   product: RecommendationProduct;

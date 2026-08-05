@@ -7,7 +7,7 @@ import {
 } from '@/shared/ui/BottomSheet';
 import { formatPrice } from '@/shared/utils/format';
 
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import type { RecommendationStep } from '@/features/recommendation/model';
 
 interface RecommendationComparisonBottomSheetProps {
   open: boolean;

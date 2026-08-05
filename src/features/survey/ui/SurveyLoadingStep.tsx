@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import { useGenerateRecommendationMutation } from '@/features/recommendation/model/useGenerateRecommendationMutation';
+import { useGenerateRecommendationMutation } from '@/features/recommendation';
 import { getLoadingMessageIndex, getLoadingProgress } from '@/features/survey/lib';
 import {
   LOADING_COMPLETE_DELAY_MS,

@@ -1,10 +1,7 @@
 import { apiClient } from '@/shared/apis/apiClient';
 import type { ApiResponse } from '@/shared/types/api';
 
-import type {
-  RecommendationResponse,
-  ShareCreateResponse,
-} from '@/features/recommendation/model/recommendation';
+import type { RecommendationResponse, ShareCreateResponse } from './recommendation';
 
 const SHARE_BASE_PATH = '/shares';
 

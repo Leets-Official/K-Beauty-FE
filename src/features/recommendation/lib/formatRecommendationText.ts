@@ -1,4 +1,4 @@
-import type { RecommendationStep } from '../model/recommendation';
+import type { RecommendationStep } from '@/features/recommendation/model';
 
 function formatRecommendationText(steps: RecommendationStep[]) {
   return steps

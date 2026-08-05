@@ -1,16 +1,17 @@
 import type { ComponentProps } from 'react';
 import { useNavigate } from 'react-router';
 
-import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
-import { RecommendationCandidates } from '@/features/recommendation/ui/RecommendationCandidates';
-import { RecommendedProductSummary } from '@/features/recommendation/ui/RecommendedProductSummary';
+import type { RecommendationStep } from '@/features/recommendation/model';
 import { ChevronIcon } from '@/shared/assets/icons';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
 import type { Concern } from '@/features/survey/model/concern';
+
+import { IngredientTags } from './IngredientTags';
+import { RecommendationCandidates } from './RecommendationCandidates';
+import { RecommendedProductSummary } from './RecommendedProductSummary';
 
 interface RecommendationStepCardProps
   extends Omit<ComponentProps<'article'>, 'children' | 'id'>, RecommendationStep {

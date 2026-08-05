@@ -1,15 +1,12 @@
 import { type ComponentProps, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { formatRecommendationText } from '@/features/recommendation/lib/formatRecommendationText';
-import { useCreateRecommendationShareMutation } from '@/features/recommendation/model/useCreateRecommendationShareMutation';
-import { RecommendationComparisonBottomSheet } from '@/features/recommendation/ui/RecommendationComparisonBottomSheet';
+import { type RecommendationStep, useRecommendationActions } from '@/features/recommendation/model';
 import { CompareIcon, CopyIcon, ResetIcon, ShareIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
-import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
 
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import { RecommendationComparisonBottomSheet } from './RecommendationComparisonBottomSheet';
 
 interface RecommendationActionsProps extends ComponentProps<'div'> {
   steps: RecommendationStep[];
@@ -18,37 +15,8 @@ interface RecommendationActionsProps extends ComponentProps<'div'> {
 function RecommendationActions({ className, steps, ...props }: RecommendationActionsProps) {
   const navigate = useNavigate();
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
-  const createShareMutation = useCreateRecommendationShareMutation();
-
-  async function copyRecommendation() {
-    try {
-      await navigator.clipboard.writeText(formatRecommendationText(steps));
-      toast.success('추천 결과가 복사되었어요!');
-    } catch {
-      toast.error('추천 결과를 복사하지 못했어요.');
-    }
-  }
-
-  function shareRecommendation() {
-    createShareMutation.mutate(undefined, {
-      onSuccess: async ({ shareToken }) => {
-        const generatedShareUrl = `${window.location.origin}/recommendation?share=${encodeURIComponent(shareToken)}`;
-
-        try {
-          await navigator.clipboard.writeText(generatedShareUrl);
-          setShareUrl(null);
-          toast.success('공유 링크가 생성되고 복사되었어요!');
-        } catch {
-          setShareUrl(generatedShareUrl);
-          toast.error('공유 링크를 복사하지 못했어요. 아래 링크를 직접 복사해주세요.');
-        }
-      },
-      onError: () => {
-        toast.error('공유 링크를 만들지 못했어요.');
-      },
-    });
-  }
+  const { copyRecommendation, isCreatingShare, shareRecommendation, shareUrl } =
+    useRecommendationActions(steps);
 
   return (
     <div className={cn('flex flex-col gap-2', className)} {...props}>
@@ -66,11 +34,11 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
         type="button"
         variant="secondary"
         className="bg-surface-default w-full"
-        disabled={createShareMutation.isPending}
+        disabled={isCreatingShare}
         onClick={shareRecommendation}
       >
         <ShareIcon aria-hidden="true" />
-        {createShareMutation.isPending ? '공유 링크 만드는 중...' : '공유하기'}
+        {isCreatingShare ? '공유 링크 만드는 중...' : '공유하기'}
       </Button>
 
       {shareUrl ? (

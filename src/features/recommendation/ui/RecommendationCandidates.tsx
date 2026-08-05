@@ -1,9 +1,9 @@
 import type { ComponentProps } from 'react';
 
-import { CandidateCard } from '@/features/recommendation/ui/CandidateCard';
+import type { RecommendationProduct } from '@/features/recommendation/model';
 import { cn } from '@/shared/utils/cn';
 
-import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
+import { CandidateCard } from './CandidateCard';
 
 interface RecommendationCandidatesProps extends ComponentProps<'div'> {
   candidates: RecommendationProduct[];

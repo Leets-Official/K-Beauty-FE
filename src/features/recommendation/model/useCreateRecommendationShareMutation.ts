@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { shareApi } from '@/features/recommendation/model/shareApi';
+import { shareApi } from './shareApi';
 
 function useCreateRecommendationShareMutation() {
   return useMutation({

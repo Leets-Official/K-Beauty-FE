@@ -5,7 +5,7 @@ import type {
   RecommendationProduct,
   RecommendationResponse,
   RecommendationRole,
-} from '@/features/recommendation/model/recommendation';
+} from '@/features/recommendation/model';
 
 const ROLE_LABELS: Record<RecommendationRole, string> = {
   TEXTURE: '피부결 정돈',

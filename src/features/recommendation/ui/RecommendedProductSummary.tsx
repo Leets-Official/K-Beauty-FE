@@ -1,13 +1,14 @@
 import type { ComponentProps } from 'react';
 
-import { formatRecommendationReason } from '@/features/recommendation/lib/formatRecommendationReason';
-import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
+import { formatRecommendationReason } from '@/features/recommendation/lib';
+import type { RecommendationProduct } from '@/features/recommendation/model';
 import { SparkleIcon } from '@/shared/assets/icons';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
 
-import type { RecommendationProduct } from '@/features/recommendation/model/recommendation';
 import type { Concern } from '@/features/survey/model/concern';
+
+import { ProductVisual } from './ProductVisual';
 
 interface RecommendedProductSummaryProps extends ComponentProps<'div'> {
   stepId: number;

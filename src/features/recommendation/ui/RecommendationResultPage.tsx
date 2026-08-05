@@ -1,16 +1,19 @@
 import type { ComponentProps } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
-import { useCurrentRecommendationQuery } from '@/features/recommendation/model/useCurrentRecommendationQuery';
-import { useSelectRecommendationCandidateMutation } from '@/features/recommendation/model/useSelectRecommendationCandidateMutation';
-import { useSharedRecommendationQuery } from '@/features/recommendation/model/useSharedRecommendationQuery';
-import { RecommendationActions } from '@/features/recommendation/ui/RecommendationActions';
-import { RecommendationStepCard } from '@/features/recommendation/ui/RecommendationStepCard';
+import {
+  useCurrentRecommendationQuery,
+  useSelectRecommendationCandidateMutation,
+  useSharedRecommendationQuery,
+} from '@/features/recommendation/model';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { BackIcon, SparkleIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
+
+import { RecommendationActions } from './RecommendationActions';
+import { RecommendationStepCard } from './RecommendationStepCard';
 
 type RecommendationResultPageProps = ComponentProps<'main'>;
 

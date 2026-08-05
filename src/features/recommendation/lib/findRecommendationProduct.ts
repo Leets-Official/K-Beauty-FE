@@ -1,4 +1,4 @@
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import type { RecommendationStep } from '@/features/recommendation/model';
 
 function findRecommendationProduct(steps: RecommendationStep[], productId: number) {
   for (const step of steps) {

@@ -4,7 +4,7 @@ import type { ApiResponse } from '@/shared/types/api';
 import type {
   RecommendationResponse,
   SelectRecommendationCandidateVariables,
-} from '@/features/recommendation/model/recommendation';
+} from './recommendation';
 
 const RECOMMENDATION_BASE_PATH = '/recommendations';
 

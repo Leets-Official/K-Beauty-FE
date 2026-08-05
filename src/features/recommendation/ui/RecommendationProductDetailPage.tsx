@@ -1,15 +1,20 @@
 import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 
-import { findRecommendationProduct } from '@/features/recommendation/lib/findRecommendationProduct';
-import { formatRecommendationReason } from '@/features/recommendation/lib/formatRecommendationReason';
-import { useCurrentRecommendationQuery } from '@/features/recommendation/model/useCurrentRecommendationQuery';
-import { useSharedRecommendationQuery } from '@/features/recommendation/model/useSharedRecommendationQuery';
-import { ProductVisual } from '@/features/recommendation/ui/ProductVisual';
+import {
+  findRecommendationProduct,
+  formatRecommendationReason,
+} from '@/features/recommendation/lib';
+import {
+  useCurrentRecommendationQuery,
+  useSharedRecommendationQuery,
+} from '@/features/recommendation/model';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { BackIcon, FlaskConicalIcon, HeartIcon, NoticeAlertIcon } from '@/shared/assets/icons';
 import { Button, buttonVariants } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { formatPrice } from '@/shared/utils/format';
+
+import { ProductVisual } from './ProductVisual';
 
 function RecommendationProductDetailPage() {
   const navigate = useNavigate();

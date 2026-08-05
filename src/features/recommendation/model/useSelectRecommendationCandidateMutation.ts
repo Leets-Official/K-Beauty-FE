@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { recommendationApi } from '@/features/recommendation/model/recommendationApi';
-import { recommendationQueries } from '@/features/recommendation/model/recommendationQueries';
+import { recommendationApi } from './recommendationApi';
+import { recommendationQueries } from './recommendationQueries';
 
 function useSelectRecommendationCandidateMutation() {
   const queryClient = useQueryClient();
