@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { resetSurveyProgressStorage } from '@/features/survey/model/surveyProgress';
 import { surveyApi } from '@/features/survey/model/surveyApi';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
 import { clearSessionToken, createSession, getSessionToken } from '@/shared/apis';
 
 let starting: Promise<number> | null = null;
+let restarting: Promise<number> | null = null;
 
 async function start() {
   // 세션은 익명 사용자 식별용이라 설문마다 새로 받을 필요가 없습니다. 없을 때만 발급받습니다.
@@ -31,10 +33,21 @@ function startSurvey(): Promise<number> {
 }
 
 function restartSurvey(): Promise<number> {
-  clearSessionToken();
-  useSurveyStore.getState().reset();
+  restarting ??= (async () => {
+    if (starting) {
+      await starting.catch(() => undefined);
+    }
 
-  return startSurvey();
+    clearSessionToken();
+    useSurveyStore.getState().reset();
+    resetSurveyProgressStorage();
+
+    return startSurvey();
+  })().finally(() => {
+    restarting = null;
+  });
+
+  return restarting;
 }
 
 /**

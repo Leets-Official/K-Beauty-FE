@@ -3,10 +3,9 @@ import * as React from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
+import { SURVEY_PROGRESS_STORAGE_KEY } from '@/features/survey/model';
 import { Progress } from '@/shared/ui/progress';
 import { cn } from '@/shared/utils/cn';
-
-const SURVEY_PROGRESS_STORAGE_KEY = 'cosmetch-survey-progress-value';
 
 interface SurveyStepLayoutProps {
   title: React.ReactNode;
@@ -33,11 +32,7 @@ function getInitialProgressValue(targetValue: number, enabled: boolean) {
   const storedValue = window.sessionStorage.getItem(SURVEY_PROGRESS_STORAGE_KEY);
   const progressValue = storedValue == null ? targetValue : Number(storedValue);
 
-  if (!Number.isFinite(progressValue) || progressValue > targetValue) {
-    return targetValue;
-  }
-
-  return progressValue;
+  return Number.isFinite(progressValue) ? progressValue : targetValue;
 }
 
 function useAnimatedSurveyProgress(targetValue: number, enabled: boolean) {

@@ -13,7 +13,7 @@ function readStoredSessionToken() {
     return null;
   }
 
-  return window.localStorage.getItem(SESSION_TOKEN_STORAGE_KEY);
+  return window.sessionStorage.getItem(SESSION_TOKEN_STORAGE_KEY);
 }
 
 let sessionToken: string | null = readStoredSessionToken();
@@ -22,7 +22,7 @@ function setSessionToken(token: string) {
   sessionToken = token;
 
   if (typeof window !== 'undefined') {
-    window.localStorage.setItem(SESSION_TOKEN_STORAGE_KEY, token);
+    window.sessionStorage.setItem(SESSION_TOKEN_STORAGE_KEY, token);
   }
 }
 
@@ -34,7 +34,7 @@ function clearSessionToken() {
   sessionToken = null;
 
   if (typeof window !== 'undefined') {
-    window.localStorage.removeItem(SESSION_TOKEN_STORAGE_KEY);
+    window.sessionStorage.removeItem(SESSION_TOKEN_STORAGE_KEY);
   }
 }
 

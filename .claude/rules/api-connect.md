@@ -14,7 +14,8 @@ K-Beauty 클라이언트는 React Router 7 SPA 구조이며, 서버 상태 관�
 - 화면에서 API를 직접 호출하지 말고, feature의 `model`에 React Query hook을 만든 뒤 UI에서 hook을 사용한다.
 - 서버 상태는 React Query로 관리하고, 설문 답변처럼 즉시 화면 흐름에 필요한 클라이언트 상태는 Zustand store에 둔다.
 - 세션 기반 API는 `apiClient`의 `X-Session-Token` 자동 주입 흐름을 사용한다.
-- 세션 토큰은 `sessionStorage`/`localStorage`에 저장하지 않고 런타임 메모리에만 보관한다.
+- 세션 토큰은 `apiClient`의 `setSessionToken()`/`clearSessionToken()`으로만 관리한다.
+- 새로고침과 같은 탭 내 재진입을 지원하기 위해 `apiClient` 내부에서만 `sessionStorage`를 사용하고, `localStorage`에는 저장하지 않는다.
 - 응답 데이터를 화면 모델로 바꿔야 하면 feature의 `lib` 또는 `model`에서 변환한다.
 
 ## 폴더 위치
@@ -190,11 +191,11 @@ useQuery({
 
 ## 세션 토큰 규칙
 
-- 세션 생성 API 응답 body의 `data.sessionToken`은 `setSessionToken()`으로 메모리에 저장한다.
+- 세션 생성 API 응답 body의 `data.sessionToken`은 `setSessionToken()`으로 저장한다.
 - 현재 세션 조회, 추천 생성/조회 등 세션이 필요한 요청은 `apiClient` 인터셉터의 자동 헤더 주입을 사용한다.
-- API 함수마다 `sessionStorage`를 직접 읽지 않는다.
-- `sessionStorage`/`localStorage`에 세션 토큰을 저장하지 않는다.
-- 새로고침하면 메모리 토큰이 사라지므로 필요한 경우 세션 생성부터 다시 시작한다.
+- 일반 API 함수나 UI 컴포넌트에서 `sessionStorage`를 직접 읽거나 쓰지 않는다.
+- `localStorage`에는 세션 토큰을 저장하지 않는다.
+- 탭을 닫으면 `sessionStorage`의 토큰이 사라지므로 다음 방문은 새 세션으로 시작한다.
 - 세션 만료 또는 재시작이 필요한 흐름에서는 `clearSessionToken()`을 호출한다.
 
 ```ts

@@ -13,7 +13,8 @@ Connect APIs according to the current structure of the K-Beauty client. This ser
 - Use the `apiClient` instance from `src/shared/apis/apiClient.ts`.
 - The common `/api` prefix for all APIs must be managed only by `API_PREFIX` in `apiClient`.
 - Do not add `/api` to domain API function paths.
-- Store the session token only in runtime memory, not in `sessionStorage` or `localStorage`.
+- Manage the session token only through `apiClient` utilities such as `setSessionToken()` and `clearSessionToken()`.
+- To support refresh and same-tab re-entry, only `apiClient` may persist the session token in `sessionStorage`. Do not store it in `localStorage`.
 - Manage server state with `@tanstack/react-query`.
 - API functions used globally across the app, such as session APIs, should be written in `src/shared/apis/{domain}.ts`.
 - Feature-specific API functions, such as survey or recommendation APIs, should be written in `src/features/{feature}/model/{domain}Api.ts`.
@@ -200,8 +201,9 @@ async function createSession() {
 Notes:
 
 - Do not read `sessionStorage` directly from regular API functions.
-- Do not store the session token in `sessionStorage` or `localStorage`.
-- Refreshing the page clears the in-memory token, so restart from session creation when needed.
+- Do not write the session token to browser storage outside `apiClient`.
+- Do not store the session token in `localStorage`.
+- The token is preserved across refreshes in the same tab through `sessionStorage`, but it is cleared when the tab or window is closed.
 - The `apiClient` request interceptor automatically attaches the `X-Session-Token` header.
 - Requests without an existing token, such as session creation, are called without the header because no token has been stored yet.
 

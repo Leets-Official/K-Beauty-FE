@@ -10,3 +10,13 @@ export const SURVEY_STEP = {
   discomfort: 4,
   research: 5,
 } as const;
+
+export const SURVEY_PROGRESS_STORAGE_KEY = 'cosmetch-survey-progress-value';
+
+export function resetSurveyProgressStorage() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.sessionStorage.removeItem(SURVEY_PROGRESS_STORAGE_KEY);
+}
