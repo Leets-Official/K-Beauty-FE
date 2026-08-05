@@ -23,11 +23,14 @@ interface SaveSurveyAnswerVariables {
 
 function useSaveSurveyAnswer() {
   const clearAnswers = useSurveyStore((state) => state.clearAnswers);
+  const markAnswerSaved = useSurveyStore((state) => state.markAnswerSaved);
 
   return useMutation({
     mutationFn: async ({ questionCode, optionCodes, diagnosisMode }: SaveSurveyAnswerVariables) => {
       const surveyId = await ensureSurveyId();
       const answer = await surveyApi.saveAnswer(surveyId, questionCode, { optionCodes });
+
+      markAnswerSaved(questionCode);
 
       // 서버가 무효화한 답변은 진단 모드 갱신 성공 여부와 무관하게 즉시 로컬에도 반영합니다.
       if (answer.clearedQuestionCodes.length > 0) {

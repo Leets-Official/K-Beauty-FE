@@ -17,12 +17,15 @@ interface SurveyAnswers {
 
 interface SurveyState extends SurveyAnswers {
   surveyId: number | null;
+  savedQuestionCodes: QuestionCode[];
   setSurveyId: (surveyId: number) => void;
   setConcern: (concern: Concern) => void;
   setSkinType: (skinType: SkinType) => void;
   setSensitive: (sensitive: Sensitivity) => void;
   setDiscomfortTypes: (discomfortTypes: ProductDiscomfortType[]) => void;
   setResearch: (research: ResearchPreference) => void;
+  markAnswerSaved: (questionCode: QuestionCode) => void;
+  isAnswerSaved: (questionCode: QuestionCode) => boolean;
   clearAnswers: (questionCodes: QuestionCode[]) => void;
   reset: () => void;
 }
@@ -38,7 +41,8 @@ const initialAnswers = {
 const initialState = {
   ...initialAnswers,
   surveyId: null,
-} satisfies Pick<SurveyState, keyof SurveyAnswers | 'surveyId'>;
+  savedQuestionCodes: [],
+} satisfies Pick<SurveyState, keyof SurveyAnswers | 'surveyId' | 'savedQuestionCodes'>;
 
 const ANSWER_KEY_BY_QUESTION_CODE: Record<QuestionCode, keyof SurveyAnswers> = {
   CONCERN: 'concern',
@@ -56,15 +60,24 @@ export const useSurveyStore = create<SurveyState>((set) => ({
   setSensitive: (sensitive) => set({ sensitive }),
   setDiscomfortTypes: (discomfortTypes) => set({ discomfortTypes }),
   setResearch: (research) => set({ research }),
+  markAnswerSaved: (questionCode) =>
+    set((state) => ({
+      savedQuestionCodes: state.savedQuestionCodes.includes(questionCode)
+        ? state.savedQuestionCodes
+        : [...state.savedQuestionCodes, questionCode],
+    })),
+  isAnswerSaved: (questionCode) =>
+    useSurveyStore.getState().savedQuestionCodes.includes(questionCode),
   // 서버가 무효화한 뒤쪽 답변을 로컬에서도 비워, 화면과 서버 상태를 맞춥니다.
   clearAnswers: (questionCodes) =>
-    set(
-      Object.fromEntries(
+    set((state) => ({
+      ...Object.fromEntries(
         questionCodes.map((code) => {
           const key = ANSWER_KEY_BY_QUESTION_CODE[code];
           return [key, initialAnswers[key]];
         }),
       ),
-    ),
+      savedQuestionCodes: state.savedQuestionCodes.filter((code) => !questionCodes.includes(code)),
+    })),
   reset: () => set(initialState),
 }));

@@ -1,75 +1,76 @@
 ---
 name: api-connect
-description: K-Beauty React Router SPA에서 Swagger/OpenAPI 명세를 참고해 API 타입, shared API 함수, React Query hook, 세션 토큰 처리 흐름을 연결한다. 사용자가 "API 연결", "API 붙여줘", "엔드포인트 연결", "React Query로 연결"을 요청하거나 Swagger/OpenAPI URL 또는 명세를 제공했을 때 사용한다.
+description: Connects API types, shared API functions, React Query hooks, and session token handling flows in the K-Beauty React Router SPA by referencing Swagger/OpenAPI specifications. Use this when the user requests "API integration", "connect this API", "connect an endpoint", "connect with React Query", or provides a Swagger/OpenAPI URL or specification.
 ---
 
 # API Connect
 
-K-Beauty 클라이언트의 현재 구조에 맞춰 API를 연결한다. 이 서비스는 로그인 기능이 없고, 세션 생성 응답 body의 `data.sessionToken`을 이후 요청의 `X-Session-Token` 헤더로 전송해 현재 세션을 저장/조회한다.
+Connect APIs according to the current structure of the K-Beauty client. This service does not have login functionality. It sends the `data.sessionToken` from the session creation response body as the `X-Session-Token` header on subsequent requests to store and retrieve the current session.
 
-## 전제
+## Assumptions
 
-- React Router 7 SPA 구조이다.
-- API 인스턴스는 `src/shared/apis/apiClient.ts`의 `apiClient`를 사용한다.
-- 모든 API의 공통 prefix인 `/api`는 `apiClient`의 `API_PREFIX`에서만 관리한다.
-- 도메인 API 함수 path에는 `/api`를 붙이지 않는다.
-- 세션 토큰은 `sessionStorage`/`localStorage`에 저장하지 않고 런타임 메모리에만 보관한다.
-- 서버 상태는 `@tanstack/react-query`로 관리한다.
-- 세션처럼 앱 전역에서 쓰는 API 함수는 `src/shared/apis/{domain}.ts`에 작성한다.
-- 설문/추천처럼 feature 전용 API 함수는 `src/features/{feature}/model/{domain}Api.ts`에 작성한다.
-- 앱 전역 DTO는 `src/shared/types/{domain}.ts`, feature 전용 DTO는 `src/features/{feature}/model/{domain}.ts`에 작성한다.
-- React Query hook은 사용하는 feature의 `model` 폴더에 작성한다.
-- `lib`에는 API 호출 코드를 두지 않고 순수 계산/변환/검증 함수만 둔다.
-- UI 컴포넌트는 API 함수를 직접 호출하지 않고 feature hook을 사용한다.
+- The app uses a React Router 7 SPA structure.
+- Use the `apiClient` instance from `src/shared/apis/apiClient.ts`.
+- The common `/api` prefix for all APIs must be managed only by `API_PREFIX` in `apiClient`.
+- Do not add `/api` to domain API function paths.
+- Manage the session token only through `apiClient` utilities such as `setSessionToken()` and `clearSessionToken()`.
+- To support refresh and same-tab re-entry, only `apiClient` may persist the session token in `sessionStorage`. Do not store it in `localStorage`.
+- Manage server state with `@tanstack/react-query`.
+- API functions used globally across the app, such as session APIs, should be written in `src/shared/apis/{domain}.ts`.
+- Feature-specific API functions, such as survey or recommendation APIs, should be written in `src/features/{feature}/model/{domain}Api.ts`.
+- App-wide DTOs should be written in `src/shared/types/{domain}.ts`; feature-specific DTOs should be written in `src/features/{feature}/model/{domain}.ts`.
+- React Query hooks should be written in the `model` folder of the feature that uses them.
+- Do not put API call code in `lib`; keep only pure calculation, transformation, and validation functions there.
+- UI components should not call API functions directly. They should use feature hooks.
 
-## 1. API 명세 확인
+## 1. Check The API Specification
 
-Swagger/OpenAPI URL이나 붙여넣은 명세가 있으면 먼저 엔드포인트를 정리한다.
+If a Swagger/OpenAPI URL or pasted specification is available, first summarize the endpoints.
 
-확인할 항목:
+Check the following:
 
 - HTTP method
 - path
-- path parameter
-- query parameter
+- path parameters
+- query parameters
 - request body
 - response body
-- response header
-- 에러 코드와 메시지
-- 세션 토큰이 필요한지 여부
+- response headers
+- error codes and messages
+- whether a session token is required
 
-엔드포인트 목록은 짧은 표로 보여주고, 여러 개면 연결할 번호를 확인한다.
+Show the endpoint list as a short table. If there are multiple endpoints, ask which number should be connected.
 
 ```text
 | # | Method | Path | Summary | Session |
 |---|--------|------|---------|---------|
-| 1 | POST | /api/sessions | 세션 생성 | 불필요 |
-| 2 | GET | /api/sessions/current | 현재 세션 조회 | 필요 |
+| 1 | POST | /api/sessions | Create session | Not required |
+| 2 | GET | /api/sessions/current | Get current session | Required |
 ```
 
-명세의 path가 `/api/...`로 시작하더라도 실제 API 함수 작성 시에는 `API_PREFIX`를 제외한다.
+Even if the path in the specification starts with `/api/...`, exclude `API_PREFIX` when writing the actual API function.
 
 ```text
 OpenAPI path: /api/sessions/current
 API function path: /sessions/current
 ```
 
-## 2. 연결 전략 결정
+## 2. Decide The Integration Strategy
 
-| 상황                          | 전략                                    | 위치                                                 |
-| ----------------------------- | --------------------------------------- | ---------------------------------------------------- |
-| 페이지 진입 시 필요한 조회    | React Query `useQuery`                  | `features/{feature}/model/use{Name}Query.ts`         |
-| 버튼/폼 제출로 생성·수정·삭제 | React Query `useMutation`               | `features/{feature}/model/use{Name}Mutation.ts`      |
-| 세션 생성                     | API 함수 + mutation 또는 앱 초기화 흐름 | `shared/apis/session.ts`, feature/model              |
-| 현재 세션 조회                | React Query `useQuery`                  | `features/{feature}/model/useCurrentSessionQuery.ts` |
-| 설문 생성/답변/완료           | React Query `useMutation`/`useQuery`    | `features/survey/model`                              |
-| 화면 전용 선택 상태           | Zustand 또는 local state                | 기존 feature store 또는 component                    |
+| Situation                                | Strategy                                 | Location                                             |
+| ---------------------------------------- | ---------------------------------------- | ---------------------------------------------------- |
+| Data needed on page entry                | React Query `useQuery`                   | `features/{feature}/model/use{Name}Query.ts`         |
+| Create/update/delete from button or form | React Query `useMutation`                | `features/{feature}/model/use{Name}Mutation.ts`      |
+| Session creation                         | API function + mutation or app init flow | `shared/apis/session.ts`, feature/model              |
+| Current session lookup                   | React Query `useQuery`                   | `features/{feature}/model/useCurrentSessionQuery.ts` |
+| Survey creation/answer/completion        | React Query `useMutation`/`useQuery`     | `features/survey/model`                              |
+| Screen-specific selection state          | Zustand or local state                   | Existing feature store or component                  |
 
-모호할 때만 사용자에게 묻는다. 예를 들어 “이 조회가 페이지 진입 시 바로 필요한지, 버튼 클릭 후 필요한지” 정도만 확인한다.
+Ask the user only when the requirement is ambiguous. For example, only clarify whether the query should run immediately on page entry or only after a button click.
 
-## 3. 기존 코드 확인
+## 3. Check Existing Code
 
-작업 전에 반드시 확인한다.
+Always check these before working.
 
 ```bash
 sed -n '1,220p' src/shared/apis/apiClient.ts
@@ -78,27 +79,27 @@ find src/shared/types -maxdepth 2 -type f
 find src/features -maxdepth 3 -type d
 ```
 
-확인할 것:
+Check the following:
 
-- `apiClient`의 baseURL, `API_PREFIX`, timeout, 세션 인터셉터
-- 이미 존재하는 shared API 파일과 feature API 파일
-- 이미 존재하는 DTO 타입
-- 대상 feature의 `model`, `lib`, `ui` 구조
+- `apiClient` baseURL, `API_PREFIX`, timeout, and session interceptor
+- Existing shared API files and feature API files
+- Existing DTO types
+- The target feature's `model`, `lib`, and `ui` structure
 
-## 4. 타입 작성
+## 4. Write Types
 
-DTO 타입은 소유권에 맞는 `model` 또는 `shared/types`에 둔다.
+Place DTO types in `model` or `shared/types` according to ownership.
 
-- 세션처럼 앱 전역에서 쓰는 DTO: `src/shared/types/{domain}.ts`
-- 설문/추천처럼 feature 전용 DTO: `src/features/{feature}/model/{domain}.ts`
+- DTOs used globally across the app, such as session DTOs: `src/shared/types/{domain}.ts`
+- Feature-specific DTOs, such as survey or recommendation DTOs: `src/features/{feature}/model/{domain}.ts`
 
-작성 규칙:
+Rules:
 
-- 객체는 `interface`를 우선 사용한다.
-- enum은 문자열 union type을 사용한다.
-- 날짜/시간은 `string`으로 둔다.
-- 명세가 불명확한 값은 `unknown`으로 두고 사용자에게 알린다.
-- API 응답 DTO와 UI 모델이 다르면 DTO 이름에 `Response`, `Request`, `Body`를 붙인다.
+- Prefer `interface` for objects.
+- Use string union types instead of enums.
+- Keep date/time values as `string`.
+- Use `unknown` for unclear values in the specification and tell the user.
+- If API response DTOs and UI models are different, suffix DTO names with `Response`, `Request`, or `Body`.
 
 ```ts
 export type DiagnosisType = 'QUICK' | 'DETAILED';
@@ -132,9 +133,9 @@ export interface CreateSessionResponse {
 }
 ```
 
-## 5. API 함수 작성
+## 5. Write API Functions
 
-앱 전역 API 파일은 `src/shared/apis/{domain}.ts`에 둔다.
+Put app-wide API files in `src/shared/apis/{domain}.ts`.
 
 ```ts
 import { apiClient } from '@/shared/apis/apiClient';
@@ -156,13 +157,13 @@ const sessionApi = {
 export { sessionApi };
 ```
 
-`src/shared/apis/index.ts`에서 필요한 API와 세션 유틸을 re-export한다.
+Re-export the necessary APIs and session utilities from `src/shared/apis/index.ts`.
 
 ```ts
 export { sessionApi } from '@/shared/apis/session';
 ```
 
-feature 전용 API 파일은 `src/features/{feature}/model/{domain}Api.ts`에 둔다.
+Put feature-specific API files in `src/features/{feature}/model/{domain}Api.ts`.
 
 ```ts
 import { apiClient } from '@/shared/apis/apiClient';
@@ -179,9 +180,9 @@ const surveyApi = {
 export { surveyApi };
 ```
 
-## 6. 세션 토큰 처리
+## 6. Handle The Session Token
 
-세션 생성 API가 응답 body의 `data.sessionToken`으로 토큰을 내려주면 저장한다.
+If the session creation API returns the token as `data.sessionToken` in the response body, store it.
 
 ```ts
 import { setSessionToken } from '@/shared/apis';
@@ -197,17 +198,18 @@ async function createSession() {
 }
 ```
 
-주의:
+Notes:
 
-- 일반 API 함수에서 `sessionStorage`를 직접 읽지 않는다.
-- `sessionStorage`/`localStorage`에 세션 토큰을 저장하지 않는다.
-- 새로고침하면 메모리 토큰이 사라지므로 필요한 경우 세션 생성부터 다시 시작한다.
-- `X-Session-Token` 헤더는 `apiClient` 요청 인터셉터가 자동으로 붙인다.
-- 세션 생성 API처럼 아직 토큰이 없는 요청은 저장된 토큰이 없으므로 헤더 없이 호출된다.
+- Do not read `sessionStorage` directly from regular API functions.
+- Do not write the session token to browser storage outside `apiClient`.
+- Do not store the session token in `localStorage`.
+- The token is preserved across refreshes in the same tab through `sessionStorage`, but it is cleared when the tab or window is closed.
+- The `apiClient` request interceptor automatically attaches the `X-Session-Token` header.
+- Requests without an existing token, such as session creation, are called without the header because no token has been stored yet.
 
-## 7. React Query Hook 작성
+## 7. Write React Query Hooks
 
-Query key factory를 같은 feature의 `model`에 둔다.
+Place the query key factory in the same feature's `model` folder.
 
 ```ts
 const sessionQueries = {
@@ -218,7 +220,7 @@ const sessionQueries = {
 export { sessionQueries };
 ```
 
-조회 hook:
+Query hook:
 
 ```ts
 import { useQuery } from '@tanstack/react-query';
@@ -237,7 +239,7 @@ function useCurrentSessionQuery() {
 export { useCurrentSessionQuery };
 ```
 
-mutation hook:
+Mutation hook:
 
 ```ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -267,9 +269,9 @@ function useCreateSessionMutation() {
 export { useCreateSessionMutation };
 ```
 
-## 8. React Query Provider 확인
+## 8. Check The React Query Provider
 
-`QueryClientProvider`가 없으면 `src/app/providers`에 추가하고 `src/app/root.tsx`에서 감싼다.
+If `QueryClientProvider` does not exist, add it under `src/app/providers` and wrap the app in `src/app/root.tsx`.
 
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -298,9 +300,9 @@ function QueryProvider({ children }: QueryProviderProps) {
 export { QueryProvider };
 ```
 
-## 9. UI 연결
+## 9. Connect UI
 
-UI는 hook만 사용한다.
+UI should use hooks only.
 
 ```tsx
 import { useCurrentSessionQuery } from '@/features/session/model/useCurrentSessionQuery';
@@ -309,11 +311,11 @@ function SessionStatusView() {
   const { data, isPending, isError } = useCurrentSessionQuery();
 
   if (isPending) {
-    return <p>불러오는 중</p>;
+    return <p>Loading</p>;
   }
 
   if (isError) {
-    return <p>세션을 불러오지 못했어요.</p>;
+    return <p>Could not load the session.</p>;
   }
 
   return <p>{data.status}</p>;
@@ -324,18 +326,18 @@ function SessionStatusView() {
 
 Good:
 
-- `apiClient` 인스턴스를 재사용한다.
-- 앱 전역 API 함수는 `shared/apis`, feature 전용 API 함수는 `features/{feature}/model`에 둔다.
-- 앱 전역 DTO는 `shared/types`, feature 전용 DTO는 `features/{feature}/model`에 둔다.
-- React Query hook은 `features/{feature}/model`에 둔다.
-- `response.data` 추출은 React Query hook에서 처리한다.
-- query key는 배열과 객체로 구조화한다.
-- 세션 토큰은 `setSessionToken`, `clearSessionToken` 유틸로만 다룬다.
+- Reuse the `apiClient` instance.
+- Put app-wide API functions in `shared/apis` and feature-specific API functions in `features/{feature}/model`.
+- Put app-wide DTOs in `shared/types` and feature-specific DTOs in `features/{feature}/model`.
+- Put React Query hooks in `features/{feature}/model`.
+- Extract `response.data` in React Query hooks.
+- Structure query keys with arrays and objects.
+- Handle session tokens only through the `setSessionToken` and `clearSessionToken` utilities.
 
 Bad:
 
-- UI 컴포넌트에서 `axios`, `fetch`, `apiClient`를 직접 호출한다.
-- API 함수마다 baseURL, timeout, session header를 반복한다.
-- `queryKey: ['domain-id']`처럼 문자열 조합 key를 쓴다.
-- DTO 타입을 UI 컴포넌트 파일 안에 임시로 만든다.
-- 명세가 불명확한 값을 `any`로 처리한다.
+- Calling `axios`, `fetch`, or `apiClient` directly from UI components.
+- Repeating baseURL, timeout, and session headers in each API function.
+- Using string-composed keys such as `queryKey: ['domain-id']`.
+- Creating DTO types temporarily inside UI component files.
+- Using `any` for values that are unclear in the specification.

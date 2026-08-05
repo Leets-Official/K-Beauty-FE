@@ -5,12 +5,25 @@ import type { ApiResponse } from '@/shared/types/api';
 const API_PREFIX = '/api';
 const API_TIMEOUT = 10_000;
 const SESSION_TOKEN_HEADER = 'X-Session-Token';
+const SESSION_TOKEN_STORAGE_KEY = 'cosmetch-session-token';
 const DEFAULT_ERROR_MESSAGE = '문제가 발생했어요. 잠시 후 다시 시도해주세요.';
 
-let sessionToken: string | null = null;
+function readStoredSessionToken() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return window.sessionStorage.getItem(SESSION_TOKEN_STORAGE_KEY);
+}
+
+let sessionToken: string | null = readStoredSessionToken();
 
 function setSessionToken(token: string) {
   sessionToken = token;
+
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.setItem(SESSION_TOKEN_STORAGE_KEY, token);
+  }
 }
 
 function getSessionToken() {
@@ -19,6 +32,10 @@ function getSessionToken() {
 
 function clearSessionToken() {
   sessionToken = null;
+
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.removeItem(SESSION_TOKEN_STORAGE_KEY);
+  }
 }
 
 class ApiError extends Error {
@@ -40,6 +57,10 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+function isDebuggableRequest(url?: string) {
+  return Boolean(url?.startsWith('/surveys') || url?.startsWith('/recommendations'));
+}
+
 apiClient.interceptors.request.use((config) => {
   const token = getSessionToken();
 
@@ -47,7 +68,28 @@ apiClient.interceptors.request.use((config) => {
     config.headers.set(SESSION_TOKEN_HEADER, token);
   }
 
+  if (import.meta.env.DEV && isDebuggableRequest(config.url)) {
+    console.debug('[api request]', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      data: config.data,
+      hasSessionToken: Boolean(token),
+    });
+  }
+
   return config;
+});
+
+apiClient.interceptors.response.use((response) => {
+  if (import.meta.env.DEV && isDebuggableRequest(response.config.url)) {
+    console.debug('[api response]', {
+      method: response.config.method?.toUpperCase(),
+      url: response.config.url,
+      data: response.data,
+    });
+  }
+
+  return response;
 });
 
 apiClient.interceptors.response.use(
@@ -76,6 +118,7 @@ export {
   ApiError,
   DEFAULT_ERROR_MESSAGE,
   SESSION_TOKEN_HEADER,
+  SESSION_TOKEN_STORAGE_KEY,
   apiClient,
   clearSessionToken,
   getSessionToken,

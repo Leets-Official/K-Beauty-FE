@@ -236,6 +236,9 @@
 
 @theme {
   --animate-blob-pulse: blob-pulse 1.4s ease-in-out infinite;
+  --animate-onboarding-slide-next: onboarding-slide-next 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-onboarding-slide-prev: onboarding-slide-prev 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-onboarding-text-enter: onboarding-text-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-orbit: orbit 1.8s linear infinite;
   --animate-orbit-reverse: orbit 2.4s linear infinite reverse;
 
@@ -255,6 +258,39 @@
     }
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  @keyframes onboarding-text-enter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes onboarding-slide-next {
+    from {
+      opacity: 0;
+      transform: translateX(36px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes onboarding-slide-prev {
+    from {
+      opacity: 0;
+      transform: translateX(-36px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 }
@@ -346,6 +382,195 @@
 
 @utility bg-button-gradient {
   background-image: var(--button-gradient);
+}
+
+@layer components {
+  .cosmetch-splash-mark {
+    transform-origin: center;
+    animation: cosmetch-mark-intro 3.6s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+
+  .cosmetch-splash-title {
+    animation: cosmetch-text-rise 3.6s ease both;
+  }
+
+  .cosmetch-splash-guide {
+    animation: cosmetch-guide-rise 3.6s ease both;
+  }
+
+  .cosmetch-wordmark {
+    font-family:
+      'Arial Rounded MT Bold', 'Avenir Next Rounded', Nunito, 'Trebuchet MS', var(--font-sans);
+    font-weight: 900;
+    letter-spacing: 0.035em;
+  }
+
+  .cosmetch-wordmark-c {
+    display: inline-block;
+    color: var(--primary-600);
+    transform: translateY(1px);
+  }
+
+  .cosmetch-splash-bg {
+    transform-origin: center;
+    animation: cosmetch-bg-bloom 3.6s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+
+  .cosmetch-splash-original {
+    z-index: 2;
+    animation: cosmetch-original-crossfade 3.6s ease both;
+  }
+
+  .cosmetch-splash-motion {
+    z-index: 1;
+    animation: cosmetch-motion-crossfade 3.6s ease both;
+  }
+
+  .cosmetch-splash-c-shape,
+  .cosmetch-splash-c-stroke {
+    transform-origin: center;
+  }
+
+  .cosmetch-splash-c-shape {
+    animation: cosmetch-c-shape-settle 3.6s cubic-bezier(0.34, 1, 0.64, 1) both;
+  }
+
+  .cosmetch-splash-c-stroke {
+    fill: none;
+    stroke: #ffffff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .cosmetch-splash-c-stroke {
+    stroke-width: 7.4;
+    animation: cosmetch-c-draw 3.6s cubic-bezier(0.34, 1, 0.64, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cosmetch-splash-mark,
+    .cosmetch-splash-title,
+    .cosmetch-splash-guide,
+    .cosmetch-splash-bg,
+    .cosmetch-splash-original,
+    .cosmetch-splash-motion,
+    .cosmetch-splash-c-shape,
+    .cosmetch-splash-c-stroke {
+      animation-duration: 1ms;
+      animation-delay: 0ms;
+    }
+  }
+}
+
+@keyframes cosmetch-original-crossfade {
+  0%,
+  60% {
+    opacity: 0;
+  }
+  72%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cosmetch-motion-crossfade {
+  0%,
+  64% {
+    opacity: 1;
+  }
+  76%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cosmetch-mark-intro {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.86);
+  }
+  14%,
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  38% {
+    transform: translateY(0) scale(1.03);
+  }
+  54% {
+    transform: translateY(0) scale(0.98);
+  }
+  74% {
+    transform: translateY(0) scale(1.02);
+  }
+}
+
+@keyframes cosmetch-text-rise {
+  0%,
+  8% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  24%,
+  82% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0.96;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes cosmetch-guide-rise {
+  0%,
+  16% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  34%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cosmetch-bg-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  16%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cosmetch-c-shape-settle {
+  0%,
+  12% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  58%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cosmetch-c-draw {
+  0%,
+  14% {
+    stroke-dashoffset: 1;
+  }
+  58%,
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 :root {

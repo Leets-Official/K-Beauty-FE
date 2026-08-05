@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { resetSurveyProgressStorage } from '@/features/survey/model/surveyProgress';
 import { surveyApi } from '@/features/survey/model/surveyApi';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { createSession, getSessionToken } from '@/shared/apis';
+import { clearSessionToken, createSession, getSessionToken } from '@/shared/apis';
 
 let starting: Promise<number> | null = null;
+let restarting: Promise<number> | null = null;
 
 async function start() {
   // 세션은 익명 사용자 식별용이라 설문마다 새로 받을 필요가 없습니다. 없을 때만 발급받습니다.
@@ -30,6 +32,24 @@ function startSurvey(): Promise<number> {
   return starting;
 }
 
+function restartSurvey(): Promise<number> {
+  restarting ??= (async () => {
+    if (starting) {
+      await starting.catch(() => undefined);
+    }
+
+    clearSessionToken();
+    useSurveyStore.getState().reset();
+    resetSurveyProgressStorage();
+
+    return startSurvey();
+  })().finally(() => {
+    restarting = null;
+  });
+
+  return restarting;
+}
+
 /**
  * 답변을 저장하려면 세션 토큰과 surveyId가 먼저 있어야 합니다.
  * 온보딩을 거쳐 왔으면 그때 만든 설문을 그대로 쓰고, 첫 질문으로 바로 들어온 경우에는 여기서 시작합니다.
@@ -50,4 +70,10 @@ function useStartSurveyMutation() {
   });
 }
 
-export { ensureSurveyId, useStartSurveyMutation };
+function useRestartSurveyMutation() {
+  return useMutation({
+    mutationFn: restartSurvey,
+  });
+}
+
+export { ensureSurveyId, restartSurvey, useRestartSurveyMutation, useStartSurveyMutation };

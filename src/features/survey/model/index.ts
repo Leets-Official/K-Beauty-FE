@@ -15,6 +15,8 @@ export {
   QUESTION_CODE,
   type AnswerSaveRequest,
   type AnswerSaveResponse,
+  type CurrentSurveyAnswer,
+  type CurrentSurveyResponse,
   type DiagnosisMode,
   type DiagnosisModeRequest,
   type DiagnosisModeResponse,
@@ -34,7 +36,12 @@ export {
   LOADING_MESSAGES,
   LOADING_MESSAGE_INTERVAL_MS,
 } from './surveyLoading';
-export { SURVEY_STEP, SURVEY_TOTAL_STEPS } from './surveyProgress';
+export {
+  SURVEY_PROGRESS_STORAGE_KEY,
+  SURVEY_STEP,
+  SURVEY_TOTAL_STEPS,
+  resetSurveyProgressStorage,
+} from './surveyProgress';
 export { SURVEY_ROUTES, type SurveyRoute } from './surveyRoutes';
 export { useCompleteSurvey } from './useCompleteSurvey';
 export {
@@ -42,6 +49,11 @@ export {
   useSurveyAnswerSubmit,
   type SaveSurveyAnswerVariables,
 } from './useSaveSurveyAnswer';
-export { ensureSurveyId, useStartSurveyMutation } from './useStartSurveyMutation';
+export {
+  ensureSurveyId,
+  restartSurvey,
+  useRestartSurveyMutation,
+  useStartSurveyMutation,
+} from './useStartSurveyMutation';
 export { useSurveyStepGuard, type SurveyAnswerKey } from './useSurveyStepGuard';
 export { useSurveyStore } from './useSurveyStore';

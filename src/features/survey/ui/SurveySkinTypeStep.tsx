@@ -53,11 +53,16 @@ const SKIN_TYPE_ICONS: Record<SkinType, SurveyOptionIconConfig> = {
   },
 };
 
+type KnownSkinType = Exclude<SkinType, 'UNKNOWN'>;
+
 function SurveySkinTypeStep() {
   const skinType = useSurveyStore((state) => state.skinType);
   const setSkinType = useSurveyStore((state) => state.setSkinType);
   const { submit, isPending } = useSurveyAnswerSubmit();
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [guideSkinType, setGuideSkinType] = useState<KnownSkinType | null>(null);
+  const isGuideSelectionRequired = skinType === 'UNKNOWN' && guideSkinType === null;
+  const isSubmitDisabled = !skinType || isPending || isGuideSelectionRequired;
 
   const handleSelect = (value: SkinType) => {
     if (isPending) return;
@@ -65,23 +70,22 @@ function SurveySkinTypeStep() {
     setSkinType(value);
 
     if (value === 'UNKNOWN') {
+      setGuideSkinType(null);
       setIsGuideOpen(true);
     }
   };
 
-  const handleGuideSelect = (value: Exclude<SkinType, 'UNKNOWN'>) => {
+  const handleGuideSelect = (value: KnownSkinType) => {
     if (isPending) return;
 
-    setSkinType(value);
-    setIsGuideOpen(false);
+    setGuideSkinType(value);
   };
 
-  const handleRecommendAsUnknown = () => {
-    if (isPending) return;
+  const handleGuideConfirm = () => {
+    if (isPending || guideSkinType === null) return;
 
     setSkinType('UNKNOWN');
     setIsGuideOpen(false);
-    submit(QUESTION_CODE.skinType, ['UNKNOWN'], 'QUICK');
   };
 
   return (
@@ -99,8 +103,8 @@ function SurveySkinTypeStep() {
         contentLabel="피부 타입"
         currentStep={SURVEY_STEP.skinType}
         totalSteps={SURVEY_TOTAL_STEPS}
-        className="pt-control-lg px-7 pb-12"
-        titleClassName="typo-title3 mt-8"
+        className="px-7 pb-12"
+        titleClassName="typo-title3 mt-4"
         descriptionClassName="typo-body1 text-text-muted mt-3"
         contentClassName="mt-5"
         footerClassName="gap-2"
@@ -116,7 +120,7 @@ function SurveySkinTypeStep() {
               <Button
                 variant="secondary"
                 className="h-control-lg flex-1 border-2 px-3"
-                disabled={!skinType || isPending}
+                disabled={isSubmitDisabled}
                 onClick={() => skinType && submit(QUESTION_CODE.skinType, [skinType], 'DETAILED')}
               >
                 더 자세히 알아보고 싶어요
@@ -124,7 +128,7 @@ function SurveySkinTypeStep() {
               <Button
                 variant="secondary"
                 className="h-control-lg flex-1 border-2 px-3"
-                disabled={!skinType || isPending}
+                disabled={isSubmitDisabled}
                 onClick={() => skinType && submit(QUESTION_CODE.skinType, [skinType], 'QUICK')}
               >
                 바로 추천해주세요
@@ -152,9 +156,10 @@ function SurveySkinTypeStep() {
       <SkinTypeGuideBottomSheet
         open={isGuideOpen}
         disabled={isPending}
+        selectedSkinType={guideSkinType}
         onOpenChange={setIsGuideOpen}
         onSelect={handleGuideSelect}
-        onRecommendAsUnknown={handleRecommendAsUnknown}
+        onConfirm={handleGuideConfirm}
       />
     </>
   );
