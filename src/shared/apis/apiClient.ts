@@ -31,10 +31,11 @@ class ApiError extends Error {
   }
 }
 
-const apiOrigin = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') ?? '';
-
+// 백엔드 주소를 번들에 넣지 않기 위해 항상 같은 출처의 /api로 요청합니다.
+// 실제 주소는 서버 쪽 BACKEND_ORIGIN에만 두고, 로컬은 vite dev proxy가,
+// 운영은 vercel.json rewrite와 api/proxy.js가 백엔드로 전달합니다.
 const apiClient = axios.create({
-  baseURL: `${apiOrigin}${API_PREFIX}`,
+  baseURL: API_PREFIX,
   timeout: API_TIMEOUT,
   headers: { 'Content-Type': 'application/json' },
 });
