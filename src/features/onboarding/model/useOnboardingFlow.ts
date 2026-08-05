@@ -10,25 +10,25 @@ import { ONBOARDING_SLIDES } from './onboardingSlides';
 const SPLASH_DURATION = 4000;
 
 function getOngoingSurveyRoute() {
-  const { concern, discomfortTypes, research, sensitive, skinType } = useSurveyStore.getState();
+  const { isAnswerSaved } = useSurveyStore.getState();
 
-  if (!concern) {
+  if (!isAnswerSaved('CONCERN')) {
     return SURVEY_ROUTES.concern;
   }
 
-  if (!skinType) {
+  if (!isAnswerSaved('SKIN_TYPE')) {
     return SURVEY_ROUTES.skinType;
   }
 
-  if (!sensitive) {
+  if (!isAnswerSaved('SENSITIVITY')) {
     return SURVEY_ROUTES.sensitive;
   }
 
-  if (discomfortTypes.length === 0) {
+  if (!isAnswerSaved('CAUTION')) {
     return SURVEY_ROUTES.discomfort;
   }
 
-  if (!research) {
+  if (!isAnswerSaved('EXPLORATION_HABIT')) {
     return SURVEY_ROUTES.research;
   }
 
