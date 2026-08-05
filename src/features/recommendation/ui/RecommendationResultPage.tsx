@@ -7,7 +7,7 @@ import {
   useSharedRecommendationQuery,
 } from '@/features/recommendation/model';
 import { useSurveyStore } from '@/features/survey/model/useSurveyStore';
-import { BackIcon, SparkleIcon } from '@/shared/assets/icons';
+import { SparkleIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
 import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
@@ -85,21 +85,11 @@ function RecommendationResultPage({ className, ...props }: RecommendationResultP
 
   return (
     <main className={cn('bg-background-canvas min-h-dvh', className)} {...props}>
-      <header className="bg-background-subtle px-4 pt-11 pb-6">
-        <div className="mb-7 flex items-center gap-2">
-          <button
-            type="button"
-            aria-label="이전 화면으로 돌아가기"
-            onClick={() => window.history.back()}
-            className="text-text-secondary -ml-2 flex size-8 items-center justify-center"
-          >
-            <BackIcon aria-hidden="true" className="size-4" />
-          </button>
-          <span className="text-action-primary typo-caption1 flex items-center gap-1">
-            <SparkleIcon aria-hidden="true" className="size-4" />
-            {isSharedRecommendation ? '공유된 추천' : '추천 완료'}
-          </span>
-        </div>
+      <header className="bg-background-subtle px-4 pt-8 pb-6">
+        <span className="typo-caption1 text-action-primary bg-primary-50 border-primary-100 mb-2 inline-flex w-fit items-center gap-1 rounded-full border px-2.5 py-1">
+          <SparkleIcon aria-hidden="true" className="size-3.5" />
+          {isSharedRecommendation ? '공유된 추천' : '추천 완료'}
+        </span>
         <h1 className="typo-title2 text-text-primary">
           고민에 맞춰
           <br />

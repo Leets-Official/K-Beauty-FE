@@ -1,5 +1,6 @@
 export {
   SURVEY_ROUTES,
+  useRestartSurveyMutation,
   useStartSurveyMutation,
   useSurveyStepGuard,
   useSurveyStore,

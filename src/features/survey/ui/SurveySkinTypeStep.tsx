@@ -73,15 +73,12 @@ function SurveySkinTypeStep() {
     if (isPending) return;
 
     setSkinType(value);
-    setIsGuideOpen(false);
   };
 
-  const handleRecommendAsUnknown = () => {
-    if (isPending) return;
+  const handleGuideConfirm = () => {
+    if (isPending || !skinType || skinType === 'UNKNOWN') return;
 
-    setSkinType('UNKNOWN');
     setIsGuideOpen(false);
-    submit(QUESTION_CODE.skinType, ['UNKNOWN'], 'QUICK');
   };
 
   return (
@@ -99,8 +96,8 @@ function SurveySkinTypeStep() {
         contentLabel="피부 타입"
         currentStep={SURVEY_STEP.skinType}
         totalSteps={SURVEY_TOTAL_STEPS}
-        className="pt-control-lg px-7 pb-12"
-        titleClassName="typo-title3 mt-8"
+        className="px-7 pb-12"
+        titleClassName="typo-title3 mt-4"
         descriptionClassName="typo-body1 text-text-muted mt-3"
         contentClassName="mt-5"
         footerClassName="gap-2"
@@ -152,9 +149,10 @@ function SurveySkinTypeStep() {
       <SkinTypeGuideBottomSheet
         open={isGuideOpen}
         disabled={isPending}
+        selectedSkinType={skinType === 'UNKNOWN' ? null : skinType}
         onOpenChange={setIsGuideOpen}
         onSelect={handleGuideSelect}
-        onRecommendAsUnknown={handleRecommendAsUnknown}
+        onConfirm={handleGuideConfirm}
       />
     </>
   );

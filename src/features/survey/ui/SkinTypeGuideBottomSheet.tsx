@@ -1,7 +1,6 @@
 import type { SkinType } from '@/features/survey/model';
 import {
   BottomSheet,
-  BottomSheetClose,
   BottomSheetContent,
   BottomSheetDescription,
   BottomSheetFooter,
@@ -20,6 +19,8 @@ interface SkinTypeGuide {
   dotClassName: string;
   interactionClassName: string;
   badgeInteractionClassName: string;
+  selectedClassName: string;
+  badgeSelectedClassName: string;
 }
 
 const SKIN_TYPE_GUIDES: SkinTypeGuide[] = [
@@ -32,6 +33,8 @@ const SKIN_TYPE_GUIDES: SkinTypeGuide[] = [
       'hover:border-accent-mint hover:bg-mint-100/30 focus-visible:border-accent-mint focus-visible:bg-mint-100/30',
     badgeInteractionClassName:
       'group-hover:bg-accent-mint group-hover:text-text-inverse group-focus-visible:bg-accent-mint group-focus-visible:text-text-inverse',
+    selectedClassName: 'border-accent-mint bg-mint-100/30',
+    badgeSelectedClassName: 'bg-accent-mint text-text-inverse',
   },
   {
     value: 'OILY',
@@ -42,6 +45,8 @@ const SKIN_TYPE_GUIDES: SkinTypeGuide[] = [
       'hover:border-accent-apricot hover:bg-apricot-100/30 focus-visible:border-accent-apricot focus-visible:bg-apricot-100/30',
     badgeInteractionClassName:
       'group-hover:bg-accent-apricot group-hover:text-text-inverse group-focus-visible:bg-accent-apricot group-focus-visible:text-text-inverse',
+    selectedClassName: 'border-accent-apricot bg-apricot-100/30',
+    badgeSelectedClassName: 'bg-accent-apricot text-text-inverse',
   },
   {
     value: 'COMBINATION',
@@ -52,6 +57,8 @@ const SKIN_TYPE_GUIDES: SkinTypeGuide[] = [
       'hover:border-action-primary hover:bg-primary-100/30 focus-visible:border-action-primary focus-visible:bg-primary-100/30',
     badgeInteractionClassName:
       'group-hover:bg-action-primary group-hover:text-text-inverse group-focus-visible:bg-action-primary group-focus-visible:text-text-inverse',
+    selectedClassName: 'border-action-primary bg-primary-100/30',
+    badgeSelectedClassName: 'bg-action-primary text-text-inverse',
   },
   {
     value: 'DEHYDRATED_OILY',
@@ -62,75 +69,86 @@ const SKIN_TYPE_GUIDES: SkinTypeGuide[] = [
       'hover:border-lavender-600 hover:bg-lavender-100/30 focus-visible:border-lavender-600 focus-visible:bg-lavender-100/30',
     badgeInteractionClassName:
       'group-hover:bg-lavender-600 group-hover:text-text-inverse group-focus-visible:bg-lavender-600 group-focus-visible:text-text-inverse',
+    selectedClassName: 'border-lavender-600 bg-lavender-100/30',
+    badgeSelectedClassName: 'bg-lavender-600 text-text-inverse',
   },
 ];
 
 interface SkinTypeGuideBottomSheetProps {
   open: boolean;
   disabled?: boolean;
+  selectedSkinType: KnownSkinType | null;
   onOpenChange: (open: boolean) => void;
   onSelect: (skinType: KnownSkinType) => void;
-  onRecommendAsUnknown: () => void;
+  onConfirm: () => void;
 }
 
 function SkinTypeGuideBottomSheet({
   open,
   disabled = false,
+  selectedSkinType,
   onOpenChange,
   onSelect,
-  onRecommendAsUnknown,
+  onConfirm,
 }: SkinTypeGuideBottomSheetProps) {
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
       <BottomSheetHeader>
         <div>
           <BottomSheetTitle>피부 타입 가이드</BottomSheetTitle>
-          <BottomSheetDescription className="mt-6">
+          <BottomSheetDescription className="mt-3">
             지금 내 피부 상태와 가장 비슷한 항목을 선택해 주세요.
           </BottomSheetDescription>
         </div>
-        <BottomSheetClose aria-label="피부 타입 가이드 닫기" />
       </BottomSheetHeader>
 
       <BottomSheetContent className="flex flex-col gap-3">
-        {SKIN_TYPE_GUIDES.map((guide) => (
-          <button
-            key={guide.value}
-            type="button"
-            disabled={disabled}
-            onClick={() => onSelect(guide.value)}
-            className={cn(
-              'group border-border-subtle bg-background-canvas flex min-h-[52px] w-full items-center gap-3 rounded-[20px] border px-4 py-3 text-left transition-colors',
-              'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
-              'disabled:pointer-events-none disabled:opacity-50',
-              guide.interactionClassName,
-            )}
-          >
-            <span
-              aria-hidden="true"
-              className={cn('size-2 shrink-0 rounded-full', guide.dotClassName)}
-            />
-            <span className="typo-body1 text-text-primary min-w-0 flex-1 font-medium">
-              {guide.description}
-            </span>
-            <span
+        {SKIN_TYPE_GUIDES.map((guide) => {
+          const selected = selectedSkinType === guide.value;
+
+          return (
+            <button
+              key={guide.value}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              disabled={disabled}
+              onClick={() => onSelect(guide.value)}
               className={cn(
-                'typo-button2 bg-badge-neutral text-text-secondary shrink-0 rounded-full px-3 py-1.5 transition-colors',
-                guide.badgeInteractionClassName,
+                'group border-border-subtle bg-background-canvas flex min-h-[52px] w-full items-center gap-3 rounded-[20px] border px-4 py-3 text-left transition-colors',
+                'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
+                'disabled:pointer-events-none disabled:opacity-50',
+                guide.interactionClassName,
+                selected && guide.selectedClassName,
               )}
             >
-              {guide.label}
-            </span>
-          </button>
-        ))}
+              <span
+                aria-hidden="true"
+                className={cn('size-2 shrink-0 rounded-full', guide.dotClassName)}
+              />
+              <span className="typo-body1 text-text-primary min-w-0 flex-1 font-medium">
+                {guide.description}
+              </span>
+              <span
+                className={cn(
+                  'typo-button2 bg-badge-neutral text-text-secondary shrink-0 rounded-full px-3 py-1.5 transition-colors',
+                  guide.badgeInteractionClassName,
+                  selected && guide.badgeSelectedClassName,
+                )}
+              >
+                {guide.label}
+              </span>
+            </button>
+          );
+        })}
       </BottomSheetContent>
 
       <BottomSheetFooter>
         <Button
           variant="secondary"
           className="w-full border-2"
-          disabled={disabled}
-          onClick={onRecommendAsUnknown}
+          disabled={disabled || selectedSkinType == null}
+          onClick={onConfirm}
         >
           이대로 추천받기
         </Button>

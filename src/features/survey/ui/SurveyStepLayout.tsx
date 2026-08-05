@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router';
 import { Progress } from '@/shared/ui/progress';
 import { cn } from '@/shared/utils/cn';
 
+const SURVEY_PROGRESS_STORAGE_KEY = 'cosmetch-survey-progress-value';
+
 interface SurveyStepLayoutProps {
   title: React.ReactNode;
   description?: React.ReactNode;
@@ -21,6 +23,38 @@ interface SurveyStepLayoutProps {
   descriptionClassName?: string;
   contentClassName?: string;
   footerClassName?: string;
+}
+
+function getInitialProgressValue(targetValue: number, enabled: boolean) {
+  if (!enabled || typeof window === 'undefined') {
+    return targetValue;
+  }
+
+  const storedValue = window.sessionStorage.getItem(SURVEY_PROGRESS_STORAGE_KEY);
+  const progressValue = storedValue == null ? targetValue : Number(storedValue);
+
+  return Number.isFinite(progressValue) ? progressValue : targetValue;
+}
+
+function useAnimatedSurveyProgress(targetValue: number, enabled: boolean) {
+  const [progressValue, setProgressValue] = React.useState(() =>
+    getInitialProgressValue(targetValue, enabled),
+  );
+
+  React.useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    const animationFrameId = window.requestAnimationFrame(() => {
+      setProgressValue(targetValue);
+      window.sessionStorage.setItem(SURVEY_PROGRESS_STORAGE_KEY, String(targetValue));
+    });
+
+    return () => window.cancelAnimationFrame(animationFrameId);
+  }, [enabled, targetValue]);
+
+  return enabled ? progressValue : targetValue;
 }
 
 function SurveyStepLayout({
@@ -42,6 +76,8 @@ function SurveyStepLayout({
   const navigate = useNavigate();
   const handleBack = onBack ?? (() => navigate(-1));
   const showProgress = currentStep != null && totalSteps != null && totalSteps > 0;
+  const targetProgressValue = showProgress ? (currentStep / totalSteps) * 100 : 0;
+  const progressValue = useAnimatedSurveyProgress(targetProgressValue, showProgress);
 
   const backButton = (
     <button
@@ -69,7 +105,7 @@ function SurveyStepLayout({
               {currentStep} / {totalSteps}
             </span>
             <Progress
-              value={(currentStep / totalSteps) * 100}
+              value={progressValue}
               aria-label={`설문 진행률 ${currentStep} / ${totalSteps}`}
               style={{ width: '100%', height: 'auto' }}
             />

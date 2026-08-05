@@ -26,13 +26,13 @@ const INDICATOR_IDLE_CLASS_NAMES: Record<SurveyOptionCardVariant, string> = {
 
 const LABEL_CLASS_NAMES: Record<SurveyOptionCardVariant, string> = {
   default: 'typo-body1 font-bold',
-  large: 'typo-label1',
+  large: 'typo-body1 font-bold',
   skinType: 'typo-body1 font-bold',
 };
 
 const CAPTION_CLASS_NAMES: Record<SurveyOptionCardVariant, string> = {
   default: 'typo-caption1 text-text-muted',
-  large: 'typo-body1 text-text-secondary',
+  large: 'typo-caption1 text-text-muted',
   skinType: 'typo-caption1 text-text-muted',
 };
 

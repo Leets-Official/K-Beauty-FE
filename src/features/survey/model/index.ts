@@ -42,6 +42,11 @@ export {
   useSurveyAnswerSubmit,
   type SaveSurveyAnswerVariables,
 } from './useSaveSurveyAnswer';
-export { ensureSurveyId, useStartSurveyMutation } from './useStartSurveyMutation';
+export {
+  ensureSurveyId,
+  restartSurvey,
+  useRestartSurveyMutation,
+  useStartSurveyMutation,
+} from './useStartSurveyMutation';
 export { useSurveyStepGuard, type SurveyAnswerKey } from './useSurveyStepGuard';
 export { useSurveyStore } from './useSurveyStore';

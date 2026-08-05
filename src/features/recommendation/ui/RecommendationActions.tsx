@@ -2,8 +2,10 @@ import { type ComponentProps, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { type RecommendationStep, useRecommendationActions } from '@/features/recommendation/model';
+import { useRestartSurveyMutation } from '@/features/survey';
 import { CompareIcon, CopyIcon, ResetIcon, ShareIcon } from '@/shared/assets/icons';
 import { Button } from '@/shared/ui/button';
+import { toast } from '@/shared/ui/Toast';
 import { cn } from '@/shared/utils/cn';
 
 import { RecommendationComparisonBottomSheet } from './RecommendationComparisonBottomSheet';
@@ -17,6 +19,20 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
   const { copyRecommendation, isCreatingShare, shareRecommendation, shareUrl } =
     useRecommendationActions(steps);
+  const restartSurveyMutation = useRestartSurveyMutation();
+
+  const restartSurvey = () => {
+    if (restartSurveyMutation.isPending) {
+      return;
+    }
+
+    restartSurveyMutation.mutate(undefined, {
+      onSuccess: () => navigate('/survey'),
+      onError: () => {
+        toast.error('설문을 다시 시작하지 못했어요. 잠시 후 다시 시도해주세요.');
+      },
+    });
+  };
 
   return (
     <div className={cn('flex flex-col gap-2', className)} {...props}>
@@ -70,10 +86,11 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
         type="button"
         variant="ghost"
         className="text-text-muted mt-1 w-full"
-        onClick={() => navigate('/')}
+        disabled={restartSurveyMutation.isPending}
+        onClick={restartSurvey}
       >
         <ResetIcon aria-hidden="true" />
-        처음부터 다시 하기
+        {restartSurveyMutation.isPending ? '설문 시작 중...' : '처음부터 다시 하기'}
       </Button>
 
       <RecommendationComparisonBottomSheet
