@@ -400,7 +400,7 @@
 
   .cosmetch-wordmark {
     font-family:
-      'Arial Rounded MT Bold', 'Avenir Next Rounded', 'Nunito', 'Trebuchet MS', var(--font-sans);
+      'Arial Rounded MT Bold', 'Avenir Next Rounded', Nunito, 'Trebuchet MS', var(--font-sans);
     font-weight: 900;
     letter-spacing: 0.035em;
   }

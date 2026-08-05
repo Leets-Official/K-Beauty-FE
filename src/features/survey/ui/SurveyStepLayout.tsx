@@ -33,7 +33,11 @@ function getInitialProgressValue(targetValue: number, enabled: boolean) {
   const storedValue = window.sessionStorage.getItem(SURVEY_PROGRESS_STORAGE_KEY);
   const progressValue = storedValue == null ? targetValue : Number(storedValue);
 
-  return Number.isFinite(progressValue) ? progressValue : targetValue;
+  if (!Number.isFinite(progressValue) || progressValue > targetValue) {
+    return targetValue;
+  }
+
+  return progressValue;
 }
 
 function useAnimatedSurveyProgress(targetValue: number, enabled: boolean) {
