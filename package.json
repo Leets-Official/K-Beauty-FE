@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
+    "postbuild": "node scripts/patch-og-meta.mjs",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
     "format": "prettier --write .",
