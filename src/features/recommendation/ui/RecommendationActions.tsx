@@ -18,6 +18,7 @@ interface RecommendationActionsProps extends ComponentProps<'div'> {
 function RecommendationActions({ className, steps, ...props }: RecommendationActionsProps) {
   const navigate = useNavigate();
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
   const createShareMutation = useCreateRecommendationShareMutation();
 
   async function copyRecommendation() {
@@ -32,13 +33,15 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
   function shareRecommendation() {
     createShareMutation.mutate(undefined, {
       onSuccess: async ({ shareToken }) => {
-        const shareUrl = `${window.location.origin}/recommendation?share=${encodeURIComponent(shareToken)}`;
+        const generatedShareUrl = `${window.location.origin}/recommendation?share=${encodeURIComponent(shareToken)}`;
 
         try {
-          await navigator.clipboard.writeText(shareUrl);
+          await navigator.clipboard.writeText(generatedShareUrl);
+          setShareUrl(null);
           toast.success('공유 링크가 생성되고 복사되었어요!');
         } catch {
-          toast.error('공유 링크는 만들었지만 복사하지 못했어요.');
+          setShareUrl(generatedShareUrl);
+          toast.error('공유 링크를 복사하지 못했어요. 아래 링크를 직접 복사해주세요.');
         }
       },
       onError: () => {
@@ -69,6 +72,20 @@ function RecommendationActions({ className, steps, ...props }: RecommendationAct
         <ShareIcon aria-hidden="true" />
         {createShareMutation.isPending ? '공유 링크 만드는 중...' : '공유하기'}
       </Button>
+
+      {shareUrl ? (
+        <div className="border-border-subtle bg-surface-default flex flex-col gap-2 rounded-2xl border p-3">
+          <p className="typo-caption1 text-text-secondary">공유 링크를 직접 복사해주세요.</p>
+          <input
+            aria-label="생성된 공유 링크"
+            readOnly
+            value={shareUrl}
+            onFocus={(event) => event.currentTarget.select()}
+            onClick={(event) => event.currentTarget.select()}
+            className="border-border-subtle bg-background-subtle text-text-primary typo-caption1 focus-visible:ring-ring/50 w-full rounded-xl border px-3 py-2 outline-none focus-visible:ring-2"
+          />
+        </div>
+      ) : null}
 
       <Button
         type="button"
