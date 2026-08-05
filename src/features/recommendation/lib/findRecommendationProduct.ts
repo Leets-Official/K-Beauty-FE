@@ -1,6 +1,6 @@
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import type { RecommendationStep } from '@/features/recommendation/model';
 
-function findRecommendationProduct(steps: RecommendationStep[], productId: string) {
+function findRecommendationProduct(steps: RecommendationStep[], productId: number) {
   for (const step of steps) {
     const product = [step.product, ...step.candidates].find(({ id }) => id === productId);
 

@@ -1,6 +1,5 @@
-export { RecommendationActions, type RecommendationActionsProps } from './RecommendationActions';
+export { RecommendationProductDetailPage } from './RecommendationProductDetailPage';
 export {
   RecommendationResultPage,
   type RecommendationResultPageProps,
 } from './RecommendationResultPage';
-export { RecommendationStepCard, type RecommendationStepCardProps } from './RecommendationStepCard';

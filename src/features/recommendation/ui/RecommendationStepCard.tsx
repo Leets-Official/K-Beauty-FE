@@ -1,20 +1,25 @@
 import type { ComponentProps } from 'react';
 import { useNavigate } from 'react-router';
 
-import { IngredientTags } from '@/features/recommendation/ui/IngredientTags';
-import { RecommendationCandidates } from '@/features/recommendation/ui/RecommendationCandidates';
-import { RecommendationEasyView } from '@/features/recommendation/ui/RecommendationEasyView';
-import { RecommendedProductSummary } from '@/features/recommendation/ui/RecommendedProductSummary';
+import type { RecommendationStep } from '@/features/recommendation/model';
 import { ChevronIcon } from '@/shared/assets/icons';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 
-import type { RecommendationStep } from '@/features/recommendation/model/recommendation';
+import type { Concern } from '@/features/survey/model/concern';
+
+import { IngredientTags } from './IngredientTags';
+import { RecommendationCandidates } from './RecommendationCandidates';
+import { RecommendedProductSummary } from './RecommendedProductSummary';
 
 interface RecommendationStepCardProps
   extends Omit<ComponentProps<'article'>, 'children' | 'id'>, RecommendationStep {
-  onReplaceProduct: (candidateId: string) => void;
+  concern: Concern | null;
+  shareToken?: string | null;
+  onReplaceProduct?: (productId: number) => void;
+  isReplacing?: boolean;
+  showCandidates?: boolean;
 }
 
 function RecommendationStepCard({
@@ -24,7 +29,11 @@ function RecommendationStepCard({
   category,
   product,
   candidates,
+  concern,
+  shareToken,
   onReplaceProduct,
+  isReplacing,
+  showCandidates = true,
   ...props
 }: RecommendationStepCardProps) {
   const navigate = useNavigate();
@@ -46,41 +55,41 @@ function RecommendationStepCard({
           <p className="typo-caption2 text-text-muted">{category}</p>
         </div>
 
-        <RecommendedProductSummary stepId={id} product={product} />
-
-        <details className="group/details">
-          <summary className="typo-caption1 text-text-secondary flex list-none items-center gap-1 py-1 [&::-webkit-details-marker]:hidden">
-            <ChevronIcon
-              aria-hidden="true"
-              className="size-3 transition-transform group-open/details:rotate-180"
-            />
-            <span className="group-open/details:hidden">자세히 보기</span>
-            <span className="hidden group-open/details:inline">쉽게 보기</span>
-          </summary>
-          <RecommendationEasyView product={product} />
-        </details>
+        <RecommendedProductSummary stepId={id} product={product} concern={concern} />
 
         <IngredientTags tags={product.tags} />
 
         <Button
           type="button"
           className="w-full"
-          onClick={() => navigate(`/recommendation/product/${encodeURIComponent(product.id)}`)}
+          onClick={() =>
+            navigate(
+              `/recommendation/product/${encodeURIComponent(product.id)}${
+                shareToken ? `?share=${encodeURIComponent(shareToken)}` : ''
+              }`,
+            )
+          }
         >
           자세히 보기
         </Button>
       </div>
 
-      <details className="group/candidates border-border-subtle border-t">
-        <summary className="typo-caption1 text-text-secondary flex list-none items-center justify-between px-4 py-4 [&::-webkit-details-marker]:hidden">
-          다른 후보 보기
-          <ChevronIcon
-            aria-hidden="true"
-            className="size-3 transition-transform group-open/candidates:rotate-180"
+      {showCandidates && onReplaceProduct && candidates.length > 0 ? (
+        <details className="group/candidates border-border-subtle border-t">
+          <summary className="typo-caption1 text-text-secondary flex list-none items-center justify-between px-4 py-4 [&::-webkit-details-marker]:hidden">
+            다른 후보 보기
+            <ChevronIcon
+              aria-hidden="true"
+              className="size-3 transition-transform group-open/candidates:rotate-180"
+            />
+          </summary>
+          <RecommendationCandidates
+            candidates={candidates}
+            onReplaceProduct={onReplaceProduct}
+            isReplacing={isReplacing}
           />
-        </summary>
-        <RecommendationCandidates candidates={candidates} onReplaceProduct={onReplaceProduct} />
-      </details>
+        </details>
+      ) : null}
     </article>
   );
 }
