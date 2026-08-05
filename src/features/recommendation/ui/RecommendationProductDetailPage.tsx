@@ -47,12 +47,18 @@ function RecommendationProductDetailPage() {
     return (
       <main className="bg-background-canvas flex min-h-dvh flex-col items-center justify-center gap-4 px-6">
         <p className="typo-body1 text-text-secondary">제품 정보를 불러오지 못했어요.</p>
-        <Button type="button" onClick={() => recommendationQuery.refetch()}>
-          다시 시도하기
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => navigate('/', { replace: true })}>
-          설문 다시 시작하기
-        </Button>
+        <div className="flex gap-3">
+          <Button type="button" onClick={() => recommendationQuery.refetch()}>
+            다시 시도하기
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => navigate('/', { replace: true })}
+          >
+            설문 다시 시작하기
+          </Button>
+        </div>
       </main>
     );
   }
@@ -159,7 +165,6 @@ function RecommendationProductDetailPage() {
             <p className="typo-caption2 text-text-muted">최저가</p>
             <p className="typo-title2 text-action-primary">{formatPrice(product.price)}</p>
           </div>
-          <p className="typo-caption2 text-text-muted">네이버 쇼핑 기준</p>
         </div>
         {product.purchaseUrl ? (
           <a
